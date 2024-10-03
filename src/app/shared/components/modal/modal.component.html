@@ -1,0 +1,32 @@
+<p-dialog #dialog *ngFor="let modal of modais" [showHeader]="modal.showHeader ?? true" [header]="modal.titulo ?? ''" [(visible)]="modal.visible"
+  [style]="{width: modal.larguraDesktop + 'vw' }" [breakpoints]="{ '768px': modal.larguraMobile + 'vw' }"
+  [draggable]="modal.isArrastar ?? false" [resizable]="modal?.isRedimensionar ?? true" [modal]="true"
+  [maximizable]="modal.isMaximizar ?? true" [closable]="modal.isFechar ?? true"
+  [closeOnEscape]="false" appendTo="body" [appAtalhoEvento]="['Escape', 'F11']" [shift]="true" (evento)="eventosModal($event)"
+  (onHide)="fecharModalX(modal)"
+  (onShow)="onShowModal(dialog, modal)">
+
+  <div class="grid">
+    <div class="col-12">
+      <ng-container ngIf="template" *ngTemplateOutlet="modal.template; context: {$implicit: modal.context}"></ng-container>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer" *ngIf="modal.botoes && modal.botoes.length > 0">
+    <div class="grid justify-content-end">
+      <div class="col-6 md:col-4" *ngFor="let botao of modal?.botoes">
+        <p-button
+          [icon]="botao?.icon ? 'pi ' + botao?.icon : ''"
+          [class]="botao.class" [label]="botao?.label"
+          [severity]="botao?.color ?? 'primary'" [text]="botao?.text ?? false"
+          [outline]="botao?.outline ?? false" [link]="botao?.link ?? false"
+          [size]="botao?.size ?? ''"
+          [disabled]="botao?.disabled ?? false"
+          [appAtalhoEvento]="botao?.atalho" [shift]="botao?.shift ?? false" [ctrl]="botao?.ctrl ?? false" [alt]="botao?.alt ?? false"
+          (evento)="eventosBotoesModal($event)"
+          (click)="botao?.onClick()"  />
+      </div>
+    </div>
+  </ng-template>
+
+</p-dialog>

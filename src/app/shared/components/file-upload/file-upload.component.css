@@ -1,0 +1,4 @@
+::ng-deep .p-file-upload-invalid {
+  border: 1px solid #e24c4c !important;
+  border-radius: 6px;
+}

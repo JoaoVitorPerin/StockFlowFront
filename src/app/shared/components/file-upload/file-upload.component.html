@@ -1,0 +1,67 @@
+<div class="{{ invalid ? 'p-file-upload-invalid' : '' }}">
+    <p-fileUpload #fileUploader name="demo[]" url="./upload.php" [accept]="accept" [customUpload]="true"
+        [multiple]="multiple" [showUploadButton]="true"
+        [maxFileSize]="maxFileSize ?? 3145728"
+        [showCancelButton]="false" [auto]="true" class="w-full"
+        invalidFileSizeMessageSummary=""
+        [invalidFileSizeMessageDetail]="'O limite para upload deste arquivo é de ' + formatarBytes(maxFileSize ?? 3145728)"
+        (onUpload)="onUpload($event, fileUploader, maxFileSize ?? 3145728)"
+        (onSelect)="onUpload($event, fileUploader, maxFileSize ?? 3145728)">
+        <ng-template pTemplate="content">
+            @if(!loading && !files?.length || multiple){
+              <div class="w-full py-3" style="cursor: copy" (click)="fileUploader.advancedFileInput.nativeElement.click()">
+                <div *ngIf="!files?.length || multiple" class="h-full flex flex-column justify-content-center align-items-center">
+                    <i class="pi pi-upload text-900 text-sm mb-2"></i>
+                    <span class="font-bold text-900 text-sm mb-1">Subir arquivos</span>
+                    <span class="font-medium text-600 text-sm text-center">Solte ou selecione arquivos</span>
+                </div>
+            </div>
+            }
+            @if(loading){
+              <div *ngIf="loading" [@inOutAnimation]
+                class="flex justify-content-center align-items-center p-3">
+                <img src="assets/img/loader/Voai-Loader-2.gif" width="100">
+              </div>
+            }
+            @if(files?.length && !loading){
+              <div class="flex justify-content-center flex-wrap gap-5">
+                <div *ngFor="let file of files" class="row w-full flex align-items-center">
+                    <div class="col-3 flex justify-content-center cursor-pointer">
+                      @if(this.accept === '.xlsx' || this.accept === '.xls'){
+                        <span class="material-symbols-outlined text-6xl text-primary">description</span>
+                      } @else{
+                        @if(isPrivado){
+                          <span style="font-size: 4.75rem !important;" class="material-symbols-outlined">
+                            description
+                          </span>
+                        }@else {
+                          <img [src]="file.arquivo" [alt]="file.nome" (click)="previewImage(file)" class="w-full h-full border-round max-width">
+                        }
+                      }
+                    </div>
+                    <div class="col-6 p-fileupload-filename text-limit-1 text-sm flex justify-content-center align-items-center">{{ file.nome }} - {{file.tamanho ? formatarBytes(file.tamanho) : ''}}</div>
+                    <div class="col-3 flex justify-content-center">
+                        <button type="button" class="p-element p-button-icon-only p-button p-component" (click)="deleteFile($event, file)">
+                            <span class="p-button-icon p-c pi pi-times"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </ng-template>
+    </p-fileUpload>
+</div>
+
+<ng-template #previewImagem>
+  <div class="modal-body">
+    <img [src]="objArquivo.arquivo" [alt]="objArquivo.nome" class="w-full h-full border-round shadow-2">
+    <div class="flex justify-content-end">
+        <div class="col-6 lg:col-2">
+            <p-button label="Cancelar" icon="pi pi-times" [outlined]="true" size="small" styleClass="p-button-primary p-button-sm" (click)="this.modalService.fecharModal()"></p-button>
+        </div>
+        <div class="col-6 lg:col-2">
+            <p-button label="Download" icon="pi pi-upload" size="small" styleClass="p-button-primary p-button-sm" (click)="downloadFile(objArquivo)"></p-button>
+        </div>
+    </div>
+  </div>
+</ng-template>

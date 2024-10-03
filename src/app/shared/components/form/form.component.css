@@ -1,0 +1,46 @@
+::ng-deep app-form {
+  width: 100%;
+}
+
+.labl-body {
+  flex: 1 1 auto;
+}
+
+.overlay-pesquisa ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-width: 150px;
+}
+
+.overlay-pesquisa ul li{
+  cursor: pointer;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  transition: .2s ease-in-out;
+}
+
+.overlay-pesquisa ul li:hover{
+  background-color: #ddd;
+}
+
+.overlay-pesquisa .p-overlaypanel-content {
+  padding: 0px;
+  max-height: 225px;
+  min-width: 250px;
+  overflow-x: auto;
+}
+
+::ng-deep .p-picklist-filter-container .p-picklist-filter input{
+  margin-bottom: 0px !important;
+}
+::ng-deep .text-limite-personalizado {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 2.25;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-spacing: 2px;
+}
+
