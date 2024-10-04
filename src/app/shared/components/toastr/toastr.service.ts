@@ -51,7 +51,7 @@ export class ToastrService {
   }
 
   mostrarToastrDanger(mensagem: string, titulo?: string): void {
-
+    console.log(mensagem)
     const dados = {
       titulo: titulo,
       mensagem: mensagem

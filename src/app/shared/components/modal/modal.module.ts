@@ -1,4 +1,3 @@
-import { AtalhoEventoDirective } from 'src/app/shared/directives/atalho-evento.directive';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +11,6 @@ import { ModalComponent } from "./modal.component";
     CommonModule,
     DialogModule,
     ButtonModule,
-    AtalhoEventoDirective
   ],
   exports: [
     ModalComponent

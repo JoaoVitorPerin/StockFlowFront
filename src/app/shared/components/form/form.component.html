@@ -19,6 +19,7 @@
   <div *ngIf="!type || type === 'text'">
     <input pInputText type="text" [formControlName]="formControlName"
       (blur)="onBlurHandler($event)"
+      class="w-full"
       [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false" autocomplete="new-password"
       [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />
     <small class="invalid" *ngIf="erro && !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched">{{ erro }}</small>
@@ -28,6 +29,7 @@
     <div class="p-inputgroup">
       <input pInputText type="text"
         #inputPesquisa [formControlName]="formControlName"
+        class="w-full"
         (blur)="onBlurHandler($event)" [feedback]="customFeedback" autocomplete="new-password"
         [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
         [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />
@@ -44,10 +46,23 @@
   </div>
 
   <div *ngIf="type === 'text-icon'">
-    <span class="p-input-icon-left">
+    <span class="p-input-icon-left w-full">
       <i class="pi {{ icon }}"></i>
       <input pInputText type="text" [formControlName]="formControlName"
         (blur)="onBlurHandler($event)" autocomplete="new-password"
+        class="w-full"
+        [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
+        [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />
+      <small class="invalid" *ngIf="erro && !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched">{{ erro }}</small>
+    </span>
+  </div>
+
+  <div *ngIf="type === 'password-icon'">
+    <span class="p-input-icon-left w-full">
+      <i class="pi {{ icon }}"></i>
+      <input pInputText type="password" [formControlName]="formControlName"
+        (blur)="onBlurHandler($event)" autocomplete="new-password"
+        class="w-full"
         [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
         [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />
       <small class="invalid" *ngIf="erro && !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched">{{ erro }}</small>
@@ -99,39 +114,12 @@
     }
   </div>
 
-  <div *ngIf="type === 'editor-html'">
-    <jqxEditor [theme]="'light'"  #editorReference [formControlName]="formControlName" [height]="400"></jqxEditor>
-  </div>
-
   <div *ngIf="type === 'editor'">
     <p-editor [(ngModel)]="text" [formControlName]="formControlName" [readonly]="readonly" [style]="{ height: '320px' }"></p-editor>
   </div>
 
   <div *ngIf="type == 'dxi-editor-html'">
     <app-editor-html [controlName]="formControlName"></app-editor-html>
-  </div>
-
-  <div *ngIf="type == 'dualist'">
-    <p-pickList [source]="items" [target]="itemsSelecionados"
-      (onMoveToSource)="onDualistChange($event)"
-      (onMoveToTarget)="onDualistChange($event)"
-      (onMoveAllToSource)="onDualistChange($event)"
-      (onMoveAllToTarget)="onDualistChange($event)"
-      (onTargetReorder)="onDualistChange($event)"
-      sourceHeader="Disponíveis"
-      targetHeader="Selecionados"
-      [dragdrop]="true"
-      [responsive]="true"
-      [sourceStyle]="{ height: '15rem' }"
-      [targetStyle]="{ height: '15rem' }"
-      filterBy="label"
-      sourceFilterPlaceholder="Procurar por nome"
-      targetFilterPlaceholder="Procurar por nome"
-      breakpoint="1400px">
-      <ng-template let-item pTemplate="item">
-        <span class="font-bold">{{ item?.label }}</span>
-      </ng-template>
-    </p-pickList>
   </div>
 
   <div *ngIf="type === 'int'">

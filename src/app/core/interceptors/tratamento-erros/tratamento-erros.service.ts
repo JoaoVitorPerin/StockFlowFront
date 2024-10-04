@@ -1,11 +1,11 @@
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { environment } from './../../../../environments/environment';
 import { LoadingService } from './../../../shared/components/loader-geral/loader-geral.service';
-import { TokenService } from '../../services/token.service';
 import { Observable, throwError, timer } from 'rxjs';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, retryWhen, mergeMap, finalize, tap } from 'rxjs/operators';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 
 export const genericRetryStrategy = ({
@@ -75,14 +75,15 @@ export class TratamentoErrosService implements HttpInterceptor {
   }
 
   handleResponseError(error, request?): Observable<never> {
+    console.log(error.error?.detail)
     if (this.urlsPermitidas.indexOf(request.url) === -1) {
       if (error?.error?.code === 'token_not_valid' || error?.error?.code === 'user_not_found') {
         this.tokenService.clearToken();
       }
     }
     
-    if(error?.error?.descricao) 
-      this.toastrService.mostrarToastrDanger(error?.error?.descricao ?? "Erro na requisição");
+    if(error?.error?.detail) 
+      this.toastrService.mostrarToastrDanger(error?.error?.detail ?? "Erro na requisição");
 
     return throwError((err) => error);
   }

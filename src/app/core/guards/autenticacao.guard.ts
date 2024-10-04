@@ -46,14 +46,7 @@ export class AutenticacaoGuard  {
   }
 
   redirectParaLogin(): void {
-    let params = {}
-    if(location?.pathname){
-      params = {
-        next: location.pathname,
-        params: location?.search ? location?.search : ''
-      }
-    }
-    this.router.navigate(['/login'], {queryParams: params})
+    this.router.navigate(['/login'])
   }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean{

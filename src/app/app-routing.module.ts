@@ -3,6 +3,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { AutenticacaoComponent } from './core/autenticacao/autenticacao.component';
 import { AutenticacaoGuard } from './core/guards/autenticacao.guard';
+import { HomeComponent } from './modules/home/home.component';
 
 const APP_ROUTES: Routes = [
     {
@@ -13,9 +14,13 @@ const APP_ROUTES: Routes = [
         path: '',
         component: AppLayoutComponent,
         data: { animationState: 'AppLayoutComponent' },
-        canLoad: [AutenticacaoGuard],
+        canActivate: [AutenticacaoGuard],
         canActivateChild: [AutenticacaoGuard],
         children: [
+            {
+                path: 'home',
+                component: HomeComponent
+            },
         ]
     },
     {
