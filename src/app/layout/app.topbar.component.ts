@@ -22,6 +22,5 @@ export class AppTopBarComponent {
         private tokenService: TokenService
     ) {
         this.nomeUsuario = `${this.tokenService.getJwtDecodedAccess().first_name} ${this.tokenService.getJwtDecodedAccess().last_name}`;
-        console.log(this.nomeUsuario);
     }
 }

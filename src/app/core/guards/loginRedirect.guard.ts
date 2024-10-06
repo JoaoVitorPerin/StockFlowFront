@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { TokenService } from './../services/token.service';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class LoginRedirectGuard {
     return new Observable(observer => {
         const token = this.tokenService.getToken();
             if (token) {
-                this.router.navigate(['/dashboard/vendas']);
+                this.router.navigate(['/dashboard']);
                 observer.next(false);
             }else {
                 this.router.navigate(['/login']);

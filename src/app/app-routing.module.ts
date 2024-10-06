@@ -18,6 +18,13 @@ const APP_ROUTES: Routes = [
         canActivateChild: [AutenticacaoGuard],
         children: [
             {
+                path: 'user',
+                loadChildren: () =>
+                  import(
+                    './modules/user/user.module'
+                  ).then(m => m.UserModule)
+            },
+            {
                 path: 'home',
                 component: HomeComponent
             },
