@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
   columns: any;
   configuracoes: DatagridConfig = datagridConfigDefault();
   data: any = [];
@@ -16,6 +17,7 @@ export class HomeComponent {
   constructor(
     private router: Router,
     private toastrService: ToastrService,
+    private userService: UserService,
   ) {
     this.columns = [
       {
@@ -32,18 +34,18 @@ export class HomeComponent {
         sorting: true,
       },
       {
+        dataField: 'email',
+        caption: 'E-mail',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
         dataField: 'acoes',
         caption: 'Ações',
         fixed: true,
         width: '100px',
       },
     ];
-
-    this.data = [
-      { id: 1, nome: 'Nome 1' },
-      { id: 2, nome: 'Nome 2' },
-      { id: 3, nome: 'Nome 3' },
-    ]
 
     this.configuracoes.actionButtons.push({
       icon: 'pi pi-pencil',
@@ -83,5 +85,25 @@ export class HomeComponent {
         }
       }
     )
+  }
+
+  ngOnInit(): void {
+    this.buscarUsuarios();
+  }
+
+  buscarUsuarios(): void {
+    this.userService.buscarDadosFilial().subscribe(
+      (response) => {
+        this.data = response.usuario.map((usuario) => {
+          return {
+            ...usuario,
+            nome: `${usuario.first_name} ${usuario.last_name}`,
+          };
+        });
+      },
+      (error) => {
+        this.toastrService.mostrarToastrDanger('Erro ao buscar usuários');
+      }
+    );
   }
 }

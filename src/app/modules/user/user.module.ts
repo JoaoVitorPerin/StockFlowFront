@@ -7,8 +7,9 @@ import { CadastroComponent } from './cadastro/cadastro.component';
 import { HomeComponent } from './home/home.component';
 import { UserRoutingModule } from './user-routing.module';
 import { FormModule } from 'src/app/shared/components/form/form.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatagridModule } from 'src/app/shared/components/datagrid/datagrid.module';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
     declarations: [
@@ -19,9 +20,11 @@ import { DatagridModule } from 'src/app/shared/components/datagrid/datagrid.modu
     imports: [
         CommonModule,
         FormModule,
+        FormsModule,
         ReactiveFormsModule,
         UserRoutingModule,
-        DatagridModule
+        DatagridModule,
+        ButtonModule
     ],
 })
 export class UserModule {}
