@@ -1,0 +1,451 @@
+<p-table
+    #table
+    [value]="data"
+    dataKey="id"
+    [resizableColumns]="configuracoes.resizableColumns"
+    styleClass="p-datatable-striped p-datatable-gridlines"
+    [tableStyle]="{'min-width': '100%'}"
+    [paginator]="configuracoes.paginator"
+    [expandedRowKeys]="expandedRows"
+    [rows]="configuracoes.rows"
+    (onLazyLoad)="lazyLoadData($event)"
+    [lazyLoadOnInit] = "configuracoes.lazyLoadOnInit"
+    configtable="configuracoes"
+    [globalFilterFields]="globalFilterFields"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    rowGroupMode="rowspan"
+    [groupRowsBy]="configuracoes.groupRowsBy"
+    [rowHover]="true"
+    stateStorage="local"
+    [stateKey]="gerarStateKeyLocalStorage()"
+    (onStateRestore)="stateRestore($event)"
+    (onStateSave)="stateSave($event)"
+    >
+    @if(configuracoes.header){
+      <ng-template pTemplate="caption">
+        @if(!isMobile){
+          <div class="flex justify-content-between gap-3">
+            <div class="flex align-items-center w-full">
+              @if(titulo){
+                <p class="text-900 text-xl font-semibold">{{ titulo }}</p>
+              }
+              @if(configuracoes.addRow){
+                <div class="md:col-2">
+                  <p-button pRipple pTooltip="Adicionar linha" tooltipPosition="right" severity="success" (click)="addRowMasterDetail()">
+                    <i class="material-symbols-outlined mr-2">add</i>
+                    <span class="p-button-label">Adicionar</span>
+                  </p-button>
+                </div>
+              }
+              @if(configuracoes.deleteRow){
+                <div class="md:col-2">
+                  <button pButton pRipple pTooltip="Excluir linha(s) selecionada(s)" tooltipPosition="right" severity="danger" (click)="deleteRowsMasterDetail()">
+                    <i class="material-symbols-outlined mr-2">delete</i>
+                    <span class="p-button-label">Excluir</span>
+                  </button>
+                </div>
+              }
+              @for(config of configuracoes?.customButtons; track config){
+                <div class="md:col-2">
+                  @if(config.iconType == 'material' && config.icon){
+                    <p-button
+                      [outlined]="config.outlined || false"
+                      [severity]="config.color"
+                      [pTooltip]="config.tooltip ?? null"
+                      tooltipPosition="right"
+                      (click)="config.click(selectedRows())">
+                      <i [class.mr-2]="config.text" class="material-symbols-outlined">{{config.icon}}</i>
+                      @if(config.text){
+                        <span class="p-button-label">{{ config.text }}</span>
+                      }
+                    </p-button>
+                  } @else {
+                    <p-button
+                      [outlined]="config.outlined || false"
+                      [label]="config.text"
+                      [icon]="config.icon"
+                      [severity]="config.color"
+                      [pTooltip]="config.tooltip ?? null"
+                      tooltipPosition="right"
+                      (click)="config.click(selectedRows())">
+                    </p-button>
+                  }
+                </div>
+              } @empty {
+                <div></div>
+              }
+            </div>
+            <div class="flex justify-content-center gap-3"></div>
+            <div class="flex align-items-center gap-2">
+              @if(configuracoes.search){
+                @if(!configuracoes.customSearch){
+                  <span class="p-input-icon-left" style="min-width: 15rem;">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="searchTable($event, table); stateSave()" placeholder="Pesquisar" [(ngModel)]="termo" />
+                  </span>
+                } @else if(configuracoes.customSearch && configuracoes.searchTemplate){
+                  <ng-container *ngTemplateOutlet="configuracoes.searchTemplate;"></ng-container>
+                }
+              }
+              @if(configuracoes.clearFilterButton){
+                  <div>
+                      <button pButton pRipple class="p-button-outlined" pTooltip="Limpar filtro" tooltipPosition="left" (click)="clear()">
+                        <div class="flex align-items-center gap-2 font-normal">
+                            <i class="pi pi-filter" style="font-size: 1.15rem;"></i>
+                        </div>
+                      </button>
+                  </div>
+              }
+              @if(configuracoes.exportButton){
+                <div>
+                  <button pButton pRipple class="p-button-outlined" pTooltip="Download" tooltipPosition="left" (click)="exportExcel()">
+                    <div class="flex align-items-center gap-2 font-normal">
+                        <i class="pi pi-download" style="font-size: 1.15rem;"></i>
+                    </div>
+                  </button>
+                </div>
+              }
+              @if(configuracoes.refresh){
+                <div>
+                  <button pButton pRipple class="p-button-outlined" pTooltip="Atualizar" tooltipPosition="left" (click)="configuracoes.refresh()">
+                    <div class="flex align-items-center gap-2 font-normal">
+                        <i class="pi pi-refresh" style="font-size: 1.15rem;"></i>
+                    </div>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        } @else{
+            <div class="grid flex justify-content-between">
+              <div class="flex justify-content-start gap-3">
+                @if(configuracoes.addRow){
+                  <div class="col-6">
+                    <p-button pRipple pTooltip="Adicionar linha" tooltipPosition="right" severity="success" (click)="addRowMasterDetail()">
+                        <i class="pi pi-plus mr-2" style="font-size: 1.15rem;"></i>
+                        <span class="p-button-label">Adicionar</span>
+                    </p-button>
+                  </div>
+                }
+                @if(configuracoes.deleteRow){
+                  <div class="col-6">
+                    <button pButton pRipple pTooltip="Excluir linha(s) selecionada(s)" tooltipPosition="right" severity="danger" (click)="deleteRowsMasterDetail()">
+                        <i class="pi pi-times mr-2" style="font-size: 1.15rem;"></i>
+                        <span class="p-button-label">Excluir</span>
+                    </button>
+                  </div>
+                }
+                @for(config of configuracoes?.customButtons; track config){
+                  <div class="col-6">
+                    @if(config.iconType == 'material' && config.icon){
+                      <p-button
+                        [outlined]="config.outlined || false"
+                        [label]="config.text"
+                        [icon]="config.icon"
+                        [severity]="config.color"
+                        [pTooltip]="config.tooltip ?? null"
+                        tooltipPosition="top"
+                        (click)="config.click()">
+                        <i [class.mr-2]="config.text" class="material-symbols-outlined">{{config.icon}}</i>
+                        @if(config.text){
+                          <span class="p-button-label">{{ config.text }}</span>
+                        }
+                      </p-button>
+                    } @else {
+                      <p-button
+                        [outlined]="config.outlined || false"
+                        [label]="config.text"
+                        [icon]="config.icon"
+                        [severity]="config.color"
+                        [pTooltip]="config.tooltip ?? null"
+                        tooltipPosition="top"
+                        (click)="config.click()">
+                      </p-button>
+                    }
+                  </div>
+                } @empty {
+                  <div></div>
+                }
+              </div>
+
+              <div class="flex align-items-center gap-2 col-12">
+                @if(configuracoes.search){
+                  <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="searchTable($event, table); stateSave();"
+                      placeholder="Pesquisar" [(ngModel)]="termo" />
+                  </span>
+                }
+                @if(configuracoes.exportButton){
+                  <button pButton pRipple icon="pi pi-upload" class="p-button-outlined" (click)="exportExcel()"></button>
+                }
+                @if(configuracoes.clearFilterButton){
+                  <button pButton class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+                }
+              </div>
+            </div>
+        }
+    </ng-template>
+    }
+
+    <ng-template pTemplate="header">
+      <tr>
+        @if (configuracoes.selectionMode) {
+          <th style="width: 4rem" >
+            <div class="flex justify-content-center">
+              <p-checkbox
+                [(ngModel)]="allChecked"
+                (onChange)="changeSelection($event, 'all')"
+                [binary]="true"
+                inputId="binary" />
+            </div>
+          </th>
+        }
+        @if(configuracoes.rowExpansion){
+          <th style="width: 4%"></th>
+        }
+        @for (col of columns; track $index) {
+
+          <th
+            class="text-{{col.align ?? 'center'}} text-sm font-bold"
+            pSortableColumn="{{col.dataField}}"
+            id="id-header"
+            pFrozenColumn
+            [frozen]="col?.fixed"
+            [alignFrozen]="col?.fixedPosition ? col?.fixedPosition : 'right'"
+            [style.width]="col.width ? col.width : 'auto'"
+            [style.display]="col?.visible === false ? 'none': ''"
+          >
+            <div class="flex flex-row justify-content-center align-items-center column-gap-2">
+              {{col.caption}}
+
+              @if(col.sorting){
+                <p-sortIcon field="{{col.dataField}}"></p-sortIcon>
+              }
+              @if(col.advancedFilter){
+                @if(!col.filterType || col.filterType === 'text'){
+                  <p-columnFilter type="text" field="{{col.dataField}}" display="menu"></p-columnFilter>
+                } @else if(col.filterType === 'boolean'){
+                  <p-columnFilter type="boolean" field="{{col.dataField}}" display="menu"></p-columnFilter>
+                } @else if(col.filterType === 'date'){
+                  <p-columnFilter type="date" field="{{col.dataField}}" display="menu" placeholder="dd/mm/yyyy"></p-columnFilter>
+                } @else if(col.filterType === 'int'){
+                  <p-columnFilter type="numeric" field="balance" display="menu"></p-columnFilter>
+                } @else if(col.filterType === 'dinheiro'){
+                  <p-columnFilter type="numeric" field="balance" display="menu" currency="BRL"></p-columnFilter>
+                } @else if(col.filterType === 'select'){
+                  <p-columnFilter field="status" matchMode="equals" display="menu">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                      <p-dropdown [ngModel]="value" [options]="col.dataField" (onChange)="filter($event.value)" placeholder="Any"></p-dropdown>
+                    </ng-template>
+                  </p-columnFilter>
+                }
+              }
+              @if(col.optionalFixed){
+                @if(!col.fixed){
+                  <span class="material-symbols-outlined font-sm" (click)="toggleColumnLock(col, true, $event)">lock_open</span>
+                } @else{
+                  <span class="material-symbols-outlined font-sm" (click)="toggleColumnLock(col, false, $event)">lock</span>
+                }
+              }
+            </div>
+          </th>
+        }
+      </tr>
+      @if (isTrFiltros) {
+        <tr>
+          @for (col of columns; track $index) {
+            @if (col?.filter) {
+              <th>
+                <p-columnFilter styleClass="p-2" [field]="col.dataField" matchMode="equals" [showMenu]="false">
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <p-dropdown
+                      [options]="advancedFilter[col.dataField]"
+                      (onChange)="filter($event.value)"
+                      placeholder="Selecione um valor"
+                      [showClear]="true"
+                      [virtualScroll]="true" [virtualScrollItemSize]="35" appendTo="body">
+                    </p-dropdown>
+                  </ng-template>
+                </p-columnFilter>
+              </th>
+
+            }@else {
+              <th></th>
+            }
+          }
+        </tr>
+      }
+
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex">
+      <tr (click)="onRowClick(rowData)" [ngStyle]="{'background-color': setBackgroundColor(rowData), 'cursor': configuracoes?.rowClick ? 'pointer': ''}">
+        @if (configuracoes.selectionMode) {
+          <th style="width: 4rem">
+            <div class="flex justify-content-center">
+              <p-checkbox [(ngModel)]="rowData.checked" (onChange)="changeSelection($event, '')" [binary]="true" inputId="binary" />
+            </div>
+          </th>
+        }
+        @if (configuracoes.rowExpansion) {
+          <td class="flex justify-content-center">
+            <p-button type="button" pRipple [pRowToggler]="rowData" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+          </td>
+        }
+        @for (col of columns; track col; let index = $index) {
+          <td class="text-center text-sm text-wrap"
+            pFrozenColumn
+            #column
+            [frozen]="col?.fixed"
+            [alignFrozen]="col?.fixedPosition ? col?.fixedPosition : 'right'"
+            [style.width]="col.width ? col.width : 'auto'"
+            [style.display]="col?.visible === false ? 'none': ''"
+            [ngStyle]="{'background-color': setBackgroundColorCell(col, rowData), 'color': setColorCell(col, rowData)}"
+            >
+            <div>
+              @if(!col?.editable){
+                @if(col.dataField === 'acoes' && configuracoes?.actionButtons?.length){
+                  <app-datagrid-actions [buttons]="configuracoes?.actionButtons" [data]="rowData" [rowIndex]="rowIndex"></app-datagrid-actions>
+                } @else if(!col.cellTemplate){
+                  {{ rowData[col.dataField] || rowData[col.dataField] == 0 || rowData[col.dataField] == false ? rowData[col.dataField] : '--'}}
+                } @else{
+                  @if(col.cellTemplate == 'datetime'){
+                    @if(rowData[col.dataField]){
+                      {{ converterParaDatetime(rowData[col.dataField]) }}
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'date') {
+                    @if(rowData[col.dataField]){
+                      {{ rowData[col.dataField] | date: 'MM/dd/yyyy' }}
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'shortDate') {
+                    @if(rowData[col.dataField]){
+                      {{ rowData[col.dataField] | date: 'MM/dd' }}
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'boolean') {
+                    @if(rowData[col.dataField]){
+                      <i class="pi pi-check" style="font-size: 1.5rem; color: #22C55E;"></i>
+                    } @else {
+                      <i class="pi pi-times" style="font-size: 1.5rem; color: var(--red-500)"></i>
+                    }
+                  } @else if(col.cellTemplate == 'img'){
+                    @if(rowData[col.dataField] || col?.imgPath){
+                      <div class="cursor-pointer">
+                        <img [src]="col?.imgPath ?? rowData[col.dataField]" width="25">
+                      </div>
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'perc'){
+                    @if(rowData[col.dataField]){
+                      {{ rowData[col.dataField] }}%
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'dinheiro'){
+                    @if(rowData[col.dataField] || rowData[col.dataField] === 0){
+                      R${{ convertePrecoParaPadraoBR(rowData[col.dataField]) }}
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'title'){
+                    @if(rowData[col.dataField]){
+                      {{ title(rowData[col.dataField]) }}
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'array'){
+                    @if(rowData[col.dataField] && rowData[col.dataField]?.length){
+                      {{ rowData[col.dataField].join(', ') }}
+                    } @else {
+                      --
+                    }
+                  } @else {
+                    <ng-container *ngTemplateOutlet="col.cellTemplate; context: {$implicit: rowData, index: index}"></ng-container>
+                  }
+                }
+              } @else {
+                @if(!col.cellTemplate){
+                  {{ rowData[col.dataField] ? rowData[col.dataField] : '--'}}
+                } @if(col.cellTemplate == 'text') {
+                  <input pInputText type="text" [ngModel]="rowData[col.dataField] ?? ''"
+                    [placeholder]="col?.placeholder ?? ''"
+                    (blur)="setMasterDetail('text', $event, col.dataField, rowIndex)" />
+                } @else if(col.cellTemplate == 'float') {
+                  <p-inputNumber [ngModel]="rowData[col.dataField] ?? ''"
+                    [placeholder]="col?.placeholder ?? ''"
+                    mode="decimal" [useGrouping]="false"
+                    [min]="col?.min ?? 0" [max]="col?.max ?? 9999999999999999999999999" [prefix]="col?.prefix ?? ''"
+                    [step]="col?.step ?? 1" [minFractionDigits]="col?.minFractionDigits ?? 2" [maxFractionDigits]="col?.maxFractionDigits ?? 2"
+                    [showButtons]="col?.showButtons ?? false" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    (onBlur)="setMasterDetail('float', $event, col.dataField, rowIndex)"></p-inputNumber>
+                } @else if(col.cellTemplate == 'boolean') {
+                  <p-checkbox [ngModel]="rowData[col.dataField] ?? ''" [binary]="true"
+                    class="width-unset" styleClass="width-unset"
+                    (onChange)="setMasterDetail('boolean', $event, col.dataField, rowIndex)"></p-checkbox>
+                } @else if(col.cellTemplate == 'cpf') {
+                  <p-inputMask [ngModel]="rowData[col.dataField] ?? ''"
+                    [placeholder]="col?.placeholder ?? ''"
+                    mask="999.999.999-99" [autoClear]="false"
+                    (onBlur)="setMasterDetail('cpf', $event, col.dataField, rowIndex)"></p-inputMask>
+                } @else if(col.cellTemplate == 'select') {
+                  <p-dropdown [ngModel]="rowData[col.dataField] ?? ''"
+                    [options]="col?.items ?? []" [placeholder]="col?.placeholder ?? 'Selecione'"
+                    [filter]="true" [showClear]="true"
+                    [virtualScroll]="true" [virtualScrollItemSize]="35" appendTo="body"
+                    (onChange)="setMasterDetail('select', $event, col.dataField, rowIndex)"></p-dropdown>
+                } @else if(col.cellTemplate == 'selectMultiplo') {
+                  <p-multiSelect [ngModel]="rowData[col.dataField] ?? ''"
+                    [options]="col?.items ?? []" [placeholder]="col?.placeholder ?? 'Selecione'"
+                    [showClear]="true"
+                    [virtualScroll]="true" [virtualScrollItemSize]="35" appendTo="body"
+                    (onChange)="setMasterDetail('selectMultiplo', $event, col.dataField, rowIndex)">
+                  </p-multiSelect>
+                } @else if(col.cellTemplate == 'treeSelect') {
+                  <p-treeSelect [ngModel]="rowData[col.dataField] ?? ''"
+                  [options]="col?.items ?? []" [placeholder]="col?.placeholder ?? 'Selecione'"
+                  [filter]="true" [showClear]="true"
+                  [virtualScroll]="true" [virtualScrollItemSize]="35" appendTo="body"
+                  (onNodeSelect)="setMasterDetail('treeSelect', $event, col.dataField, rowIndex)"
+                  (onNodeUnselect)="setMasterDetail('treeSelect', $event, col.dataField, rowIndex)" />
+                } @else if(col.cellTemplate == 'date') {
+                  <p-calendar [ngModel]="rowData[col.dataField] ?? ''"
+                    [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body"
+                    [minDate]="col?.minDate ?? minDateDefault" [maxDate]="col?.maxDate ?? maxDateDefault"
+                    (onBlur)="setMasterDetail('date', $event, col.dataField, rowIndex)"></p-calendar>
+                } @else if(col.cellTemplate == 'dateRange') {
+                  <p-calendar [ngModel]="rowData[col.dataField] ?? ''"
+                    [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body"
+                    [minDate]="col?.minDate ?? ''" [maxDate]="maxDate ?? maxDateDefault" selectionMode="range"
+                    #rangeDataMasterDetail
+                    (onBlur)="setMasterDetail('dateRange', $event, col.dataField, rowIndex)"></p-calendar>
+                } @else if(col.cellTemplate == 'dateManual') {
+                  <p-inputMask [ngModel]="rowData[col.dataField] ? converterParaDiaMesAno(rowData[col.dataField]) : ''"
+                    [placeholder]="col?.placeholder ?? 'DD/MM/AAAA'"
+                    mask="99/99/9999" [autoClear]="false"
+                    (onBlur)="setMasterDetail('dateManual', $event, col.dataField, rowIndex)"></p-inputMask>
+                }
+              }
+            </div>
+          </td>
+        }
+      </tr>
+    </ng-template>
+    @if (configuracoes.rowExpansion) {
+      <ng-template pTemplate="rowexpansion" let-product>
+        <tr>
+          <td style="width: 4%;"></td>
+          <td colspan="100" style="padding: 0 !important;">
+            <ng-container *ngTemplateOutlet="configuracoes.rowExpansion; context: { $implicit: product }"></ng-container>
+          </td>
+        </tr>
+      </ng-template>
+    }
+
+</p-table>

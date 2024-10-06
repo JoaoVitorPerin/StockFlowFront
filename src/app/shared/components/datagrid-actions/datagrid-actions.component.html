@@ -1,0 +1,59 @@
+<div class="flex flex-row justify-content-center align-items-center column-gap-2">
+    @for (button of actions(); track button) {
+      @if (!button.show || (button.show && button.show(data))) {
+        <ng-container *ngTemplateOutlet="buttonTemplate; context: { $implicit: button }"></ng-container>
+      }
+    }
+    @if (moreActions()?.length) {
+      <p-button
+        [outlined]="true"
+        [rounded]="true"
+        icon="pi pi-ellipsis-h"
+        severity="secondary"
+        pTooltip="Mais ações"
+        tooltipPosition="left"
+        (click)="toogleMoreActions(); overlayMoreActions.toggle($event);">
+      </p-button>
+    }
+  </div>
+  
+  <p-overlayPanel [styleClass]="'overlay-more-actions'" #overlayMoreActions>
+    <div class="flex flex-row gap-2">
+      @for (button of moreActions(); track button) {
+        @if (!button.show || (button.show && button.show(data))) {
+          <ng-container *ngTemplateOutlet="buttonTemplate; context: { $implicit: button }"></ng-container>
+        }
+      }
+    </div>
+  </p-overlayPanel>
+  
+  <ng-template #buttonTemplate let-button>
+    @if(button.iconType == 'material' && button.icon){
+      <p-button
+        [outlined]="button.outlined || false"
+        [rounded]="true"
+        [label]="button.text"
+        [icon]="button.icon"
+        [severity]="button.color"
+        [pTooltip]="button.tooltip ?? null"
+        tooltipPosition="top"
+        (click)="button.click(data)">
+        <i [class.mr-2]="button.text" class="material-symbols-outlined">{{button.icon}}</i>
+        @if(button.text){
+          <span class="p-button-label">{{ button.text }}</span>
+        }
+      </p-button>
+    } @else {
+      <p-button
+        [outlined]="button.outlined || false"
+        [rounded]="true"
+        [label]="button.text"
+        [icon]="button.icon"
+        [severity]="button.color"
+        [pTooltip]="button.tooltip ?? null"
+        tooltipPosition="top"
+        (click)="button.click(data)">
+      </p-button>
+    }
+  </ng-template>
+  

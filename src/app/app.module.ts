@@ -24,7 +24,7 @@ import { TratamentoErrosService } from './core/interceptors/tratamento-erros/tra
         AutenticacaoComponent,
         ToastrModule,
         HttpClientModule, 
-        ModalModule
+        ModalModule,
     ],
     providers: [
         {
