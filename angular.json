@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "sakai-ng": {
+        "stock-flow-angular": {
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/sakai-ng",
+                        "outputPath": "dist/stock-flow-angular",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": [
@@ -87,13 +87,13 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "buildTarget": "sakai-ng:build:production"
+                            "buildTarget": "stock-flow-angular:build:production"
                         },
                         "development": {
-                            "buildTarget": "sakai-ng:build:development"
+                            "buildTarget": "stock-flow-angular:build:development"
                         },
                         "local": {
-                            "buildTarget": "sakai-ng:build:local"
+                            "buildTarget": "stock-flow-angular:build:local"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -101,7 +101,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "buildTarget": "sakai-ng:build"
+                        "buildTarget": "stock-flow-angular:build"
                     }
                 },
                 "test": {

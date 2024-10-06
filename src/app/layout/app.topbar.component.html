@@ -6,10 +6,10 @@
         <img src="../../assets/img/icons/Logo.png" height="30">
     </a>
 
-    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+    <div #topbarmenu class="layout-topbar-menu flex align-item-center gap-2" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        <p class="text-base">Seja bem vindo, <span class="font-bold">{{nomeUsuario ?? '--'}}</span>!</p>
         <button class="p-link layout-topbar-button">
             <i class="pi pi-user"></i>
-            <span>Profile</span>
         </button>
     </div>
 </div>
