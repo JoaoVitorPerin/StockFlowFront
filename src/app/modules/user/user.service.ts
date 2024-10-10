@@ -22,14 +22,14 @@ export class UserService {
   }
 
   buscarDadosFilial(): Observable<any>{
-    return this.http.get<any>(this.API_BACK + 'user/gestao', {
+    return this.http.get<any>(this.API_BACK + 'user/cadastro', {
         context: new HttpContext().set(SET_LOADER, true),
         headers: this.headerService.getHeader(),
     });
   }
 
   buscarUserById(id: string | number): Observable<any>{
-    return this.http.get<any>(this.API_BACK + 'user/gestao', {
+    return this.http.get<any>(this.API_BACK + 'user/cadastro', {
         context: new HttpContext().set(SET_LOADER, true),
         headers: this.headerService.getHeader(),
         params: {user_id: id}
@@ -37,9 +37,17 @@ export class UserService {
   }
 
   cadastrarUser(data: any): Observable<any>{
-    return this.http.post<any>(this.API_BACK + 'user/cadastro', JSON.stringify(data), {
+    return this.http.post<any>(this.API_BACK + 'user/cadastro', data, {
         context: new HttpContext().set(SET_LOADER, true),
         headers: this.headerService.getHeader({ 'Content-Type': 'application/json' }),  
+    });
+  }
+
+  deletarUser(id: string | number): Observable<any>{
+    return this.http.delete<any>(this.API_BACK + 'user/cadastro', {
+        context: new HttpContext().set(SET_LOADER, true), 
+        headers: this.headerService.getHeader(),
+        params: {user_id: id}
     });
   }
 }

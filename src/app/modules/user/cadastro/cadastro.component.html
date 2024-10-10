@@ -2,7 +2,7 @@
 <form [formGroup]="formUser">
     <div class="grid">
         <div class="col-12 md:col-4">
-            <app-form type="text" id="username" label="Usuário" formControlName="username" placeholder="Digite o Usuário" erro="Digite o nome de usuário!" ngDefaultControl/>
+            <app-form type="text" [readonly]="idUsuario" id="username" label="Usuário" formControlName="username" placeholder="Digite o Usuário" erro="Digite o nome de usuário!" ngDefaultControl/>
         </div>
         <div class="col-12 md:col-4">
             <app-form type="text" id="first_name" label="Nome" formControlName="first_name" placeholder="Digite o Nome" erro="Digite o nome do usuário!" ngDefaultControl/>
