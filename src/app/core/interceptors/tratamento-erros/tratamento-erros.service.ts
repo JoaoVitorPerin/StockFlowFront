@@ -75,7 +75,6 @@ export class TratamentoErrosService implements HttpInterceptor {
   }
 
   handleResponseError(error, request?): Observable<never> {
-    console.log(error.error?.detail)
     if (this.urlsPermitidas.indexOf(request.url) === -1) {
       if (error?.error?.code === 'token_not_valid' || error?.error?.code === 'user_not_found') {
         this.tokenService.clearToken();

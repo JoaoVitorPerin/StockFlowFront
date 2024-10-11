@@ -61,7 +61,7 @@
     <span class="p-input-icon-left w-full">
       <i class="pi {{ icon }}"></i>
       <input pInputText type="password" [formControlName]="formControlName"
-        (blur)="onBlurHandler($event)" autocomplete="new-password"
+        (blur)="onBlurHandler($event)" autocomplete="new-password" 
         class="w-full"
         [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
         [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />

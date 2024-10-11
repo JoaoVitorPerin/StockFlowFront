@@ -64,4 +64,8 @@ export class AutenticacaoComponent implements OnInit {
       this.toastrService.mostrarToastrDanger('Informe o login e senha para prosseguir')
     }
   }
+
+  redirectRedefinirSenha(): void {
+    this.router.navigate(['redefinir-senha'])
+  }
 }

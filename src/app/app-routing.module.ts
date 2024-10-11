@@ -5,11 +5,16 @@ import { AutenticacaoComponent } from './core/autenticacao/autenticacao.componen
 import { AutenticacaoGuard } from './core/guards/autenticacao.guard';
 import { HomeComponent } from './modules/home/home.component';
 import { Page404Component } from './core/page-404/page-404.component';
+import { RedefinirSenhaComponent } from './core/redefinir-senha/redefinir-senha.component';
 
 const APP_ROUTES: Routes = [
     {
         path: 'login',
         component: AutenticacaoComponent
+    },
+    {
+        path: 'redefinir-senha',
+        component: RedefinirSenhaComponent
     },
     {
         path: '',

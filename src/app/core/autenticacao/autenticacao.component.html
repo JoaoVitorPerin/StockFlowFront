@@ -10,6 +10,6 @@
             </div>
         </div>
         <p-button label="Entrar" [disabled]="loadingRequest()" [loading]="loadingRequest()" (click)="login()" styleClass="w-full"/>
-        <p class="text-sm text-primary mt-3 text-center cursor-pointer">Esqueceu a senha?</p>
+        <p class="text-sm text-primary mt-3 text-center cursor-pointer redefinir" (click)="redirectRedefinirSenha()">Redefinir a senha?</p>
     </form>
 </section>

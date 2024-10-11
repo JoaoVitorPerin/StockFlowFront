@@ -1,0 +1,37 @@
+@if(!isNextStep){
+    <section class="flex flex-column align-items-center justify-content-center">
+        <div class="flex flex-column">
+            <p class="flex align-items-center gap-2 text-left cursor-pointer text-primary font-bold mb-5" (click)="redirectLogin()"><i class="pi pi-angle-left"></i>Voltar</p>
+            <img src="../../../assets/img/icons/Logo.png" alt="Logo" class="logo mb-5">
+            <form [formGroup]="formRedefinirSenha">
+                <div class="grid flex justify-content-center">
+                    <div class="col-12">
+                        <app-form type="text-icon" [readonly]="loadingRequest()" icon="pi-envelope" id="email" formControlName="email" placeholder="Digite seu Email" ngDefaultControl/>
+                    </div>
+                </div>
+                <p-button label="Enviar Email" [disabled]="loadingRequest()" [loading]="loadingRequest()" (click)="enviarEmail()" styleClass="w-full"/>
+            </form>
+        </div>
+    </section>
+}@else{
+    <section class="flex flex-column align-items-center justify-content-center">
+        <div class="flex flex-column">
+            <p class="flex align-items-center gap-2 text-left cursor-pointer text-primary font-bold mb-5" (click)="isNextStep = !isNextStep"><i class="pi pi-angle-left"></i>Voltar</p>
+            <img src="../../../assets/img/icons/Logo.png" alt="Logo" class="logo mb-5">
+            <form [formGroup]="formRedefinirSenhaCodigo">
+                <div class="grid flex justify-content-center">
+                    <div class="col-12">
+                        <app-form type="text-icon" [readonly]="loadingRequest()" icon="pi-qrcode" id="codigo" formControlName="codigo" placeholder="Digite o seu código" ngDefaultControl/>
+                    </div>
+                    <div class="col-12">
+                        <app-form type="password-icon" [readonly]="loadingRequest()" icon="pi-lock" id="password" formControlName="password" placeholder="Digite sua senha" ngDefaultControl/>
+                    </div>
+                    <div class="col-12">
+                        <app-form type="password-icon" [readonly]="loadingRequest()" icon="pi-lock" id="confirm_password" formControlName="confirm_password" placeholder="Confirme sua senha" ngDefaultControl/>
+                    </div>
+                </div>
+                <p-button label="Redefinir" [disabled]="loadingRequest()" [loading]="loadingRequest()" (click)="redefinirSenha()" styleClass="w-full"/>
+            </form>
+        </div>
+    </section>
+}
