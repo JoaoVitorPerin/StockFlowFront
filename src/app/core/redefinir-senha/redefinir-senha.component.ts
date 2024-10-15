@@ -7,6 +7,7 @@ import { AutenticacaoService } from '../autenticacao/autenticacao.service';
 import { CommonModule } from '@angular/common';
 import { FormModule } from 'src/app/shared/components/form/form.module';
 import { ButtonModule } from 'primeng/button';
+import { RedefinirSenhaService } from './redefinir-senha.service';
 
 @Component({
   selector: 'app-redefinir-senha',
@@ -31,6 +32,7 @@ export class RedefinirSenhaComponent {
               private toastrService: ToastrService,
               private tokenService: TokenService,
               private router: Router,
+              private redefinirSenhaService: RedefinirSenhaService,
               private autenticacaoService: AutenticacaoService){}
 
   ngOnInit(): void {
@@ -55,9 +57,22 @@ export class RedefinirSenhaComponent {
 
     if(this.formRedefinirSenha.valid){
       this.loadingRequest.set(true);
-      console.log(this.formRedefinirSenha.getRawValue())
-      this.loadingRequest.set(false);
-      this.isNextStep = true;
+      this.redefinirSenhaService.enviarEmail(this.formRedefinirSenha.getRawValue()).subscribe(
+        (response) => {
+          if(response.status){
+            this.loadingRequest.set(false);
+            this.toastrService.mostrarToastrSuccess('Email enviado com sucesso!')
+            this.isNextStep = true;
+          }else{
+            this.loadingRequest.set(false);
+            this.toastrService.mostrarToastrDanger(response.mensagem ?? 'Erro ao enviar email!')
+          }
+        },
+        (error) => {
+          this.loadingRequest.set(false);
+          this.toastrService.mostrarToastrDanger('Erro ao enviar email!')
+        }
+      )
     } else {
       this.loadingRequest.set(false);
       this.toastrService.mostrarToastrDanger('Informe um email válido!')
