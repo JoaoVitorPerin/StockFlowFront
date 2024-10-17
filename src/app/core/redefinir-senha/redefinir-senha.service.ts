@@ -24,7 +24,14 @@ export class RedefinirSenhaService {
     enviarEmail(dados): Observable<any> {
         return this.http.post<any>(`${this.API_BACK}user/enviar_email_reset`, JSON.stringify(dados), {
         headers: this.headerService.getHeader({ 'Content-Type': 'application/json' }),
-        context: new HttpContext().set(SET_LOADER, true),
+        context: new HttpContext().set(SKIP_LOADER, true),
+        });
+    }
+
+    redefinirSenha(dados): Observable<any> {
+        return this.http.post<any>(`${this.API_BACK}user/reset_senha`, JSON.stringify(dados), {
+        headers: this.headerService.getHeader({ 'Content-Type': 'application/json' }),
+        context: new HttpContext().set(SKIP_LOADER, true),
         });
     }
 }

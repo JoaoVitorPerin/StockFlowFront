@@ -21,13 +21,16 @@
             <form [formGroup]="formRedefinirSenhaCodigo">
                 <div class="grid flex justify-content-center">
                     <div class="col-12">
+                        <app-form type="text-icon" [readonly]="loadingRequest()" icon="pi-envelope" id="email" formControlName="email" placeholder="Digite seu Email" ngDefaultControl/>
+                    </div>
+                    <div class="col-12">
                         <app-form type="text-icon" [readonly]="loadingRequest()" icon="pi-qrcode" id="codigo" formControlName="codigo" placeholder="Digite o seu código" ngDefaultControl/>
                     </div>
                     <div class="col-12">
                         <app-form type="password-icon" [readonly]="loadingRequest()" icon="pi-lock" id="password" formControlName="password" placeholder="Digite sua senha" ngDefaultControl/>
                     </div>
                     <div class="col-12">
-                        <app-form type="password-icon" [readonly]="loadingRequest()" icon="pi-lock" id="confirm_password" formControlName="confirm_password" placeholder="Confirme sua senha" ngDefaultControl/>
+                        <app-form type="password-icon" [readonly]="loadingRequest()" icon="pi-lock" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirme sua senha" ngDefaultControl/>
                     </div>
                 </div>
                 <p-button label="Redefinir" [disabled]="loadingRequest()" [loading]="loadingRequest()" (click)="redefinirSenha()" styleClass="w-full"/>

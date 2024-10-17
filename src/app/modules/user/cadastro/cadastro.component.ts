@@ -23,7 +23,7 @@ export class CadastroComponent {
                   username: [null, Validators.required],
                   first_name: [null, Validators.required],
                   last_name: [null, Validators.required],
-                  email: [null, Validators.required],
+                  email: [null, [Validators.required, Validators.email]],
                 })
 
                 this.idUsuario = this.activatedRoute.snapshot.paramMap.get('id');

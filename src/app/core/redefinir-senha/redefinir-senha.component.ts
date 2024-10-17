@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormModule } from 'src/app/shared/components/form/form.module';
 import { ButtonModule } from 'primeng/button';
 import { RedefinirSenhaService } from './redefinir-senha.service';
+import { confirmPasswordValidator, validatorSenhaForte } from 'src/app/shared/validator/validatorForm';
 
 @Component({
   selector: 'app-redefinir-senha',
@@ -39,15 +40,16 @@ export class RedefinirSenhaComponent {
     this.tokenService.clearToken()
 
     this.formRedefinirSenha = this.formBuilder.group({
-      email: [null, Validators.required],
+      email: [null, [Validators.required, Validators.email]],
     })
 
     this.formRedefinirSenhaCodigo = this.formBuilder.group({
+      email: [null, [Validators.required, Validators.email]],
       codigo: [null, Validators.required],
-      password: [null, Validators.required],
-      confirm_password: [null, Validators.required],
-    })
-  }
+      password: [null, [Validators.required, validatorSenhaForte()]],
+      confirmPassword: [null, [Validators.required, validatorSenhaForte()]],
+    },{ validators: confirmPasswordValidator })
+  } 
 
   enviarEmail(): void {
     if(this.loadingRequest())
@@ -87,12 +89,25 @@ export class RedefinirSenhaComponent {
 
     if(this.formRedefinirSenhaCodigo.valid){
       this.loadingRequest.set(true);
-      console.log(this.formRedefinirSenhaCodigo.getRawValue())
+      this.redefinirSenhaService.redefinirSenha(this.formRedefinirSenhaCodigo.getRawValue()).subscribe(
+        (response) => {
+          if(response.status){
+            this.loadingRequest.set(false);
+            this.toastrService.mostrarToastrSuccess('Senha redefinida com sucesso!')
+            this.router.navigate(['login'])
+          }else{
+            this.loadingRequest.set(false);
+            this.toastrService.mostrarToastrDanger(response.mensagem ?? 'Erro ao redefinir senha!')
+          }
+        },
+        (error) => {
+          this.loadingRequest.set(false);
+          this.toastrService.mostrarToastrDanger('Erro ao redefinir senha!')
+        }
+      )
+    } else {
       this.loadingRequest.set(false);
-      this.redirectLogin()
-    }else {
-      this.loadingRequest.set(false);
-      this.toastrService.mostrarToastrDanger('Informe os dados corretos!')
+      this.toastrService.mostrarToastrDanger('Infome todos os dados para prosseguir!')
     }
   }
 
