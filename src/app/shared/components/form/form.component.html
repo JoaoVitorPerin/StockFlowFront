@@ -279,7 +279,7 @@
     <p-dropdown [formControlName]="formControlName" [options]="items" (onChange)="onChangeHandler($event)"
       [placeholder]="placeholder ?? ''" [filter]="true" [showClear]="true" ngDefaultControl
       [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"
-
+      class="w-full"
       [virtualScroll]="items.length > 100 ? true : false" [virtualScrollItemSize]="35" appendTo="body">
       <ng-template pTemplate="empty">
         Nenhum resultado encontrado

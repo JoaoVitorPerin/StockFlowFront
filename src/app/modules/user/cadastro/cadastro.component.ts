@@ -12,6 +12,7 @@ import { UserService } from '../user.service';
 export class CadastroComponent {
   formUser: FormGroup;
   idUsuario: string;
+  itemsGrupos: any[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -24,6 +25,7 @@ export class CadastroComponent {
                   first_name: [null, Validators.required],
                   last_name: [null, Validators.required],
                   email: [null, [Validators.required, Validators.email]],
+                  grupo_id: [null, Validators.required]
                 })
 
                 this.idUsuario = this.activatedRoute.snapshot.paramMap.get('id');
@@ -33,6 +35,8 @@ export class CadastroComponent {
                   this.formUser.get('user_id').disable();
                   this.buscarUserById(this.idUsuario);
                 }
+
+                this.buscarGrupos();
               }
 
   buscarUserById(id: string): void {
@@ -47,7 +51,7 @@ export class CadastroComponent {
 
   cadastrarUser(): void {
     this.formUser.markAllAsTouched();
-
+    console.log(this.formUser.getRawValue());
     if(this.formUser.valid){
       this.userService.cadastrarUser(this.formUser.getRawValue()).subscribe({
         next: (response) => {
@@ -58,5 +62,17 @@ export class CadastroComponent {
         }
       })
     }
+  }
+
+  buscarGrupos(): void {
+    this.userService.buscarGrupos().subscribe({
+      next: (dados) => {
+        this.itemsGrupos = dados.grupos.map((grupo) => {
+          return {label: grupo.name, value: grupo.id};
+        });
+      }, error: () => {
+        this.toastrService.mostrarToastrDanger('Erro ao buscar grupos');
+      }
+    })
   }
 }

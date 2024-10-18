@@ -94,7 +94,7 @@ export class HomeComponent implements OnInit{
   }
 
   buscarUsuarios(): void {
-    this.userService.buscarDadosFilial().subscribe(
+    this.userService.buscarDadosUsuario().subscribe(
       (response) => {
         this.data = response.usuario.map((usuario) => {
           return {

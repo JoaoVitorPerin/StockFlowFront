@@ -21,7 +21,7 @@ export class UserService {
   ) {
   }
 
-  buscarDadosFilial(): Observable<any>{
+  buscarDadosUsuario(): Observable<any>{
     return this.http.get<any>(this.API_BACK + 'user/cadastro', {
         context: new HttpContext().set(SET_LOADER, true),
         headers: this.headerService.getHeader(),
@@ -48,6 +48,13 @@ export class UserService {
         context: new HttpContext().set(SET_LOADER, true), 
         headers: this.headerService.getHeader(),
         params: {user_id: id}
+    });
+  }
+
+  buscarGrupos(): Observable<any>{
+    return this.http.get<any>(this.API_BACK + 'user/grupos', {
+        context: new HttpContext().set(SET_LOADER, true),
+        headers: this.headerService.getHeader()
     });
   }
 }
