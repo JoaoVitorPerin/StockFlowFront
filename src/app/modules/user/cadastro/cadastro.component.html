@@ -20,7 +20,9 @@
                 <app-form type="text" id="email" label="Email" formControlName="email" placeholder="Digite o Email" erro="Digite o email do usuário!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
             </div>
             <div class="col-12 md:col-4">
-                <app-form type="select" [items]="itemsGrupos" id="grupos" label="Grupos" formControlName="grupo_id" placeholder="Selecione um grupo" [exibirLabelObrigatoriedade]="true" erro="Selecione um grupo!" ngDefaultControl/>
+                <div class="w-full">
+                    <app-form type="select" [items]="itemsGrupos" id="grupos" label="Grupos" formControlName="grupo_id" placeholder="Selecione um grupo" [exibirLabelObrigatoriedade]="true" erro="Selecione um grupo!" ngDefaultControl/>
+                </div>
             </div>
         </div>
         <div class="grid md:flex md:justify-content-end">

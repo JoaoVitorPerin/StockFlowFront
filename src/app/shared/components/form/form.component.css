@@ -1,5 +1,13 @@
 ::ng-deep app-form {
+  width: 100%!important;
+}
+
+input {
   width: 100%;
+}
+
+.p-dropdown{
+  width: 100%!important;
 }
 
 .labl-body {

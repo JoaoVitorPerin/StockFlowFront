@@ -112,7 +112,7 @@ export class HomeComponent {
 
     this.items = [
       { label: 'Gestão Admin' }, 
-      { label: 'Usuários' }, 
+      { label: 'Produtos' }, 
       { label: 'Home' }
     ];
 

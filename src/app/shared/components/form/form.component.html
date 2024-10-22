@@ -29,7 +29,6 @@
     <div class="p-inputgroup">
       <input pInputText type="text"
         #inputPesquisa [formControlName]="formControlName"
-        class="w-full"
         (blur)="onBlurHandler($event)" [feedback]="customFeedback" autocomplete="new-password"
         [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
         [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />
@@ -46,23 +45,10 @@
   </div>
 
   <div *ngIf="type === 'text-icon'">
-    <span class="p-input-icon-left w-full">
+    <span class="p-input-icon-left">
       <i class="pi {{ icon }}"></i>
       <input pInputText type="text" [formControlName]="formControlName"
         (blur)="onBlurHandler($event)" autocomplete="new-password"
-        class="w-full"
-        [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
-        [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />
-      <small class="invalid" *ngIf="erro && !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched">{{ erro }}</small>
-    </span>
-  </div>
-
-  <div *ngIf="type === 'password-icon'">
-    <span class="p-input-icon-left w-full">
-      <i class="pi {{ icon }}"></i>
-      <input pInputText type="password" [formControlName]="formControlName"
-        (blur)="onBlurHandler($event)" autocomplete="new-password" 
-        class="w-full"
         [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
         [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }" />
       <small class="invalid" *ngIf="erro && !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched">{{ erro }}</small>
@@ -238,7 +224,7 @@
 
   <div *ngIf="type === 'password'">
     <p-password [formControlName]="formControlName"
-      [toggleMask]="true" [feedback]="false" [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
+      [toggleMask]="true" [feedback]="false" [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false" styleClass="w-full"
       [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"></p-password>
     <small class="invalid" *ngIf="erro && !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched">{{ erro }}</small>
   </div>
@@ -276,11 +262,11 @@
   </div>
 
   <div *ngIf="type === 'select'">
-    <p-dropdown [formControlName]="formControlName" [options]="items" (onChange)="onChangeHandler($event)"
+    <p-dropdown #dropdown [formControlName]="formControlName" [options]="items" (onChange)="onChangeHandler($event)"
       [placeholder]="placeholder ?? ''" [filter]="true" [showClear]="true" ngDefaultControl
       [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"
-      class="w-full"
-      [virtualScroll]="items.length > 100 ? true : false" [virtualScrollItemSize]="35" appendTo="body">
+      [virtualScroll]="items.length > 100 ? true : false" [virtualScrollItemSize]="35" appendTo="body"
+      (onFilter)="onFilterHandler($event, dropdown)">
       <ng-template pTemplate="empty">
         Nenhum resultado encontrado
       </ng-template>

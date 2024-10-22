@@ -3,10 +3,10 @@
     <form [formGroup]="formLogin">
         <div class="grid flex justify-content-center">
             <div class="col-12">
-                <app-form type="text-icon" [readonly]="loadingRequest()" icon="pi-user" id="username" formControlName="username" placeholder="Usuário" ngDefaultControl/>
+                <app-form type="text" [readonly]="loadingRequest()" id="username" formControlName="username" erro="Obrigatório informar um usuário!" label="Usuário" placeholder="Digite seu usuário" ngDefaultControl/>
             </div>
             <div class="col-12">
-                <app-form type="password-icon" [readonly]="loadingRequest()" icon="pi-lock" id="password" formControlName="password" placeholder="Senha" ngDefaultControl/>
+                <app-form type="password" [readonly]="loadingRequest()" id="password" formControlName="password" placeholder="Digite a sua senha" erro="Obrigatório informar uma senha!" label="Senha" ngDefaultControl/>
             </div>
         </div>
         <p-button label="Entrar" [disabled]="loadingRequest()" [loading]="loadingRequest()" (click)="login()" styleClass="w-full"/>
