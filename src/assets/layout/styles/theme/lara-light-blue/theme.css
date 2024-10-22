@@ -4076,7 +4076,7 @@
     color: #6b7280;
   }
   .p-card .p-card-content {
-    padding: 1.25rem 0;
+    padding: 0 0;
   }
   .p-card .p-card-footer {
     padding: 1.25rem 0 0 0;
@@ -4592,8 +4592,6 @@
   }
 
   .p-breadcrumb {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
     border-radius: 6px;
     padding: 1rem;
   }

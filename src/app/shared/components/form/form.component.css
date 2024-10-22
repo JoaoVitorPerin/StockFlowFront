@@ -44,3 +44,6 @@
   word-spacing: 2px;
 }
 
+.invalid {
+  color: #dc3545;
+}

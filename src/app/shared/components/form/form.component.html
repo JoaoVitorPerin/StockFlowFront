@@ -6,7 +6,7 @@
     <label *ngIf="label && type != 'checkbox' && type != 'color' && type != 'switch'">
       {{ label }}
       @if(exibirLabelObrigatoriedade) {
-        <span class="text-sm text-danger">*</span>
+        <span class="text-sm text-red-500">*</span>
       }
     </label>
 
@@ -72,7 +72,7 @@
   <div *ngIf="type === 'textarea'">
     <textarea [maxlength]="maxLength ?? 300" pInputTextarea [formControlName]="formControlName"
       [placeholder]="placeholder ?? ''"[rows]="rows ?? 4" [readonly]="readonly || disabled ?? false"
-      (blur)="onBlurHandler($event)"
+      (blur)="onBlurHandler($event)" class="w-full"
       [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }">
     </textarea>
     <div class="flex justify-content-between w-100">

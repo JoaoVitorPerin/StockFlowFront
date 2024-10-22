@@ -31,6 +31,13 @@ const APP_ROUTES: Routes = [
                   ).then(m => m.UserModule)
             },
             {
+                path: 'produto',
+                loadChildren: () =>
+                  import(
+                    './modules/produto/produto.module'
+                  ).then(m => m.ProdutoModule)
+            },
+            {
                 path: 'home',
                 component: HomeComponent
             },

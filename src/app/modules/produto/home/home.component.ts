@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
-import { UserService } from '../user.service';
+import { ProdutoService } from '../produto.service';
 import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirmacao/modal-confirmacao.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirm
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent {
   columns: any;
   configuracoes: DatagridConfig = datagridConfigDefault();
   data: any = [];
@@ -21,15 +21,14 @@ export class HomeComponent implements OnInit{
   constructor(
     private router: Router,
     private toastrService: ToastrService,
-    private userService: UserService,
+    private produtoService: ProdutoService,
     private modalConfirmacaoService: ModalConfirmacaoService
   ) {
     this.columns = [
       {
-        dataField: 'id',
-        caption: 'ID',
+        dataField: 'codigo',
+        caption: 'Código',
         dataType: 'int',
-        width: '50px',
         sorting: true,
       },
       {
@@ -39,10 +38,24 @@ export class HomeComponent implements OnInit{
         sorting: true,
       },
       {
-        dataField: 'email',
-        caption: 'E-mail',
+        dataField: 'preco_compra',
+        caption: 'Preço de Compra',
         dataType: 'string',
         sorting: true,
+        cellTemplate: 'dinheiro',
+      },
+      {
+        dataField: 'preco_venda',
+        caption: 'Preço de Venda',
+        dataType: 'string',
+        sorting: true,
+        cellTemplate: 'dinheiro',
+      },
+      {
+        dataField: 'status',
+        caption: 'Status',
+        sorting: true,
+        cellTemplate: 'boolean',
       },
       {
         dataField: 'acoes',
@@ -55,27 +68,33 @@ export class HomeComponent implements OnInit{
     this.configuracoes.actionButtons.push({
       icon: 'pi pi-pencil',
       color: 'primary',
-      tooltip: 'Editar Usuario',
+      tooltip: 'Editar Produto',
       click: (rowData): void => {
-        this.router.navigate(['user/cadastro/', rowData?.id])
+        this.router.navigate(['produto/cadastro/', rowData?.id])
       }
     })
 
     this.configuracoes.actionButtons.push({
-      icon: 'pi pi-trash',
+      icon: 'pi pi-times',
       color: 'danger',
-      tooltip: 'Deletar Usuário',
+      tooltip: 'Desativar Produto',
+      show: (rowData): boolean => {
+        return rowData?.status
+      },
       click: (rowData): void => {
-        this.modalConfirmacaoService.abrirModalConfirmacao(
-          'Atenção',
-          `Deseja realmente deletar esse usuário?`,
-          {
-            icone: 'pi pi-info-circle',
-            callbackAceitar: () => {
-              this.deletarUsuario(rowData?.id);
-            }
-          }
-        );
+        this.alterarStatusProduto(rowData?.id);
+      }
+    })
+
+    this.configuracoes.actionButtons.push({
+      icon: 'pi pi-check',
+      color: 'success',
+      tooltip: 'Ativar Produto',
+      show: (rowData): boolean => {
+        return !rowData?.status
+      },
+      click: (rowData): void => {
+        this.alterarStatusProduto(rowData?.id);
       }
     })
 
@@ -83,10 +102,10 @@ export class HomeComponent implements OnInit{
       {
         icon: 'pi pi-plus',
         color: 'success',
-        tooltip: 'Adicionar Usuario',
+        tooltip: 'Adicionar Produto',
         text: 'Adicionar',
         click: (): void => {
-          this.router.navigate(['user/cadastro']);
+          this.router.navigate(['produto/cadastro']);
         }
       }
     )
@@ -101,33 +120,28 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.buscarUsuarios();
+    this.buscarProdutos();
   }
 
-  buscarUsuarios(): void {
-    this.userService.buscarDadosUsuario().subscribe(
+  buscarProdutos(): void {
+    this.produtoService.buscarDadosProdutos().subscribe(
       (response) => {
-        this.data = response.usuario.map((usuario) => {
-          return {
-            ...usuario,
-            nome: `${usuario.first_name} ${usuario.last_name}`,
-          };
-        });
+        this.data = response.produtos ?? [];
       },
       (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar usuários');
+        this.toastrService.mostrarToastrDanger('Erro ao buscar produtos');
       }
     );
   }
 
-  deletarUsuario(id: string): void {
-    this.userService.deletarUser(id).subscribe(
+  alterarStatusProduto(id: string): void {
+    this.produtoService.alterarStatusProduto(id).subscribe(
       () => {
-        this.toastrService.mostrarToastrSuccess('Usuário deletado com sucesso');
-        this.buscarUsuarios();
+        this.toastrService.mostrarToastrSuccess(`Alterado status do produto com sucesso`);
+        this.buscarProdutos();
       },
       () => {
-        this.toastrService.mostrarToastrDanger('Erro ao deletar usuário');
+        this.toastrService.mostrarToastrDanger('Erro ao alterar status do produto');
       }
     );
   }

@@ -13,6 +13,8 @@ export class CadastroComponent {
   formUser: FormGroup;
   idUsuario: string;
   itemsGrupos: any[] = [];
+  items: any[];
+  home: any;
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -37,6 +39,13 @@ export class CadastroComponent {
                 }
 
                 this.buscarGrupos();
+                this.items = [
+                  { label: 'Gestão Admin' }, 
+                  { label: 'Usuários' }, 
+                  { label: 'Cadastro' }
+                ];
+      
+                this.home = { icon: 'pi pi-home', routerLink: '/' };
               }
 
   buscarUserById(id: string): void {
