@@ -12,6 +12,7 @@ import { ModalModule } from './shared/components/modal/modal.module';
 import { LoaderGeralComponent } from './shared/components/loader-geral/loader-geral.component';
 import { TratamentoErrosService } from './core/interceptors/tratamento-erros/tratamento-erros.service';
 import { ModalConfirmacaoModule } from './shared/components/modal-confirmacao/modal-confirmacao.module';
+import { MovimentacaoEstoqueComponent } from './modules/movimentacao-estoque/movimentacao-estoque.component';
 
 @NgModule({
     declarations: [
@@ -26,7 +27,8 @@ import { ModalConfirmacaoModule } from './shared/components/modal-confirmacao/mo
         ToastrModule,
         HttpClientModule, 
         ModalModule,
-        ModalConfirmacaoModule
+        ModalConfirmacaoModule,
+        MovimentacaoEstoqueComponent
     ],
     providers: [
         {

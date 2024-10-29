@@ -6,6 +6,7 @@ import { AutenticacaoGuard } from './core/guards/autenticacao.guard';
 import { HomeComponent } from './modules/home/home.component';
 import { Page404Component } from './core/page-404/page-404.component';
 import { RedefinirSenhaComponent } from './core/redefinir-senha/redefinir-senha.component';
+import { MovimentacaoEstoqueComponent } from './modules/movimentacao-estoque/movimentacao-estoque.component';
 
 const APP_ROUTES: Routes = [
     {
@@ -36,6 +37,10 @@ const APP_ROUTES: Routes = [
                   import(
                     './modules/produto/produto.module'
                   ).then(m => m.ProdutoModule)
+            },
+            {
+                path: 'movimentacao-estoque',
+                component: MovimentacaoEstoqueComponent
             },
             {
                 path: 'home',

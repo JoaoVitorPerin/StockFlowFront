@@ -200,7 +200,7 @@ export class DatagridComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   converterParaDatetime(datetime: string): string {
-    return this.dayjs(datetime).format('DD/MM/YYYY HH:mm')
+    return this.dayjs(datetime).format('DD/MM/YYYY HH:mm:ss')
   }
 
   converterParaDiaMesAno(date: string): string {

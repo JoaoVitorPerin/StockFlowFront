@@ -57,5 +57,12 @@ export class ProdutoService {
         headers: this.headerService.getHeader({ 'Content-Type': 'application/json' }),  
     });
   }
+
+  historicoMovimentacaoEstoque(): Observable<any>{
+    return this.http.get<any>(this.API_BACK + 'produto/estoque', {
+        context: new HttpContext().set(SET_LOADER, true),
+        headers: this.headerService.getHeader(),
+    });
+  }
     
 }
