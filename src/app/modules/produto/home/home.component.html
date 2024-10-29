@@ -4,3 +4,21 @@
     [home]="home" />
     
 <app-datagrid [data]="data ? data : []" [columns]="columns" [configuracoes]="configuracoes" titulo="Gestão de Produtos" class="w-full"></app-datagrid>
+
+<ng-template #modalControleEstoque>
+    <p class="text-sm text-red-500 mb-3">* representam campos obrigatórios!</p>
+    <form [formGroup]="formEstoque">
+        <div class="grid">
+            <div class="col-12 md:col-4">
+                <app-form type="int" id="qtd_estoque" label="Qtd. Estoque Atual" formControlName="qtd_estoque" [readonly]="true" ngDefaultControl/>
+            </div>
+            <div class="col-12 md:col-4">
+                <app-form type="int" id="quantidade" label="Qtd. Movimentação" formControlName="quantidade"  [exibirLabelObrigatoriedade]="true" erro="Digite a quantidade da movimentação!" ngDefaultControl/>
+            </div>
+            <div class="col-12 md:col-4">
+                <app-form label="Tipo de movimentação" type="radio" formControlName="movimentacao"  [exibirLabelObrigatoriedade]="true" [items]="opcoesRadio" erro="Selecione o tipo da movimentação!" ngDefaultControl />
+            </div>
+
+        </div>
+    </form>
+</ng-template>

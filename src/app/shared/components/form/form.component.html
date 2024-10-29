@@ -110,7 +110,7 @@
 
   <div *ngIf="type === 'int'">
     <p-inputNumber [formControlName]="formControlName"
-      (onBlur)="onBlurHandler($event)" autocomplete="new-password"
+      (onBlur)="onBlurHandler($event)" autocomplete="new-password" class="w-full"
       mode="decimal" [useGrouping]="false" [min]="min ?? 0" [max]="max ?? 9999999999999999999999999"
       [prefix]="prefix ?? ''" [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
       [showButtons]="showButtons ?? false" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -120,7 +120,7 @@
 
   <div *ngIf="type === 'float'">
     <p-inputNumber [formControlName]="formControlName"
-      (onBlur)="onBlurHandler($event)" autocomplete="new-password"
+      (onBlur)="onBlurHandler($event)" autocomplete="new-password" class="w-full"
       mode="decimal" [useGrouping]="false" [minFractionDigits]="2" [maxFractionDigits]="2" [min]="min ?? 0" [max]="max ?? 9999999999999999999999999"
       [prefix]="prefix ?? ''" [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
       [showButtons]="showButtons ?? false"

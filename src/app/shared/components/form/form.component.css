@@ -10,6 +10,18 @@ input {
   width: 100%!important;
 }
 
+.p-element-radio{
+  margin-top: 10px;
+}
+
+p-inputNumber{
+  width: 100%!important;
+}
+
+p-inputNumber span{
+  width: 100%!important;
+}
+
 .labl-body {
   flex: 1 1 auto;
 }

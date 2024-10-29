@@ -50,4 +50,12 @@ export class ProdutoService {
         params: {produto_id: id}
     });
   }
+
+  movimentarEstoque(data: any): Observable<any>{
+    return this.http.post<any>(this.API_BACK + 'produto/estoque', data, {
+        context: new HttpContext().set(SET_LOADER, true),
+        headers: this.headerService.getHeader({ 'Content-Type': 'application/json' }),  
+    });
+  }
+    
 }

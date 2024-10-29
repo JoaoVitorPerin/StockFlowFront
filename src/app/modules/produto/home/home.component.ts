@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { ProdutoService } from '../produto.service';
 import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirmacao/modal-confirmacao.service';
+import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { items } from 'src/app/shared/models/items.model';
 
 @Component({
   selector: 'app-home',
@@ -14,16 +17,40 @@ export class HomeComponent {
   columns: any;
   configuracoes: DatagridConfig = datagridConfigDefault();
   data: any = [];
+  formEstoque: FormGroup;
+  opcoesRadio: Array<items> = [];
 
   items: any[];
   home: any;
+
+  @ViewChild('modalControleEstoque', { static: false }) modalControleEstoque!: TemplateRef<any>;
 
   constructor(
     private router: Router,
     private toastrService: ToastrService,
     private produtoService: ProdutoService,
-    private modalConfirmacaoService: ModalConfirmacaoService
+    private modalConfirmacaoService: ModalConfirmacaoService,
+    private modalService: ModalService,
+    private formBuilder: FormBuilder
   ) {
+    this.opcoesRadio = [
+      {
+        value: 'entrada',
+        label: 'Entrada'
+      },
+      {
+        value: 'saida',
+        label: 'Saída'
+      }
+    ]
+
+    this.formEstoque = this.formBuilder.group({
+      produto_id: [null],
+      qtd_estoque: [null],
+      movimentacao: [null, Validators.required],
+      quantidade: [null, Validators.required],
+    })
+
     this.columns = [
       {
         dataField: 'codigo',
@@ -34,6 +61,12 @@ export class HomeComponent {
       {
         dataField: 'nome',
         caption: 'Nome',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
+        dataField: 'estoque__quantidade',
+        caption: 'Qtd. Estoque',
         dataType: 'string',
         sorting: true,
       },
@@ -98,6 +131,37 @@ export class HomeComponent {
       }
     })
 
+    this.configuracoes.actionButtons.push({
+      icon: 'pi pi-sliders-h',
+      color: 'info',
+      tooltip: 'Controle de Estoque',
+      click: (rowData): void => {
+        this.formEstoque.reset();
+        this.formEstoque.patchValue({
+          produto_id: rowData?.id,
+          qtd_estoque: rowData?.estoque__quantidade ?? 0
+        })
+        const botoes = [
+          {
+            label: 'Cancelar',
+            color: 'primary',
+            link: true,
+            onClick: () => {
+              this.modalService.fecharModal();
+            },
+          },
+          {
+            label: 'Salvar',
+            color: 'primary',
+            onClick: () => {
+              this.movimentarEstoque();
+            }
+          }
+        ];
+        this.modalService.abrirModal(`Controle de estoque - ${rowData.nome}`, this.modalControleEstoque, botoes);
+      }
+    })
+
     this.configuracoes.customButtons.push(
       {
         icon: 'pi pi-plus',
@@ -142,6 +206,28 @@ export class HomeComponent {
       },
       () => {
         this.toastrService.mostrarToastrDanger('Erro ao alterar status do produto');
+      }
+    );
+  }
+
+  movimentarEstoque(): void {
+    this.formEstoque.markAllAsTouched();
+    if (this.formEstoque.invalid) {
+      return;
+    }
+
+    this.produtoService.movimentarEstoque(this.formEstoque.getRawValue()).subscribe(
+      (res) => {
+        if(res.status){
+          this.toastrService.mostrarToastrSuccess(`Movimentação de estoque realizada com sucesso`);
+          this.modalService.fecharModal();
+          this.buscarProdutos();
+        }else{
+          this.toastrService.mostrarToastrDanger(res.descricao);
+        }
+      },
+      () => {
+        this.toastrService.mostrarToastrDanger('Erro ao movimentar estoque');
       }
     );
   }
