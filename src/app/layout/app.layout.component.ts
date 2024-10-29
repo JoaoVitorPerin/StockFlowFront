@@ -1,3 +1,4 @@
+import { ModalConfirmacaoService } from './../shared/components/modal-confirmacao/modal-confirmacao.service';
 import { Component, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -7,7 +8,8 @@ import { AppTopBarComponent } from './app.topbar.component';
 
 @Component({
     selector: 'app-layout',
-    templateUrl: './app.layout.component.html'
+    templateUrl: './app.layout.component.html',
+    styleUrl: './app.layout.component.scss'
 })
 export class AppLayoutComponent implements OnDestroy {
 

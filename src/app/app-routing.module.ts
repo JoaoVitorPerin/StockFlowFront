@@ -43,10 +43,6 @@ const APP_ROUTES: Routes = [
                 component: MovimentacaoEstoqueComponent
             },
             {
-                path: 'home',
-                component: HomeComponent
-            },
-            {
                 path: '404',
                 component: Page404Component
             },

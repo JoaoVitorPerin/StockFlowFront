@@ -52,7 +52,7 @@ export class AutenticacaoComponent implements OnInit {
         next: (dados) => {
           if(dados.access){
             this.tokenService.setToken(dados);
-            this.router.navigate(['home'])
+            this.router.navigate(['produto'])
             this.loadingRequest.set(false);
           }
         }, error: () => {

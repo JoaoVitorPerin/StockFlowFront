@@ -1,7 +1,8 @@
 <div class="layout-wrapper" [ngClass]="containerClass">
     <app-topbar></app-topbar>
-    <div class="layout-sidebar">
+    <div class="layout-sidebar flex flex-column justify-content-between">
         <app-sidebar></app-sidebar>
+        <p-button class="mb-5" label="Sair" severity="danger" icon="pi pi-sign-out" [routerLink]="['/login']" routerLinkActive="router-link-active" />
     </div>
     <div class="layout-main-container">
         <div class="layout-main">
