@@ -4424,7 +4424,7 @@
   }
   .p-dialog .p-dialog-footer button {
     margin: 0 0.5rem 0 0;
-    width: auto;
+    width: 100%;
   }
   .p-dialog.p-confirm-dialog .p-confirm-dialog-icon {
     font-size: 2rem;

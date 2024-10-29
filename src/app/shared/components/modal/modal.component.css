@@ -9,3 +9,7 @@
 ::ng-deep .p-dialog .p-dialog-content{
     padding: 1.5rem 1rem !important;
 }
+
+.p-button{
+    width: 100%!important;
+}

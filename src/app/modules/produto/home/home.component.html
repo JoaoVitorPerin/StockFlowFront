@@ -21,4 +21,19 @@
 
         </div>
     </form>
+    <p class="text-primary text-base font-bold">Última movimentação desse produto:</p>
+    <p class="text-sm"><span class="font-bold">Data: </span>{{formatarData(movimentacaoProduto.data)}}</p>
+    <p class="text-sm"><span class="font-bold">Quantidade: </span>{{movimentacaoProduto.qtd}}</p>
+    <p class="text-sm flex align-items-center gap-2">
+        <span class="font-bold">Tipo: </span>
+        <span class="mr-1">
+            @if(movimentacaoProduto.tipo == 'entrada'){
+            <i class="pi pi-arrow-down text-green-500"></i>
+            }@else{
+            <i class="pi pi-arrow-up text-red-500"></i>
+            }
+            {{movimentacaoProduto.tipo}}
+        </span>
+    </p>
+    <p class="text-sm"><span class="font-bold">Usuário: </span>{{movimentacaoProduto.nomeUsuario}}</p>
 </ng-template>

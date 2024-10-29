@@ -7,6 +7,8 @@ import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirm
 import { ModalService } from 'src/app/shared/components/modal/modal.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { items } from 'src/app/shared/models/items.model';
+import { TokenService } from 'src/app/shared/services/token.service';
+import { formatarData } from 'src/app/shared/ts/util';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +20,10 @@ export class HomeComponent {
   configuracoes: DatagridConfig = datagridConfigDefault();
   data: any = [];
   formEstoque: FormGroup;
+  movimentacaoProduto: any = {};
   opcoesRadio: Array<items> = [];
+
+  formatarData = formatarData;
 
   items: any[];
   home: any;
@@ -29,7 +34,7 @@ export class HomeComponent {
     private router: Router,
     private toastrService: ToastrService,
     private produtoService: ProdutoService,
-    private modalConfirmacaoService: ModalConfirmacaoService,
+    private tokenService: TokenService,
     private modalService: ModalService,
     private formBuilder: FormBuilder
   ) {
@@ -45,6 +50,7 @@ export class HomeComponent {
     ]
 
     this.formEstoque = this.formBuilder.group({
+      usuario_id: [null],
       produto_id: [null],
       qtd_estoque: [null],
       movimentacao: [null, Validators.required],
@@ -136,11 +142,19 @@ export class HomeComponent {
       color: 'info',
       tooltip: 'Controle de Estoque',
       click: (rowData): void => {
+        this.movimentacaoProduto = {};
         this.formEstoque.reset();
         this.formEstoque.patchValue({
+          usuario_id: this.tokenService.getJwtDecodedAccess()?.user_id,
           produto_id: rowData?.id,
           qtd_estoque: rowData?.estoque__quantidade ?? 0
         })
+        this.movimentacaoProduto = {
+          data: rowData.ultima_movimentacao_data ?? '',
+          qtd: rowData.ultima_movimentacao_quantidade ?? '',
+          tipo: rowData.ultima_movimentacao_tipo ?? '',
+          nomeUsuario: `${rowData.ultima_movimentacao_usuario_nome ?? ''} ${rowData.ultima_movimentacao_usuario_sobrenome ?? ''}`
+        }
         const botoes = [
           {
             label: 'Cancelar',
