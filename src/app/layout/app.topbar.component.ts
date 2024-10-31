@@ -11,6 +11,8 @@ export class AppTopBarComponent {
     nomeUsuario = 'Usuário Teste';
     items!: MenuItem[];
 
+    isMobile = window.innerWidth <= 1024;
+
     @ViewChild('menubutton') menuButton!: ElementRef;
 
     @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
