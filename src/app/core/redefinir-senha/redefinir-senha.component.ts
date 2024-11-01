@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
@@ -113,5 +113,14 @@ export class RedefinirSenhaComponent {
 
   redirectLogin(): void {
     this.router.navigate(['login'])
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnterPress(event: KeyboardEvent) {
+    if(!this.isNextStep){
+      this.enviarEmail();
+    }else{
+      this.redefinirSenha();
+    }
   }
 }

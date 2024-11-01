@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormModule } from 'src/app/shared/components/form/form.module';
@@ -63,6 +63,11 @@ export class AutenticacaoComponent implements OnInit {
       this.loadingRequest.set(false);
       this.toastrService.mostrarToastrDanger('Informe o login e senha para prosseguir')
     }
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnterPress(event: KeyboardEvent) {
+    this.login();
   }
 
   redirectRedefinirSenha(): void {
