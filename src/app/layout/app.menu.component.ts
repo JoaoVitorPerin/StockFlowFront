@@ -33,6 +33,12 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Movimentações', icon: 'pi pi-fw pi-arrows-v', routerLink: ['/movimentacao-estoque'] },
                 ]
             },
+            {
+                label: 'Pedidos',
+                items: [
+                    { label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/cliente/home'] },
+                ]
+            },
         ];
     }
 }

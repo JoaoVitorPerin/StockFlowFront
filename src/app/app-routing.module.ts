@@ -39,6 +39,13 @@ const APP_ROUTES: Routes = [
                   ).then(m => m.ProdutoModule)
             },
             {
+                path: 'cliente',
+                loadChildren: () =>
+                  import(
+                    './modules/cliente/cliente.module'
+                  ).then(m => m.ClienteModule)
+            },
+            {
                 path: 'movimentacao-estoque',
                 component: MovimentacaoEstoqueComponent
             },
