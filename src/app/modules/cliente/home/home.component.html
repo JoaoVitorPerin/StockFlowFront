@@ -1,1 +1,6 @@
-<p>home works!</p>
+<p-breadcrumb 
+    class="max-w-full" 
+    [model]="items" 
+    [home]="home" />
+    
+<app-datagrid [data]="data ? data : []" [columns]="columns" [configuracoes]="configuracoes" titulo="Gestão de Clientes" class="w-full"></app-datagrid>

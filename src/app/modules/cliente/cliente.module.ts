@@ -10,6 +10,7 @@ import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ClienteRoutingModule } from './cliente-routing.module';
 import { ClienteComponent } from './cliente.component';
+import { DividerModule } from 'primeng/divider';
 
 @NgModule({
     declarations: [
@@ -26,7 +27,8 @@ import { ClienteComponent } from './cliente.component';
         DatagridModule,
         ButtonModule,
         CardModule,
-        BreadcrumbModule
+        BreadcrumbModule,
+        DividerModule
     ],
 })
 export class ClienteModule {}

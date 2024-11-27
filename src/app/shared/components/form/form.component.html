@@ -239,7 +239,7 @@
   </div>
 
   <div *ngIf="type === 'checkbox'">
-    <div class="flex align-items-center gap-2 mb-1">
+    <div class="flex align-items-center gap-2 mb-1 mt-4">
       <p-checkbox [formControlName]="formControlName" [value]="true" [binary]="true" class="width-unset" styleClass="width-unset"
         [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"></p-checkbox>
       <label *ngIf="label">{{ label }}</label>
