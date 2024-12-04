@@ -34,8 +34,9 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Pedidos',
+                label: 'Gestão de Pedidos',
                 items: [
+                    { label: 'Pedidos', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/pedido/home'] },
                     { label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/cliente/home'] },
                 ]
             },

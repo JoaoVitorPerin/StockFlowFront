@@ -39,6 +39,13 @@ const APP_ROUTES: Routes = [
                   ).then(m => m.ProdutoModule)
             },
             {
+                path: 'pedido',
+                loadChildren: () =>
+                  import(
+                    './modules/pedido/pedido.module'
+                  ).then(m => m.PedidoModule)
+            },
+            {
                 path: 'cliente',
                 loadChildren: () =>
                   import(
