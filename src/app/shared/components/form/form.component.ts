@@ -59,6 +59,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() grid: string;
   @Input() iconType: string;
   @Input() width: number|string;
+  @Input() currency: string;
   @Input() value: any;
   @Input() textoAgrupamento: string;
   @Input() autoClear: boolean;

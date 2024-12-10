@@ -131,7 +131,7 @@
   <div *ngIf="type === 'dinheiro'">
     <p-inputNumber [formControlName]="formControlName"
       (blur)="onBlurHandler($event)" autocomplete="new-password"
-      mode="currency" currency="BRL" locale="pt-BR" [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
+      mode="currency" [currency]="currency ?? 'BRL'" locale="pt-BR" [placeholder]="placeholder ?? ''" [readonly]="readonly ?? false"
       [showButtons]="showButtons ?? false"
       [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"></p-inputNumber>
     <small class="invalid" *ngIf="erro && !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched">{{ erro }}</small>

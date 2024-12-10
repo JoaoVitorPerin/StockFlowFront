@@ -7,20 +7,17 @@
     <p class="text-sm text-red-500 mb-3">* representam campos obrigatórios!</p>
     <form [formGroup]="formProduto">
         <div class="grid">
-            <div class="col-12 md:col-4">
-                <app-form type="text" [readonly]="idProduto" id="username" label="Código" formControlName="codigo" placeholder="Digite o código" [exibirLabelObrigatoriedade]="true" erro="Digite o código do produto!" ngDefaultControl/>
-            </div>
-            <div class="col-12 md:col-4">
+            <div class="col-12 md:col-6">
                 <app-form type="text" id="nome" label="Nome" formControlName="nome" placeholder="Digite o Nome" erro="Digite o nome do produto!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
             </div>
-            <div class="col-12 md:col-4">
-                <app-form type="text" id="categoria" label="Categoria" formControlName="categoria" placeholder="Digite a Categoria" ngDefaultControl/>
+            <div class="col-12 md:col-6">
+                <app-form type="text" id="categoria" label="Marca" formControlName="categoria" placeholder="Digite a Categoria" ngDefaultControl/>
             </div>
             <div class="col-12 md:col-6">
-                <app-form type="float" id="preco_compra" label="Preço de compra" formControlName="preco_compra" placeholder="Digite o Preço de Compra" erro="Digite o preço de compra do produto!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
+                <app-form type="dinheiro" currency="USD" id="preco_compra" label="Preço de compra" formControlName="preco_compra" placeholder="Digite o Preço de Compra" erro="Digite o preço de compra do produto!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
             </div>
             <div class="col-12 md:col-6">
-                <app-form type="float" id="preco_venda" label="Preço de venda" formControlName="preco_venda" placeholder="Digite o Preço de Venda" [exibirLabelObrigatoriedade]="true" erro="Digite o preço de venda do produto!" ngDefaultControl/>
+                <app-form type="dinheiro" id="preco_venda" label="Preço de venda" formControlName="preco_venda" placeholder="Digite o Preço de Venda" [exibirLabelObrigatoriedade]="true" erro="Digite o preço de venda do produto!" ngDefaultControl/>
             </div>
             <div class="col-12 md:col-12">
                 <app-form type="textarea" id="descricao" label="Descrição" formControlName="descricao" placeholder="Digite a Descrição" erro="Digite a descrição de venda do produto!" ngDefaultControl/>
