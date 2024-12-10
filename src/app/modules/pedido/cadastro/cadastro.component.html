@@ -146,7 +146,7 @@
               <app-form type="dinheiro" id="desconto" label="Desconto" formControlName="desconto" placeholder="Digite o desconto" ngDefaultControl/>
             </div>
             <div class="col-12 md:col-4">
-              <p class="text-3xl font-bold text-primary m-0 text-center mt-3">Valor Total: {{precoTotalProdutos + formPedido.get('frete').value - formPedido.get('desconto').value | currency: 'BRL'}}</p>
+              <p class="text-3xl font-bold text-primary m-0 text-center mt-3">Valor Total: {{(precoTotalProdutos + parseFloat(formPedido.get('frete').value)) - parseFloat(formPedido.get('desconto').value) | currency: 'BRL'}}</p>
             </div>
           </div>
         </div>

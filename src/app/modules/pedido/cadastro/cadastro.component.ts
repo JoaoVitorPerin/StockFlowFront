@@ -38,6 +38,8 @@ export class CadastroComponent {
 
   passoAtual: number = 0;
 
+  parseFloat = parseFloat;
+
   itemsSteps = [
     {
         label: 'Cliente',    
@@ -48,7 +50,7 @@ export class CadastroComponent {
     {
         label: 'Confirmação',
     }
-];
+  ];
 
   constructor(
     private pedidoService: PedidoService,
@@ -68,6 +70,7 @@ export class CadastroComponent {
     this.home = { icon: 'pi pi-home', routerLink: '/' };
 
     this.formPedido = this.formBuilder.group({
+      pedido_id: [null],
       cliente_id: [null, Validators.required],
       logradouro: [null],
       numero: [null, Validators.required],
@@ -129,6 +132,14 @@ export class CadastroComponent {
       }
     );
 
+    this.idPedido = this.activatedRoute.snapshot.paramMap.get('id');
+    this.formPedido.patchValue({pedido_id: this.idPedido});
+
+    if (this.idPedido) {
+      this.formPedido.get('pedido_id').disable();
+      this.buscarPedidoById(this.idPedido);
+    }
+
     this.buscarDadosProdutos();
   }
 
@@ -189,6 +200,32 @@ export class CadastroComponent {
     }
   }
 
+  buscarPedidoById(id: string): void {
+    this.pedidoService.buscarPedidoById(id).subscribe({
+      next: (dados) => {
+        this.formPedido.patchValue(dados.pedidos);
+        this.formPedido.patchValue({
+          cliente_id: dados.pedidos.cliente.id,
+          total: parseFloat(dados.pedidos.vlrTotal).toFixed(2),
+        })
+        this.listaProdutos = dados.pedidos.produtos.forEach(item => {
+          const novoProduto = this.formBuilder.group({
+            produto_id: [item.produto_id, Validators.required],
+            quantidade: [parseInt(item.quantidade), Validators.required],
+            preco_unitario: [parseFloat(item.precoUnitario), Validators.required],
+          });
+          this.precoTotalProdutos += parseInt(item.quantidade) * parseFloat(item.precoUnitario);
+          const itens = this.formPedido.get('itens') as FormArray;
+          itens.push(novoProduto);
+        });
+        this.formPedido.get('total').setValue(dados.pedidos.vlrTotal);
+        console.log(this.formPedido.getRawValue())
+      }, error: () => {
+        this.toastrService.mostrarToastrDanger('Erro ao buscar pedido');
+      }
+    })
+  }
+
   buscarDadosProdutos(){
     this.produtoService.buscarDadosProdutos().subscribe(
       (response) => {
@@ -238,7 +275,7 @@ export class CadastroComponent {
       this.formPedido.markAllAsTouched();
       if(this.formPedido.valid){
         this.formPedido.get('total').setValue(
-          (this.precoTotalProdutos + this.formPedido.get('frete').value - this.formPedido.get('desconto').value).toFixed(2)
+          (this.precoTotalProdutos + parseFloat(this.formPedido.get('frete').value) - parseFloat(this.formPedido.get('desconto').value)).toFixed(2)
         );
         this.cadastrarPedido();
       }
@@ -253,6 +290,7 @@ export class CadastroComponent {
   }
 
   passoAnterior() {
+    this.precoTotalProdutos = 0;
     if(this.passoAtual === 0){
       this.router.navigate(['/pedido/home']);
       return;

@@ -39,7 +39,7 @@ export class PedidoService {
     return this.http.get<any>(this.API_BACK + 'pedido/cadastro', {
         context: new HttpContext().set(SET_LOADER, true),
         headers: this.headerService.getHeader(),
-        params: {produto_id: id}
+        params: {pedido_id: id}
     });
   }
 
