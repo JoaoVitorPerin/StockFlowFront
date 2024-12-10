@@ -11,6 +11,10 @@ import { HomeComponent } from './home/home.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { PedidoRoutingModule } from './pedido-routing.module';
 import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { StepsModule } from 'primeng/steps';
 
 @NgModule({
     declarations: [
@@ -29,6 +33,10 @@ import { DividerModule } from 'primeng/divider';
         BreadcrumbModule,
         PedidoRoutingModule,
         DividerModule,
+        DropdownModule,
+        InputTextModule,
+        InputNumberModule,
+        StepsModule
     ],
 })
 export class PedidoModule {}
