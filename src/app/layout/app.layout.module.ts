@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,6 +18,8 @@ import { AppConfigModule } from './config/config.module';
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { ButtonModule } from 'primeng/button';
+import { CotacaoService } from '../shared/services/cotacao.service';
+import { FormModule } from '../shared/components/form/form.module';
 
 @NgModule({
     declarations: [
@@ -31,6 +33,7 @@ import { ButtonModule } from 'primeng/button';
     imports: [
         BrowserModule,
         FormsModule,
+        FormModule,
         HttpClientModule,
         BrowserAnimationsModule,
         InputTextModule,
@@ -41,8 +44,12 @@ import { ButtonModule } from 'primeng/button';
         RippleModule,
         RouterModule,
         AppConfigModule,
-        ButtonModule
+        ButtonModule,
+        ReactiveFormsModule
     ],
-    exports: [AppLayoutComponent]
+    exports: [AppLayoutComponent],
+    providers: [
+        CotacaoService, // Registre aqui o serviço
+    ],
 })
 export class AppLayoutModule { }
