@@ -189,14 +189,14 @@ export class CadastroComponent {
             this.toastrService.mostrarToastrDanger('Digite um CEP válido!')
           }else{
             this.formPedido.patchValue(data)
+            this.formPedido.get('numero').setValue(null);
+            this.formPedido.get('complemento').setValue(null);
           }
         },
         error => {
           console.error('Erro ao buscar o CEP:', error);
         }
       );
-    } else {
-      this.toastrService.mostrarToastrDanger('Digite um CEP válido!')
     }
   }
 
@@ -207,7 +207,7 @@ export class CadastroComponent {
         this.formPedido.patchValue({
           cliente_id: dados.pedidos.cliente.id,
           total: parseFloat(dados.pedidos.vlrTotal).toFixed(2),
-        })
+        }, { emitEvent: false });
         this.listaProdutos = dados.pedidos.produtos.forEach(item => {
           const novoProduto = this.formBuilder.group({
             produto_id: [item.produto_id, Validators.required],
@@ -281,6 +281,19 @@ export class CadastroComponent {
       }
       return
     }
+    let produtosInvalidos = 0;
+    this.itens.controls.forEach(item => {
+      item.markAllAsTouched();
+      if(item.invalid){
+        produtosInvalidos++;
+      }
+    });
+
+    if(produtosInvalidos > 0){
+      this.toastrService.mostrarToastrDanger('Preencha todos os campos dos produtos!');
+      return;
+    }
+    
     this.itens.controls.forEach(item => {
       const quantidade = item.get('quantidade').value;
       const precoUnitario = item.get('preco_unitario').value;

@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-        <div *ngFor="let item of itens.controls; let i = index; trackBy: trackByFn" [formGroup]="item">
+        <div *ngFor="let item of itens.controls; let i = index; trackBy: trackByFn" [formGroup]="item" class="border-1 border-solid border-primary border-round px-3 mb-3">
           @if(isMobile){
             <div class="flex align-items-center justify-content-between">
               <p class="text-base font-bold">Produto {{i+1}}</p>
@@ -69,7 +69,7 @@
                 <label>Produto:</label>
                 <p-dropdown #dropdown formControlName="produto_id" [options]="itemsProdutos" class="w-full"
                   placeholder="Selecione um produto" [filter]="true" [showClear]="true" ngDefaultControl
-                  [ngClass]="{'ng-invalid ng-dirty': !item?.get(produto_id)?.valid && item?.get(produto_id)?.touched }"
+                  [ngClass]="{'ng-invalid ng-dirty': !item?.get('produto_id')?.valid && item?.get('produto_id')?.touched }"
                   virtualScroll="true" [virtualScrollItemSize]="35" appendTo="body">
                   <ng-template pTemplate="empty">
                     Nenhum resultado encontrado
@@ -85,14 +85,14 @@
                 <label>Quantidade:</label>
                 <p-inputNumber formControlName="quantidade" class="w-full" mode="decimal" [useGrouping]="false" [min]="0" [max]="9999999999999999999999999" suffix="x"
                 placeholder="Quantidade do produto" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"></p-inputNumber>
+                [ngClass]="{'ng-invalid ng-dirty': !item?.get('quantidade')?.valid && item?.get('quantidade')?.touched }"></p-inputNumber>
               </div>
             </div>
             <div class="col-12 md:col-4">
               <div class="w-100 flex flex-column">
                 <label>Preço unitário:</label>
                 <p-inputNumber formControlName="preco_unitario" mode="currency" currency="BRL" locale="pt-BR" placeholder="Preço unitário do produto" class="w-full"
-                [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"></p-inputNumber>
+                [ngClass]="{'ng-invalid ng-dirty': !item?.get('preco_unitario')?.valid && item?.get('preco_unitario')?.touched }"></p-inputNumber>
               </div>
             </div>
             @if(!isMobile){
