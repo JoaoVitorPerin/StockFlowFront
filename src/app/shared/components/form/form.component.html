@@ -263,10 +263,14 @@
 
   <div *ngIf="type === 'select'">
     <p-dropdown #dropdown [formControlName]="formControlName" [options]="items" (onChange)="onChangeHandler($event)"
-      [placeholder]="placeholder ?? ''" [filter]="true" [showClear]="true" ngDefaultControl
+      [placeholder]="placeholder ?? ''" [filter]="true" [showClear]="true" ngDefaultControl 
       [ngClass]="{'ng-invalid ng-dirty': !formGroup?.get(formControlName)?.valid && formGroup?.get(formControlName)?.touched }"
       [virtualScroll]="items.length > 100 ? true : false" [virtualScrollItemSize]="35" appendTo="body"
-      (onFilter)="onFilterHandler($event, dropdown)">
+      (onFilter)="onFilterHandler($event, dropdown)"
+      [optionLabel]="'label'" 
+      [filterBy]="'label'" 
+      [optionValue]="'value'"
+      >
       <ng-template pTemplate="empty">
         Nenhum resultado encontrado
       </ng-template>

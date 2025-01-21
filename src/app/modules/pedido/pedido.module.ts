@@ -15,6 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { StepsModule } from 'primeng/steps';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
     declarations: [
@@ -36,7 +37,8 @@ import { StepsModule } from 'primeng/steps';
         DropdownModule,
         InputTextModule,
         InputNumberModule,
-        StepsModule
+        StepsModule,
+        CheckboxModule
     ],
 })
 export class PedidoModule {}

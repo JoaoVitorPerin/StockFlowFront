@@ -23,7 +23,6 @@ export class CadastroComponent {
                 this.formProduto = this.formBuilder.group({
                   produto_id: [null],
                   nome: [null, Validators.required],
-                  codigo: [null, Validators.required],
                   categoria: [null],
                   descricao: [null],
                   preco_compra: [null, Validators.required],

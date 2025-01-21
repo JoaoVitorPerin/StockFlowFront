@@ -24,11 +24,13 @@
     @if(configuracoes.header){
       <ng-template pTemplate="caption">
         @if(!isMobile){
+          <div class="flex ml-3">
+            @if(titulo){
+              <p class="text-900 text-xl font-semibold">{{ titulo }}</p>
+            }
+          </div>
           <div class="flex justify-content-between gap-3">
             <div class="flex align-items-center w-full">
-              @if(titulo){
-                <p class="text-900 text-xl font-semibold">{{ titulo }}</p>
-              }
               @if(configuracoes.addRow){
                 <div class="md:col-2">
                   <p-button pRipple pTooltip="Adicionar linha" tooltipPosition="right" severity="success" (click)="addRowMasterDetail()">
@@ -117,6 +119,11 @@
             </div>
           </div>
         } @else{
+            <div class="flex">
+              @if(titulo){
+                <p class="text-900 text-xl font-semibold mb-3">{{ titulo }}</p>
+              }
+            </div>
             <div class="grid flex justify-content-between">
               <div class="flex justify-content-start gap-3">
                 @if(configuracoes.addRow){
@@ -318,7 +325,7 @@
                     }
                   } @else if(col.cellTemplate == 'date') {
                     @if(rowData[col.dataField]){
-                      {{ rowData[col.dataField] | date: 'MM/dd/yyyy' }}
+                      {{ rowData[col.dataField] | date: 'dd/MM/yyyy' }}
                     } @else {
                       --
                     }
@@ -356,7 +363,13 @@
                     }
                   } @else if(col.cellTemplate == 'dinheiro'){
                     @if(rowData[col.dataField] || rowData[col.dataField] === 0){
-                      R${{ convertePrecoParaPadraoBR(rowData[col.dataField]) }}
+                      R$ {{ convertePrecoParaPadraoBR(rowData[col.dataField]) }}
+                    } @else {
+                      --
+                    }
+                  } @else if(col.cellTemplate == 'dinheiroUS'){
+                    @if(rowData[col.dataField] || rowData[col.dataField] === 0){
+                      US$ {{ convertePrecoParaPadraoBR(rowData[col.dataField]) }}
                     } @else {
                       --
                     }

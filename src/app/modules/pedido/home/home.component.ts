@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { PedidoService } from '../pedido.service';
+import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirmacao/modal-confirmacao.service';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ export class HomeComponent implements OnInit{
     private router: Router,
     private toastrService: ToastrService,
     private pedidoService: PedidoService,
+    private modalConfirmacaoService: ModalConfirmacaoService
   ){
     this.columns = [
       {
@@ -39,6 +41,7 @@ export class HomeComponent implements OnInit{
         dataField: 'vlrTotal',
         caption: 'Valor Total',
         dataType: 'string',
+        cellTemplate: 'dinheiro',
         sorting: true,
       },
       {
@@ -115,15 +118,25 @@ export class HomeComponent implements OnInit{
   }
 
   excluirPedido(id: string): void {
-    this.pedidoService.excluirPedido(id).subscribe(
-      () => {
-        this.toastrService.mostrarToastrSuccess(`Alterado status do pedido com sucesso`);
-        this.buscarPedidos();
-      },
-      () => {
-        this.toastrService.mostrarToastrDanger('Erro ao alterar status do pedido');
+    this.modalConfirmacaoService.abrirModalConfirmacao(
+      'Atenção',
+      `Deseja realmente deletar esse pedido?`,
+      {
+        icone: 'pi pi-info-circle',
+        callbackAceitar: () => {
+          this.pedidoService.excluirPedido(id).subscribe(
+            () => {
+              this.toastrService.mostrarToastrSuccess(`Pedido deletado com sucesso!`);
+              this.buscarPedidos();
+            },
+            () => {
+              this.toastrService.mostrarToastrDanger('Erro ao deletar pedido!');
+            }
+          );
+        }
       }
     );
+    
   }
 
 }

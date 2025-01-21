@@ -59,12 +59,6 @@ export class HomeComponent {
 
     this.columns = [
       {
-        dataField: 'codigo',
-        caption: 'Código',
-        dataType: 'int',
-        sorting: true,
-      },
-      {
         dataField: 'nome',
         caption: 'Nome',
         dataType: 'string',
@@ -81,7 +75,7 @@ export class HomeComponent {
         caption: 'Preço de Compra',
         dataType: 'string',
         sorting: true,
-        cellTemplate: 'dinheiro',
+        cellTemplate: 'dinheiroUS',
       },
       {
         dataField: 'preco_venda',
