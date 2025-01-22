@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit{
         caption: 'Data do pedido',
         dataType: 'string',
         sorting: true,
-        cellTemplate: 'date'
+        cellTemplate: 'datetime'
       },
       {
         dataField: 'vlrTotal',

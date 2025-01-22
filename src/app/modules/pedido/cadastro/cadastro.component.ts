@@ -19,6 +19,7 @@ interface produto {
   styleUrl: './cadastro.component.scss'
 })
 export class CadastroComponent {
+  valorTotalEdicao: number = 0;
   todosCliente: any = [];
   itemsClientes: any = [];
 
@@ -37,7 +38,7 @@ export class CadastroComponent {
   listaProdutos: produto[];
 
   passoAtual: number = 0;
-
+  totalEditadoManualmente: boolean = false;
   parseFloat = parseFloat;
 
   itemsSteps = [
@@ -143,16 +144,20 @@ export class CadastroComponent {
     this.buscarDadosProdutos();
   }
 
-  cadastrarPedido(){
+  cadastrarPedido() {
     this.formPedido.markAllAsTouched();
 
-    if(this.formPedido.valid){
-      this.pedidoService.cadastrarPedido(this.formPedido.getRawValue()).subscribe(
+    if (this.formPedido.valid) {
+      const dados = {
+        ...this.formPedido.getRawValue(),
+        total: parseFloat(this.formPedido.get('total').value) + this.parseFloat(this.formPedido.get('frete').value),
+      }
+      this.pedidoService.cadastrarPedido(dados).subscribe(
         (response) => {
-          if(response.status){
+          if (response.status) {
             this.toastrService.mostrarToastrSuccess('Pedido cadastrado com sucesso!');
             this.router.navigate(['/pedido/home']);
-          }else{
+          } else {
             this.toastrService.mostrarToastrDanger(response.descricao);
           }
         },
@@ -162,6 +167,7 @@ export class CadastroComponent {
       );
     }
   }
+  
 
   get itens(): FormArray {
     return this.formPedido.get('itens') as FormArray;
@@ -203,10 +209,11 @@ export class CadastroComponent {
   buscarPedidoById(id: string): void {
     this.pedidoService.buscarPedidoById(id).subscribe({
       next: (dados) => {
+        this.valorTotalEdicao = this.parseFloat(dados.pedidos.vlrTotal) - this.parseFloat(dados.pedidos.frete);
         this.formPedido.patchValue(dados.pedidos);
         this.formPedido.patchValue({
           cliente_id: dados.pedidos.cliente.id,
-          total: parseFloat(dados.pedidos.vlrTotal).toFixed(2),
+          total: this.valorTotalEdicao,
         }, { emitEvent: false });
         this.listaProdutos = dados.pedidos.produtos.forEach(item => {
           const novoProduto = this.formBuilder.group({
@@ -215,12 +222,10 @@ export class CadastroComponent {
             preco_unitario: [parseFloat(item.precoUnitario), Validators.required],
             is_estoque_externo: [item.is_estoque_externo],  
           });
-          this.precoTotalProdutos += parseInt(item.quantidade) * parseFloat(item.precoUnitario);
           const itens = this.formPedido.get('itens') as FormArray;
           itens.push(novoProduto);
         });
         this.formPedido.get('total').setValue(dados.pedidos.vlrTotal);
-        console.log(this.formPedido.getRawValue())
       }, error: () => {
         this.toastrService.mostrarToastrDanger('Erro ao buscar pedido');
       }
@@ -257,52 +262,51 @@ export class CadastroComponent {
     const itens = this.formPedido.get('itens') as FormArray;
     itens.push(novoProduto);
   
+    this.recalcularPrecoTotal();
     this.formPedido.updateValueAndValidity();
   }
-
+  
   removerItemListaProduto(index: number) {
     const itens = this.formPedido.get('itens') as FormArray;
     itens.removeAt(index);
+  
+    this.recalcularPrecoTotal();
   }
+  
 
   proximoPasso() {
-    if(this.passoAtual === 0 && this.formPedido.get('cliente_id').value === null){
+    if (this.passoAtual === 0 && this.formPedido.get('cliente_id').value === null) {
       this.formPedido.markAllAsTouched();
       this.toastrService.mostrarToastrDanger('Selecione um cliente!');
       return;
-    }else if(this.passoAtual === 1 && this.formPedido.get("itens").value.length === 0){
+    } else if (this.passoAtual === 1 && this.formPedido.get("itens").value.length === 0) {
       this.toastrService.mostrarToastrDanger('Adicione pelo menos um produto!');
       return;
-    }else if(this.passoAtual === 2){
+    } else if (this.passoAtual === 2) {
       this.formPedido.markAllAsTouched();
-      if(this.formPedido.valid){
-        this.formPedido.get('total').setValue(
-          (this.precoTotalProdutos + parseFloat(this.formPedido.get('frete').value) - parseFloat(this.formPedido.get('desconto').value)).toFixed(2)
-        );
+      if (this.formPedido.valid) {
         this.cadastrarPedido();
       }
-      return
+      return;
     }
+  
     let produtosInvalidos = 0;
     this.itens.controls.forEach(item => {
       item.markAllAsTouched();
-      if(item.invalid){
+      if (item.invalid) {
         produtosInvalidos++;
       }
     });
-
-    if(produtosInvalidos > 0){
+  
+    if (produtosInvalidos > 0) {
       this.toastrService.mostrarToastrDanger('Preencha todos os campos dos produtos!');
       return;
     }
-    
-    this.itens.controls.forEach(item => {
-      const quantidade = item.get('quantidade').value;
-      const precoUnitario = item.get('preco_unitario').value;
-      this.precoTotalProdutos += quantidade * precoUnitario;
-    });
+  
+    this.recalcularPrecoTotal(); // Atualiza o preço total antes de passar para o próximo passo
     this.passoAtual++;
   }
+  
 
   passoAnterior() {
     this.precoTotalProdutos = 0;
@@ -321,5 +325,46 @@ export class CadastroComponent {
   onChangeSelectProduto(event, form){
     const produto = this.buscarProduto(event.value);
     form.get("preco_unitario").setValue(produto.preco_venda);
+
+    this.recalcularPrecoTotal()
   }
+
+  recalcularPrecoTotal() {
+    const itens = this.formPedido.get('itens') as FormArray;
+    const precoProdutos = itens.controls.reduce((total, item) => {
+      const quantidade = item.get('quantidade')?.value || 0;
+      const precoUnitario = item.get('preco_unitario')?.value || 0;
+      return total + (quantidade * precoUnitario);
+    }, 0);
+  
+    this.precoTotalProdutos = precoProdutos;
+  
+    // Se `valorTotalEdicao` existir e o total não foi editado manualmente, use `valorTotalEdicao`
+    if (this.valorTotalEdicao && !this.totalEditadoManualmente) {
+      this.formPedido.get('total')?.setValue(this.valorTotalEdicao.toFixed(2), { emitEvent: false });
+    } else if (!this.totalEditadoManualmente) {
+      // Atualiza o total com base nos produtos caso não tenha sido editado manualmente
+      this.formPedido.get('total')?.setValue(this.precoTotalProdutos.toFixed(2), { emitEvent: false });
+    }
+  }
+  
+  
+  onTotalChange(event: any) {
+    const valorEditado = parseFloat(event.target.value || '0');
+    if (!isNaN(valorEditado)) {
+      this.totalEditadoManualmente = true;
+      this.formPedido.get('total')?.setValue(valorEditado.toFixed(2), { emitEvent: false });
+    } else {
+      // Caso o valor seja inválido, restaure o valor calculado ou o valor de `valorTotalEdicao`
+      this.toastrService.mostrarToastrDanger('Digite um valor válido para o total.');
+      if (this.valorTotalEdicao) {
+        this.formPedido.get('total')?.setValue(this.valorTotalEdicao.toFixed(2), { emitEvent: false });
+      } else {
+        this.formPedido.get('total')?.setValue(this.precoTotalProdutos.toFixed(2), { emitEvent: false });
+      }
+      this.totalEditadoManualmente = false;
+    }
+  }
+  
+  
 }
