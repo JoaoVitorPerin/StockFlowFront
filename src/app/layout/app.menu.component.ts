@@ -24,7 +24,8 @@ export class AppMenuComponent implements OnInit {
                 label: 'Gestão Admin',
                 items: [
                     { label: 'Usuários', icon: 'pi pi-fw pi-user', routerLink: ['/user/home'] },
-                    { label: 'Produtos e Estoque', icon: 'pi pi-fw pi-box', routerLink: ['/produto/home'] }
+                    { label: 'Produtos e Estoque', icon: 'pi pi-fw pi-box', routerLink: ['/produto/home'] },
+                    { label: 'Marcas', icon: 'pi pi-fw pi-bookmark', routerLink: ['/marca/home'] },
                 ]
             },
             {

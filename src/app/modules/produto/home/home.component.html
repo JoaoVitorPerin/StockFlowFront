@@ -37,3 +37,14 @@
     </p>
     <p class="text-sm"><span class="font-bold">Usuário: </span>{{movimentacaoProduto.nomeUsuario}}</p>
 </ng-template>
+
+<ng-template #modalMarca>
+    <form [formGroup]="formMarca">
+        <p>Para cadastrar uma marca é apenas necessário digitar o nome dela:</p>
+        <div class="grid">
+            <div class="col-12 md:col-4">
+                <app-form type="text" id="nome" label="Nome" [exibirLabelObrigatoriedade]="true" formControlName="nome" erro="Digite o nome da marca!" ngDefaultControl/>
+            </div>
+        </div>
+    </form>
+</ng-template>

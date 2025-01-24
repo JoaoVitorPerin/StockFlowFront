@@ -241,7 +241,7 @@ export class CadastroComponent {
         .map((item) => {
           return {
             value: item.id,
-            label: `${item.categoria} - ${item.nome}`
+            label: `${item.marca__nome} - ${item.nome}`
           }
         })
       },

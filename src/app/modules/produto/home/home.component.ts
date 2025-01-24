@@ -20,6 +20,7 @@ export class HomeComponent {
   configuracoes: DatagridConfig = datagridConfigDefault();
   data: any = [];
   formEstoque: FormGroup;
+  formMarca: FormGroup;
   movimentacaoProduto: any = {};
   opcoesRadio: Array<items> = [];
 
@@ -29,6 +30,7 @@ export class HomeComponent {
   home: any;
 
   @ViewChild('modalControleEstoque', { static: false }) modalControleEstoque!: TemplateRef<any>;
+  @ViewChild('modalMarca', { static: false }) modalMarca!: TemplateRef<any>;
 
   constructor(
     private router: Router,
@@ -57,10 +59,20 @@ export class HomeComponent {
       quantidade: [null, Validators.required],
     })
 
+    this.formMarca = this.formBuilder.group({
+      nome: [null, Validators.required]
+    })
+
     this.columns = [
       {
         dataField: 'nome',
         caption: 'Nome',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
+        dataField: 'marca__nome',
+        caption: 'Marca',
         dataType: 'string',
         sorting: true,
       },
@@ -175,9 +187,54 @@ export class HomeComponent {
         icon: 'pi pi-plus',
         color: 'success',
         tooltip: 'Adicionar Produto',
-        text: 'Adicionar',
+        text: 'Produto',
         click: (): void => {
           this.router.navigate(['produto/cadastro']);
+        }
+      }
+    )
+
+    this.configuracoes.customButtons.push(
+      {
+        icon: 'pi pi-plus',
+        color: 'info',
+        tooltip: 'Adicionar Marca',
+        text: 'Marca',
+        click: (): void => {
+          const botoes = [
+            {
+              label: 'Cancelar',
+              color: 'primary',
+              link: true,
+              onClick: () => {
+                this.modalService.fecharModal();
+              },
+            },
+            {
+              label: 'Salvar',
+              color: 'primary',
+              onClick: () => {
+                this.formMarca.markAllAsTouched();
+                if (this.formMarca.invalid) {
+                  return;
+                }
+                this.produtoService.cadastrarMarca(this.formMarca.value).subscribe(
+                  (res) => {
+                    if(res.status){
+                      this.toastrService.mostrarToastrSuccess(`Marca cadastrada com sucesso`);
+                      this.modalService.fecharModal();
+                    }else{
+                      this.toastrService.mostrarToastrDanger(res.descricao);
+                    }
+                  },
+                  () => {
+                    this.toastrService.mostrarToastrDanger('Erro ao cadastrar marca');
+                  }
+                );
+              }
+            }
+          ];
+        this.modalService.abrirModal(`Adicionar Marca`, this.modalMarca, botoes,{larguraDesktop: '50'});
         }
       }
     )

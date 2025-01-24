@@ -64,5 +64,27 @@ export class ProdutoService {
         headers: this.headerService.getHeader(),
     });
   }
+
+  cadastrarMarca(data: any): Observable<any>{
+    return this.http.post<any>(this.API_BACK + 'marca/cadastro', data, {
+        context: new HttpContext().set(SET_LOADER, true),
+        headers: this.headerService.getHeader({ 'Content-Type': 'application/json' }),  
+    });
+  }
+
+  buscarTodasMarcas(): Observable<any>{
+    return this.http.get<any>(this.API_BACK + 'marca/cadastro', {
+        context: new HttpContext().set(SET_LOADER, true),
+        headers: this.headerService.getHeader(),
+    });
+  }
+
+  buscarMarcaById(id: string | number): Observable<any>{
+    return this.http.get<any>(this.API_BACK + 'marca/cadastro', {
+        context: new HttpContext().set(SET_LOADER, true),
+        headers: this.headerService.getHeader(),
+        params: {marca_id: id}
+    });
+  }
     
 }
