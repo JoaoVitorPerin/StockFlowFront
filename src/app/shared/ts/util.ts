@@ -1582,3 +1582,16 @@ export const formatarData = (dataISO: string): string => {
 
   return `${dia}/${mes}/${ano} - ${horas}:${minutos}:${segundos}`;
 }
+
+export const converterStatusPedido = (status: string): string =>{
+  switch(status){
+    case 'separacao':
+      return 'Separação';
+    case 'embalado':
+      return 'Embalado';
+    case 'saiu_estoque':
+      return 'Saiu Estoque';
+    default:
+      return 'Desconhecido';
+  }
+}

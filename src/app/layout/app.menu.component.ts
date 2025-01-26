@@ -21,11 +21,11 @@ export class AppMenuComponent implements OnInit {
             //     ]
             // },
             {
-                label: 'Gestão Admin',
+                label: 'Gestão de Pedidos',
                 items: [
-                    { label: 'Usuários', icon: 'pi pi-fw pi-user', routerLink: ['/user/home'] },
-                    { label: 'Produtos e Estoque', icon: 'pi pi-fw pi-box', routerLink: ['/produto/home'] },
-                    { label: 'Marcas', icon: 'pi pi-fw pi-bookmark', routerLink: ['/marca/home'] },
+                    { label: 'Pedidos', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/pedido/home'] },
+                    { label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/cliente/home'] },
+                    { label: 'Separação', icon: 'pi pi-fw pi-truck', routerLink: ['/separar-pedido'] },
                 ]
             },
             {
@@ -35,12 +35,13 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Gestão de Pedidos',
+                label: 'Gestão Admin',
                 items: [
-                    { label: 'Pedidos', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/pedido/home'] },
-                    { label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/cliente/home'] },
+                    { label: 'Usuários', icon: 'pi pi-fw pi-user', routerLink: ['/user/home'] },
+                    { label: 'Produtos e Estoque', icon: 'pi pi-fw pi-box', routerLink: ['/produto/home'] },
+                    { label: 'Marcas', icon: 'pi pi-fw pi-bookmark', routerLink: ['/marca/home'] },
                 ]
-            },
+            }
         ];
     }
 }
