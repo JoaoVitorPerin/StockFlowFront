@@ -7,6 +7,7 @@ import { HomeComponent } from './modules/home/home.component';
 import { Page404Component } from './core/page-404/page-404.component';
 import { RedefinirSenhaComponent } from './core/redefinir-senha/redefinir-senha.component';
 import { MovimentacaoEstoqueComponent } from './modules/movimentacao-estoque/movimentacao-estoque.component';
+import { SepararPedidoComponent } from './modules/separar-pedido/separar-pedido.component';
 
 const APP_ROUTES: Routes = [
     {
@@ -51,13 +52,17 @@ const APP_ROUTES: Routes = [
                 import(
                   './modules/marca/marca.module'
                 ).then(m => m.MarcaModule)
-          },
+            },
             {
                 path: 'cliente',
                 loadChildren: () =>
                   import(
                     './modules/cliente/cliente.module'
                   ).then(m => m.ClienteModule)
+            },
+            {
+              path: 'separar-pedido',
+              component: SepararPedidoComponent
             },
             {
                 path: 'movimentacao-estoque',
