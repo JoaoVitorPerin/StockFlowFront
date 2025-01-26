@@ -138,7 +138,7 @@
               @for(item of itens.controls; track item){
                 <tr>  
                   <td>{{buscarProduto(item.get('produto_id').value).nome}}</td>
-                  <td>{{buscarProduto(item.get('produto_id').value).categoria}}</td>
+                  <td>{{buscarProduto(item.get('produto_id').value).marca__nome}}</td>
                   <td>{{item.get('quantidade').value}}</td>
                   <td>R$ {{item.get('preco_unitario').value }}</td>
                   <td>{{item.get('quantidade').value * item.get('preco_unitario').value | currency: 'BRL'}}</td>

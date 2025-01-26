@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ViaCepService } from 'src/app/shared/services/viaCep.service';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { ProdutoService } from '../../produto/produto.service';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 interface produto {
   produto_id: number;
@@ -60,6 +61,7 @@ export class CadastroComponent {
     private router: Router,
     private viaCepService: ViaCepService,
     private produtoService: ProdutoService,
+    private tokenService: TokenService,
     private activatedRoute: ActivatedRoute){
 
     this.items = [
@@ -68,7 +70,7 @@ export class CadastroComponent {
       { label: 'Cadastro' }
     ];
 
-    this.home = { icon: 'pi pi-home', routerLink: '/' };
+    this.home = { icon: 'pi pi-home'};
 
     this.formPedido = this.formBuilder.group({
       pedido_id: [null],
@@ -151,6 +153,7 @@ export class CadastroComponent {
       const dados = {
         ...this.formPedido.getRawValue(),
         total: parseFloat(this.formPedido.get('total').value) + this.parseFloat(this.formPedido.get('frete').value),
+        usuario_id: this.tokenService.getJwtDecodedAccess()?.user_id,
       }
       this.pedidoService.cadastrarPedido(dados).subscribe(
         (response) => {

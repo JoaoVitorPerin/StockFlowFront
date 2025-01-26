@@ -40,7 +40,7 @@ export class CadastroComponent {
                   { label: 'Cadastro' }
                 ];
       
-                this.home = { icon: 'pi pi-home', routerLink: '/' };
+                this.home = { icon: 'pi pi-home'};
                 }
 
   buscarMarcasById(id: string): void {

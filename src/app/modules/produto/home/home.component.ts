@@ -245,7 +245,7 @@ export class HomeComponent {
       { label: 'Home' }
     ];
 
-    this.home = { icon: 'pi pi-home', routerLink: '/' };
+    this.home = { icon: 'pi pi-home'};
   }
 
   ngOnInit(): void {

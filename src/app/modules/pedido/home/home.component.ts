@@ -94,7 +94,7 @@ export class HomeComponent implements OnInit{
       { label: 'Home' }
     ];
 
-    this.home = { icon: 'pi pi-home', routerLink: '/' };
+    this.home = { icon: 'pi pi-home'};
   }
   
   ngOnInit(): void {
