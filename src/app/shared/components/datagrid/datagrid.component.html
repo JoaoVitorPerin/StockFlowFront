@@ -331,9 +331,9 @@
                     }
                   } @else if(col.cellTemplate == 'movimentacao') {
                     @if(rowData[col.dataField] == 'saida'){
-                      <i class="pi pi-arrow-down" style="font-size: 1.5rem; color: #22C55E;"></i>
+                      <i class="pi pi-arrow-up" style="font-size: 1.5rem; color: var(--red-500)"><span class="ml-3 text-sm">Saída</span></i>
                     } @else {
-                      <i class="pi pi-arrow-up" style="font-size: 1.5rem; color: var(--red-500)"></i>
+                      <i class="pi pi-arrow-down" style="font-size: 1.5rem; color: #22C55E;"><span class="ml-3 text-sm">Entrada</span></i>
                     }
                   } @else if(col.cellTemplate == 'shortDate') {
                     @if(rowData[col.dataField]){

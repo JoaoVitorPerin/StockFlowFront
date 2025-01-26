@@ -16,8 +16,8 @@
         </tr>
         @for(item of pedido.produtos; track item){
           <tr>
-            <td>{{item?.produto__marca__nome ?? '--'}}</td>
             <td>{{item?.produto__nome ?? '--'}}</td>
+            <td>{{item?.produto__marca__nome ?? '--'}}</td>
             <td>{{item?.quantidade ?? '--'}}</td>
           </tr>
         }
