@@ -20,11 +20,6 @@ const routes: Routes = [
       {
         path: 'cadastro/:id',
         component: CadastroComponent
-      },
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full'
       }
     ]
   }

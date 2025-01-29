@@ -3,7 +3,6 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { AutenticacaoComponent } from './core/autenticacao/autenticacao.component';
 import { AutenticacaoGuard } from './core/guards/autenticacao.guard';
-import { HomeComponent } from './modules/home/home.component';
 import { Page404Component } from './core/page-404/page-404.component';
 import { RedefinirSenhaComponent } from './core/redefinir-senha/redefinir-senha.component';
 import { MovimentacaoEstoqueComponent } from './modules/movimentacao-estoque/movimentacao-estoque.component';
@@ -85,7 +84,8 @@ const APP_ROUTES: Routes = [
     },
 ];
   
-export class AppRoutingModule {
-    static routing: ModuleWithProviders<RouterModule> =
-        RouterModule.forRoot(APP_ROUTES);
-}
+@NgModule({
+  imports: [RouterModule.forRoot(APP_ROUTES)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}

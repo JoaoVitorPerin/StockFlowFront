@@ -21,7 +21,7 @@ import { MovimentacaoEstoqueComponent } from './modules/movimentacao-estoque/mov
     ],
     imports: [
         BrowserModule,
-        AppRoutingModule.routing, 
+        AppRoutingModule, 
         AppLayoutModule,
         AutenticacaoComponent,
         ToastrModule,
