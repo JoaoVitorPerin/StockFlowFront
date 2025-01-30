@@ -115,8 +115,12 @@ export class CadastroComponent {
     if(this.formCliente.valid){
       this.clienteService.cadastrarCliente(this.formCliente.getRawValue()).subscribe({
         next: (response) => {
-          this.toastrService.mostrarToastrSuccess('Cliente cadastrado com sucesso');
-          this.router.navigate(['cliente/cadastro', response.cliente_id]);
+          if(response.status){
+            this.toastrService.mostrarToastrSuccess('Cliente cadastrado com sucesso');
+            this.router.navigate(['cliente/cadastro', response.cliente_id]);
+          }else[
+            this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar cliente')
+          ]
         }, error: () => {
           this.toastrService.mostrarToastrDanger('Erro ao cadastrar cliente');
         }
@@ -153,5 +157,42 @@ export class CadastroComponent {
       this.toastrService.mostrarToastrDanger('Digite um CEP válido!')
     }
   }
-  
+
+  resetCampoCpfInvalido(): void {
+    if (!this.validarCPF()) {
+      console.log('invalido')
+      this.toastrService.mostrarToastrDanger('CPF inválido!');
+      this.formCliente.patchValue({cpf_cnpj: null});
+    }
+  }   
+
+  validarCPF() {
+    const cpfusuario = this.formCliente.get('cpf_cnpj').value;
+    let cpf = cpfusuario.replace(/\D/g, '');
+
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+        return false; // Verifica se tem 11 dígitos e se não é uma sequência repetida (ex: 111.111.111-11)
+    }
+
+    let soma = 0, resto;
+
+    // Calcula o primeiro dígito verificador
+    for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.charAt(9))) return false;
+
+    // Calcula o segundo dígito verificador
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.charAt(10))) return false;
+
+    return true
+  }
 }
