@@ -160,7 +160,6 @@ export class CadastroComponent {
 
   resetCampoCpfInvalido(): void {
     if (!this.validarCPF()) {
-      console.log('invalido')
       this.toastrService.mostrarToastrDanger('CPF inválido!');
       this.formCliente.patchValue({cpf_cnpj: null});
     }
