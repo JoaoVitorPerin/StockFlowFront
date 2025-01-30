@@ -123,7 +123,7 @@ export class CadastroComponent {
     this.pedidoService.buscarDadosClientes().subscribe(
       (response) => {
         this.todosCliente = response.clientes;
-        this.itemsClientes = response.clientes.map((item) => {
+        this.itemsClientes = response.clientes.filter((item) => item.status).map((item) => {
           return {
             value: item.id,
             label: item.nome_completo
