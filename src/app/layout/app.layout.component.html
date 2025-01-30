@@ -1,7 +1,14 @@
 <div class="layout-wrapper" [ngClass]="containerClass">
     <app-topbar></app-topbar>
     <div class="layout-sidebar flex flex-column justify-content-between">
-        <app-sidebar></app-sidebar>
+        <div class="flex flex-column gap-3 mt-5 md:mt-0">
+            @if(isMobile){
+            <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+                <i class="text-3xl pi pi-times"></i>
+            </button>
+            }
+            <app-sidebar></app-sidebar>
+        </div>
         <p-button class="mb-5" label="Sair" severity="danger" icon="pi pi-sign-out" [routerLink]="['/login']" routerLinkActive="router-link-active" />
     </div>
     <div class="layout-main-container">

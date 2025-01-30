@@ -16,8 +16,8 @@
             }
 
             .layout-sidebar {
-                transform: translateX(-100%);
-                left: 0;
+                transform: translateX(100%);
+                right: 0;
                 top: 0;
                 height: 100vh;
                 border-top-left-radius: 0;
@@ -67,8 +67,8 @@
         }
 
         .layout-sidebar {
-            transform: translateX(-100%);
-            left: 0;
+            transform: translateX(100%);
+            right: 0;
             top: 0;
             height: 100vh;
             border-top-left-radius: 0;

@@ -18,6 +18,7 @@ export class AppLayoutComponent implements OnDestroy {
     menuOutsideClickListener: any;
 
     profileMenuOutsideClickListener: any;
+    isMobile = window.innerWidth <= 1024;
 
     @ViewChild(AppSidebarComponent) appSidebar!: AppSidebarComponent;
 
