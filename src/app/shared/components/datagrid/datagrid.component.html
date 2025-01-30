@@ -90,22 +90,20 @@
                 }
               }
               @if(configuracoes.clearFilterButton){
-                  <div>
-                      <button pButton pRipple class="p-button-outlined" pTooltip="Limpar filtro" tooltipPosition="left" (click)="clear()">
-                        <div class="flex align-items-center gap-2 font-normal">
-                            <i class="pi pi-filter" style="font-size: 1.15rem;"></i>
-                        </div>
+                  <div class="mx-3 col-6">
+                      <button pButton pRipple class="p-button-outlined" label="Limpar filtro" pTooltip="Limpar filtro" tooltipPosition="left" (click)="clear()">
+
                       </button>
                   </div>
               }
               @if(configuracoes.exportButton){
-                <div>
+                <!-- <div>
                   <button pButton pRipple class="p-button-outlined" pTooltip="Download" tooltipPosition="left" (click)="exportExcel()">
                     <div class="flex align-items-center gap-2 font-normal">
                         <i class="pi pi-download" style="font-size: 1.15rem;"></i>
                     </div>
                   </button>
-                </div>
+                </div> -->
               }
               @if(configuracoes.refresh){
                 <div>
@@ -183,11 +181,8 @@
                       placeholder="Pesquisar" [(ngModel)]="termo" />
                   </span>
                 }
-                @if(configuracoes.exportButton){
-                  <button pButton pRipple icon="pi pi-upload" class="p-button-outlined" (click)="exportExcel()"></button>
-                }
                 @if(configuracoes.clearFilterButton){
-                  <button pButton class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+                  <button pButton class="p-button-outlined" label="Limpar filtro" (click)="clear(table)"></button>
                 }
               </div>
             </div>
