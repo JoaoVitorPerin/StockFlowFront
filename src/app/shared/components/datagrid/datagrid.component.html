@@ -173,14 +173,16 @@
                 }
               </div>
 
-              <div class="flex align-items-center gap-2 col-12">
+              <div class="col-12">
                 @if(configuracoes.search){
-                  <span class="p-input-icon-left">
+                  <span class="p-input-icon-left w-full">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="searchTable($event, table); stateSave();"
+                    <input pInputText type="text" class="w-full" (input)="searchTable($event, table); stateSave();"
                       placeholder="Pesquisar" [(ngModel)]="termo" />
                   </span>
                 }
+              </div>
+              <div class="col-12">
                 @if(configuracoes.clearFilterButton){
                   <button pButton class="p-button-outlined" label="Limpar filtro" (click)="clear(table)"></button>
                 }

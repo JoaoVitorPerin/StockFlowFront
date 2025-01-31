@@ -121,4 +121,8 @@ export class AppLayoutComponent implements OnDestroy {
             this.menuOutsideClickListener();
         }
     }
+
+    onConfigButtonClick() {
+        this.layoutService.showConfigSidebar();
+    }
 }

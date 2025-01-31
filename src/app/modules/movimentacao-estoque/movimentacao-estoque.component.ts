@@ -41,6 +41,14 @@ export class MovimentacaoEstoqueComponent {
 
     this.columns = [
       {
+        dataField: 'tipo',
+        caption: 'Tipo',
+        dataType: 'string',
+        cellTemplate: 'movimentacao',
+        sorting: true,
+        fixed: true
+      },
+      {
         dataField: 'data_movimentacao',
         caption: 'Data',
         dataType: 'date',
@@ -57,13 +65,6 @@ export class MovimentacaoEstoqueComponent {
         dataField: 'quantidade',
         caption: 'Quantidade',
         dataType: 'int',
-        sorting: true,
-      },
-      {
-        dataField: 'tipo',
-        caption: 'Tipo',
-        dataType: 'string',
-        cellTemplate: 'movimentacao',
         sorting: true,
       },
       {

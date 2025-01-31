@@ -1,8 +1,8 @@
 <div class="grid md:ml-3">
     <p class="text-3xl font-bold">Pedidos em separação:<p>
-    <div class="grid col-12">
+    <div class="grid md:col-12">
         @if(pedidosSeparacao.length == 0){
-            <p>Nenhum pedido em separação</p>
+            <p class="ml-3">Nenhum pedido em separação</p>
         }
         @for(pedido of pedidosSeparacao; track pedido){
         <div class="col-12 md:col-3">
@@ -12,9 +12,9 @@
     </div>
 
     <p class="text-3xl font-bold">Pedidos embalados:<p>
-    <div class="grid col-12">
+    <div class="grid md:col-12">
         @if(pedidosEmbalados.length == 0){
-            <p>Nenhum pedido embalado</p>
+            <p class="ml-3">Nenhum pedido embalado</p>
         }
         @for(pedido of pedidosEmbalados; track pedido){
         <div class="col-12 md:col-3">
@@ -24,9 +24,9 @@
     </div>
 
     <p class="text-3xl font-bold">Pedidos que saíram do estoque:<p>
-    <div class="grid col-12">
+    <div class="grid md:col-12">
         @if(pedidosSaidaEstoque.length == 0){
-            <p>Nenhum pedido saiu do estoque</p>
+            <p class="ml-3">Nenhum pedido saiu do estoque</p>
         }
         @for(pedido of pedidosSaidaEstoque; track pedido){
         <div class="col-12 md:col-3">
