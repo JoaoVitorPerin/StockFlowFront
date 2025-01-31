@@ -52,6 +52,10 @@ export class TokenService {
     return JSON.parse(localStorage.getItem('is_cadastro_completo'));
   }
 
+  getPermissions(): any {
+    return this.getJwtDecodedAccess().groups;
+  }
+
   enviarRefreshToken(token: string): any {
     return this.http.post(`${this.API_BACK}core/login/refresh`, { refresh: token });
   }
