@@ -7,7 +7,6 @@
     @if (moreActions()?.length) {
       <p-button
         [outlined]="true"
-        [rounded]="true"
         icon="pi pi-ellipsis-h"
         severity="secondary"
         pTooltip="Mais ações"
@@ -31,7 +30,6 @@
     @if(button.iconType == 'material' && button.icon){
       <p-button
         [outlined]="button.outlined || false"
-        [rounded]="true"
         [label]="button.text"
         [icon]="button.icon"
         [severity]="button.color"
@@ -46,7 +44,6 @@
     } @else {
       <p-button
         [outlined]="button.outlined || false"
-        [rounded]="true"
         [label]="button.text"
         [icon]="button.icon"
         [severity]="button.color"

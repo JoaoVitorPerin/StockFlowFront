@@ -294,7 +294,7 @@
         }
         @if (configuracoes.rowExpansion) {
           <td class="flex justify-content-center">
-            <p-button type="button" pRipple [pRowToggler]="rowData" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+            <p-button type="button" pRipple [pRowToggler]="rowData" [text]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
           </td>
         }
         @for (col of columns; track col; let index = $index) {
