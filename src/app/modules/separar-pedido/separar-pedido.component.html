@@ -1,8 +1,8 @@
 <div class="grid md:ml-3">
-    <p class="text-3xl font-bold">Pedidos em separação:<p>
+    <p class="text-3xl font-bold">Pedidos pendentes:<p>
     <div class="grid md:col-12">
         @if(pedidosSeparacao.length == 0){
-            <p class="ml-3">Nenhum pedido em separação</p>
+            <p class="ml-3">Nenhum pedido(s) pendente!</p>
         }
         @for(pedido of pedidosSeparacao; track pedido){
         <div class="col-12 md:col-3">
@@ -11,7 +11,7 @@
         }
     </div>
 
-    <p class="text-3xl font-bold">Pedidos embalados:<p>
+    <!-- <p class="text-3xl font-bold">Pedidos embalados:<p>
     <div class="grid md:col-12">
         @if(pedidosEmbalados.length == 0){
             <p class="ml-3">Nenhum pedido embalado</p>
@@ -21,9 +21,9 @@
             <app-card-separacao [pedido]="pedido" (statusAlterado)="buscarPedidos()"></app-card-separacao>
         </div>
         }
-    </div>
+    </div> -->
 
-    <p class="text-3xl font-bold">Pedidos que saíram do estoque:<p>
+    <!-- <p class="text-3xl font-bold">Pedidos que saíram do estoque:<p>
     <div class="grid md:col-12">
         @if(pedidosSaidaEstoque.length == 0){
             <p class="ml-3">Nenhum pedido saiu do estoque</p>
@@ -33,5 +33,5 @@
             <app-card-separacao [pedido]="pedido" [notButton]="true" (statusAlterado)="buscarPedidos()"></app-card-separacao>
         </div>
         }
-    </div>
+    </div> -->
 </div>

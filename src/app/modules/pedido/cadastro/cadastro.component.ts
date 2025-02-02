@@ -223,6 +223,7 @@ export class CadastroComponent {
             produto_id: [item.produto_id, Validators.required],
             quantidade: [parseInt(item.quantidade), Validators.required],
             preco_unitario: [parseFloat(item.precoUnitario), Validators.required],
+            preco_custo: [parseFloat(item.precoCusto)],
             is_estoque_externo: [item.is_estoque_externo],  
           });
           const itens = this.formPedido.get('itens') as FormArray;
@@ -259,6 +260,7 @@ export class CadastroComponent {
       produto_id: [null, Validators.required],
       quantidade: [null, Validators.required],
       preco_unitario: [null, Validators.required],
+      preco_custo: [null],
       is_estoque_externo: [false],
     });
   
@@ -328,6 +330,8 @@ export class CadastroComponent {
   onChangeSelectProduto(event, form){
     const produto = this.buscarProduto(event.value);
     form.get("preco_unitario").setValue(produto.preco_venda);
+
+    form.get("preco_custo").setValue(produto.preco_compra_real)
 
     this.recalcularPrecoTotal()
   }
