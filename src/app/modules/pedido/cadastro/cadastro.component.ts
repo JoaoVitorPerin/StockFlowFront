@@ -158,7 +158,7 @@ export class CadastroComponent {
       this.pedidoService.cadastrarPedido(dados).subscribe(
         (response) => {
           if (response.status) {
-            this.toastrService.mostrarToastrSuccess('Pedido cadastrado com sucesso!');
+            this.toastrService.mostrarToastrSuccess(`Pedido ${this.idPedido ? 'editado' : 'cadastrado'} com sucesso!`);
             this.router.navigate(['/pedido/home']);
           } else {
             this.toastrService.mostrarToastrDanger(response.descricao);

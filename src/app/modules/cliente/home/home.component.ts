@@ -25,9 +25,9 @@ export class HomeComponent implements OnInit{
   ){
     this.columns = [
       {
-        dataField: 'cpf_cnpj',
-        caption: 'CPF/CPNJ',
-        dataType: 'int',
+        dataField: 'telefone',
+        caption: 'Telefone',
+        dataType: 'string',
         sorting: true,
       },
       {
@@ -37,8 +37,8 @@ export class HomeComponent implements OnInit{
         sorting: true,
       },
       {
-        dataField: 'telefone',
-        caption: 'Telefone',
+        dataField: 'cpf_cnpj',
+        caption: 'CPF/CPNJ',
         dataType: 'string',
         sorting: true,
       },

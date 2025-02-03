@@ -312,7 +312,7 @@
                 @if(col.dataField === 'acoes' && configuracoes?.actionButtons?.length){
                   <app-datagrid-actions [buttons]="configuracoes?.actionButtons" [data]="rowData" [rowIndex]="rowIndex"></app-datagrid-actions>
                 } @else if(!col.cellTemplate){
-                  {{ rowData[col.dataField] || rowData[col.dataField] == 0 || rowData[col.dataField] == false ? rowData[col.dataField] : '--'}}
+                  {{ rowData[col.dataField] || rowData[col.dataField] === "" || rowData[col.dataField] == 0 || rowData[col.dataField] == false ? rowData[col.dataField] : '--'}}
                 } @else{
                   @if(col.cellTemplate == 'datetime'){
                     @if(rowData[col.dataField]){
@@ -388,7 +388,7 @@
                 }
               } @else {
                 @if(!col.cellTemplate){
-                  {{ rowData[col.dataField] ? rowData[col.dataField] : '--'}}
+                  {{ rowData[col.dataField] && rowData[col.dataField] != "" ? rowData[col.dataField] : '--'}}
                 } @if(col.cellTemplate == 'text') {
                   <input pInputText type="text" [ngModel]="rowData[col.dataField] ?? ''"
                     [placeholder]="col?.placeholder ?? ''"

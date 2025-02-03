@@ -77,8 +77,12 @@ export class CadastroComponent {
     if(this.formProduto.valid){
       this.produtoService.cadastrarProduto(this.formProduto.getRawValue()).subscribe({
         next: (response) => {
-          this.toastrService.mostrarToastrSuccess('Produto cadastrado com sucesso');
-          this.router.navigate(['produto/cadastro', response.produto_id]);
+          if(response.status){
+            this.toastrService.mostrarToastrSuccess(`Produto ${this.idProduto ? 'editado' : 'cadastrado'} com sucesso`);
+            this.router.navigate(['produto/home']);
+          }else{
+            this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar produto');
+          }
         }, error: () => {
           this.toastrService.mostrarToastrDanger('Erro ao cadastrar produto');
         }

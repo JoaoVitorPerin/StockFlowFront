@@ -58,8 +58,8 @@ export class CadastroComponent {
     if(this.formMarca.valid){
       this.produtoService.cadastrarMarca(this.formMarca.getRawValue()).subscribe({
         next: (response) => {
-          this.toastrService.mostrarToastrSuccess('Marca cadastrado com sucesso');
-          this.router.navigate(['marca/cadastro', response.marca_id]);
+          this.toastrService.mostrarToastrSuccess(`Marca ${this.idMarca ? 'editada' : 'cadastrada'} com sucesso`);
+          this.router.navigate(['marca/home']);
         }, error: () => {
           this.toastrService.mostrarToastrDanger('Erro ao cadastrar marca');
         }

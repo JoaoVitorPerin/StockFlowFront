@@ -64,8 +64,8 @@ export class CadastroComponent {
     if(this.formUser.valid){
       this.userService.cadastrarUser(this.formUser.getRawValue()).subscribe({
         next: (response) => {
-          this.toastrService.mostrarToastrSuccess('Usuário cadastrado com sucesso');
-          this.router.navigate(['user/cadastro', response.user_id]);
+          this.toastrService.mostrarToastrSuccess(`Usuário ${this.idUsuario ? 'editado' : 'cadastrado'} com sucesso`);
+          this.router.navigate(['user/home']);
         }, error: () => {
           this.toastrService.mostrarToastrDanger('Erro ao cadastrar usuário');
         }

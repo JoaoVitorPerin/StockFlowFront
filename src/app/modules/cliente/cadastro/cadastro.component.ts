@@ -29,9 +29,9 @@ export class CadastroComponent {
       this.formCliente = this.formBuilder.group({
         cliente_id: [null],
         nome_completo: [null, Validators.required],
-        cpf_cnpj: [null, Validators.required],
+        cpf_cnpj: [null],
         telefone: [null, Validators.required],
-        email: [null, [Validators.required, Validators.email]],
+        email: [null, [Validators.email]],
         logradouro: [null],
         numero: [null, Validators.required],
         complemento: [null],
@@ -113,14 +113,18 @@ export class CadastroComponent {
   cadastrarCliente(): void {
     this.formCliente.markAllAsTouched();
     if(this.formCliente.valid){
-      this.clienteService.cadastrarCliente(this.formCliente.getRawValue()).subscribe({
+      const data = {
+        ...this.formCliente.getRawValue(),
+        cpf_cnpj: this.formCliente.get('cpf_cnpj').value === "" ? null : this.formCliente.get('cpf_cnpj').value,
+      }
+      this.clienteService.cadastrarCliente(data).subscribe({
         next: (response) => {
           if(response.status){
-            this.toastrService.mostrarToastrSuccess('Cliente cadastrado com sucesso');
-            this.router.navigate(['cliente/cadastro', response.cliente_id]);
-          }else[
+            this.toastrService.mostrarToastrSuccess(`Cliente ${this.idCliente ? 'editado' : 'cadastrado'} com sucesso`);
+            this.router.navigate(['cliente/home']);
+          }else{
             this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar cliente')
-          ]
+          }
         }, error: () => {
           this.toastrService.mostrarToastrDanger('Erro ao cadastrar cliente');
         }
@@ -134,7 +138,6 @@ export class CadastroComponent {
     if (cepOnlyNumbers && cepOnlyNumbers.length === 8) {
       this.viaCepService.buscarCep(cepOnlyNumbers).subscribe(
         data => {
-          console.log(data)
           if(data.erro){
             this.formCliente.patchValue({
               logradouro: null,
@@ -159,15 +162,17 @@ export class CadastroComponent {
   }
 
   resetCampoCpfInvalido(): void {
-    if (!this.validarCPF()) {
+    if (!this.validarCPF() && this.formCliente.get('cpf_cnpj').value.length >= 11) {
       this.toastrService.mostrarToastrDanger('CPF inválido!');
       this.formCliente.patchValue({cpf_cnpj: null});
     }
   }   
 
   validarCPF() {
-    const cpfusuario = this.formCliente.get('cpf_cnpj').value;
-    let cpf = cpfusuario.replace(/\D/g, '');
+    const cpfusuario = this.formCliente.get('cpf_cnpj').value ?? null;
+    if(!cpfusuario) return false;
+
+    let cpf = cpfusuario?.replace(/\D/g, '');
 
     if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
         return false; // Verifica se tem 11 dígitos e se não é uma sequência repetida (ex: 111.111.111-11)

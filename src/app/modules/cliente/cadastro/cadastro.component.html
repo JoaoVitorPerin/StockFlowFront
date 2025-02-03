@@ -9,17 +9,19 @@
         <p class="text-base font-bold">Informações básicas</p>
         <div class="grid mb-2">
             <div class="col-12 md:col-4">
-                <app-form type="cpf" (blur)="resetCampoCpfInvalido()" id="cpf_cnpj" label="CPF" formControlName="cpf_cnpj" placeholder="Digite o cpf/cpnj do cliente" erro="Digite o cpf/cpnj do cliente" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
+                <app-form type="celular" id="telefone" label="Telefone" formControlName="telefone" placeholder="Digite o telefone do cliente" erro="Digite o telefone do cliente" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
             </div>
+
             <div class="col-12 md:col-4">
                 <app-form type="text" id="nome_completo" label="Nome" formControlName="nome_completo" placeholder="Digite o Nome Completo" erro="Digite o nome do cliente!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
             </div>
+
+            <div class="col-12 md:col-4">
+                <app-form type="cpf" (blur)="resetCampoCpfInvalido()" id="cpf_cnpj" label="CPF" formControlName="cpf_cnpj" placeholder="Digite o cpf/cpnj do cliente" erro="Digite o cpf/cpnj do cliente" ngDefaultControl/>
+            </div>
             
             <div class="col-12 md:col-4">
-                <app-form type="celular" id="telefone" label="Telefone" formControlName="telefone" placeholder="Digite o telefone do cliente" erro="Digite o telefone do cliente" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
-            </div>
-            <div class="col-12 md:col-4">
-                <app-form type="text" id="email" label="E-mail" formControlName="email" placeholder="Digite o email do cliente" erro="Digite o email do cliente" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
+                <app-form type="text" id="email" label="E-mail" formControlName="email" placeholder="Digite o email do cliente" erro="Digite o email do cliente" ngDefaultControl/>
             </div>
         </div>
 
