@@ -50,7 +50,6 @@ export class CadastroComponent {
         filter(value => value && value.length === 8)
       )
       .subscribe(cep => {
-        console.log(cep)
         this.viaCepService.buscarCep(cep).subscribe(
           data => {
             this.formCliente.patchValue(data)
