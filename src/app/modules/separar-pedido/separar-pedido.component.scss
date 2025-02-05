@@ -1,0 +1,25 @@
+table {
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+}
+  
+table, td {
+    border: 1px solid var(--text-color); /* Define bordas de 1px */
+}
+
+th {
+    color: var(--primary-color)!important;
+    font-weight: bold;
+    border: 1px solid var(--text-color)
+}
+
+th, td {
+    padding: 20px 5px; /* Adiciona padding nas células */
+    text-align: center; /* Alinha o texto ao centro */
+    color: var(--text-color); /* Texto em branco */
+}
+
+tr:nth-child(even) {
+    background-color: var(--surface-b); /* Alterna cor de linhas */
+}

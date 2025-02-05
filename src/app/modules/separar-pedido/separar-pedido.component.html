@@ -1,4 +1,44 @@
-<div class="grid md:ml-3">
+<p-breadcrumb 
+    class="max-w-full" 
+    [model]="items" 
+    [home]="home" />
+
+<app-datagrid [data]="pedidosSeparacao ? pedidosSeparacao : []" [columns]="columns" [configuracoes]="configuracoes" titulo="Pedidos pendentes no estoque" class="w-full"></app-datagrid>
+
+<ng-template #modalPedido>
+    <table class="w-full table mb-2">
+        <tr>
+          <th>Produto</th>
+          <th>Marca</th>
+          <th>Quantidade</th>
+        </tr>
+        @for(item of pedido.produtos; track item){
+          <tr>
+            <td>{{item?.produto__nome ?? '--'}}</td>
+            <td>{{item?.produto__marca__nome ?? '--'}}</td>
+            <td>{{item?.quantidade ?? '--'}}</td>
+          </tr>
+        }
+    </table>
+    <p class="mt-3 mb-0 text-3xl font-bold">Dados do cliente:</p>
+    <div class="mt-2 flex justify-content-around">
+        <div>
+            <p class="m-0 font-bold">Dados básicos:</p>
+            <p>{{pedido?.cliente?.nome_completo}}</p>
+            <p>{{pedido?.cliente?.email}}</p>
+            <p>{{pedido?.cliente?.telefone}}</p>
+        </div>
+        <div>
+            <p class="m-0 font-bold">Endereço:</p>
+            <p>{{pedido?.cliente?.cep}}</p>
+            <p>{{pedido?.cliente?.rua}}, {{pedido?.cliente?.numero}}, {{pedido?.cliente?.cidade}}, {{pedido?.cliente?.estado}}</p>
+            <p>{{pedido?.cliente?.complemento}}</p>
+        </div>
+    </div>
+</ng-template>
+
+<!-- <div class="grid">
+
     <p class="text-3xl font-bold">Pedidos pendentes:<p>
     <div class="grid md:col-12">
         @if(pedidosSeparacao.length == 0){
@@ -11,7 +51,7 @@
         }
     </div>
 
-    <!-- <p class="text-3xl font-bold">Pedidos embalados:<p>
+    <p class="text-3xl font-bold">Pedidos embalados:<p>
     <div class="grid md:col-12">
         @if(pedidosEmbalados.length == 0){
             <p class="ml-3">Nenhum pedido embalado</p>
@@ -21,9 +61,9 @@
             <app-card-separacao [pedido]="pedido" (statusAlterado)="buscarPedidos()"></app-card-separacao>
         </div>
         }
-    </div> -->
+    </div>
 
-    <!-- <p class="text-3xl font-bold">Pedidos que saíram do estoque:<p>
+    <p class="text-3xl font-bold">Pedidos que saíram do estoque:<p>
     <div class="grid md:col-12">
         @if(pedidosSaidaEstoque.length == 0){
             <p class="ml-3">Nenhum pedido saiu do estoque</p>
@@ -33,5 +73,5 @@
             <app-card-separacao [pedido]="pedido" [notButton]="true" (statusAlterado)="buscarPedidos()"></app-card-separacao>
         </div>
         }
-    </div> -->
-</div>
+    </div>
+</div> -->

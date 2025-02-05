@@ -6,7 +6,9 @@
 <p-card header="Cadastro/Edição de Pedidos">
     <div class="mb-3 md:mb-0 flex-column md:flex md:flex-row md:justify-content-between align-items-center">
       <p class="text-sm text-red-500 mb-3">* representam campos obrigatórios!</p>
-      <p-button label="Adicionar cliente" (click)="abrirModalCliente()" styleClass="w-full" severity="primary"/>
+      @if(passoAtual == 0){
+        <p-button label="Adicionar cliente" (click)="abrirModalCliente()" styleClass="w-full" severity="primary"/>
+      }
     </div>
     <p-steps [model]="itemsSteps" [readonly]="true" [activeIndex]="passoAtual"/>
     <form [formGroup]="formPedido">
@@ -70,7 +72,7 @@
             <p class="text-base font-bold">Produto {{i+1}}</p>
           }
           <div class="grid mb-2 flex align-items-center">
-            <div class="col-12 md:col-3">
+            <div class="col-12 md:col-4">
               <div class="w-100 flex flex-column">
                 <label>Produto:</label>
                 <p-dropdown #dropdown formControlName="produto_id" [options]="itemsProdutos" class="w-full"
@@ -90,7 +92,7 @@
                 </p-dropdown>
               </div>
             </div>
-            <div class="col-12 md:col-2">
+            <div class="col-12 md:col-4">
               <div class="w-100 flex flex-column">
                 <label>Quantidade:</label>
                 <p-inputNumber formControlName="quantidade" class="w-full" mode="decimal" [useGrouping]="false" [min]="0" [max]="9999999999999999999999999" suffix="x"
@@ -98,21 +100,7 @@
                 [ngClass]="{'ng-invalid ng-dirty': !item?.get('quantidade')?.valid && item?.get('quantidade')?.touched }"></p-inputNumber>
               </div>
             </div>
-            <div class="col-12 md:col-2">
-              <div class="w-100 flex flex-column">
-                <label>Preço unitário:</label>
-                <p-inputNumber formControlName="preco_unitario" mode="currency" currency="BRL" locale="pt-BR" placeholder="Preço unitário do produto" class="w-full"
-                [ngClass]="{'ng-invalid ng-dirty': !item?.get('preco_unitario')?.valid && item?.get('preco_unitario')?.touched }"></p-inputNumber>
-              </div>
-            </div>
-            <div class="col-12 md:col-2">
-              <div class="w-100 flex flex-column">
-                <label>Preço custo real:</label>
-                <p-inputNumber formControlName="preco_custo" mode="currency" currency="BRL" locale="pt-BR" placeholder="Preço de custo do produto" class="w-full"
-                [ngClass]="{'ng-invalid ng-dirty': !item?.get('preco_custo')?.valid && item?.get('preco_custo')?.touched }"></p-inputNumber>
-              </div>
-            </div>
-            <div class="col-12 md:col-2">
+            <div class="col-12 md:col-3">
               <div class="w-100 flex flex-column">
                 <label>Estoque externo?</label>
                 <p-checkbox formControlName="is_estoque_externo" [value]="true" [binary]="true" size="large" />
@@ -123,6 +111,22 @@
               <p-button icon="pi pi-trash" [rounded]="true" severity="danger " (click)="removerItemListaProduto(i)"/>
             </div>
             }
+          </div>
+          <div class="grid flex align-items-center">
+            <div class="col-12 md:col-6">
+              <div class="w-100 flex flex-column">
+                <label>Preço unitário:</label>
+                <p-inputNumber formControlName="preco_unitario" mode="currency" currency="BRL" locale="pt-BR" placeholder="Preço unitário do produto" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': !item?.get('preco_unitario')?.valid && item?.get('preco_unitario')?.touched }"></p-inputNumber>
+              </div>
+            </div>
+            <div class="col-12 md:col-6">
+              <div class="w-100 flex flex-column">
+                <label>Preço custo real:</label>
+                <p-inputNumber formControlName="preco_custo" mode="currency" currency="BRL" locale="pt-BR" placeholder="Preço de custo do produto" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': !item?.get('preco_custo')?.valid && item?.get('preco_custo')?.touched }"></p-inputNumber>
+              </div>
+            </div>
           </div>
         </div>
         <div class="grid md:flex md:justify-content-end">

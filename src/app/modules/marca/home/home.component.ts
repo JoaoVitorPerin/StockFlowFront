@@ -62,7 +62,7 @@ export class HomeComponent {
         icon: 'pi pi-plus',
         color: 'success',
         tooltip: 'Adicionar Marca',
-        text: 'Adicionar Marca',
+        text: 'Adicionar',
         click: (): void => {
           this.router.navigate(['marca/cadastro']);
         }

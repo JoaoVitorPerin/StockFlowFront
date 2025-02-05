@@ -33,7 +33,7 @@
                 <app-form type="cep" id="cep" label="CEP" formControlName="cep" placeholder="Digite o cep do cliente" erro="Digite o cep do cliente" [exibirLabelObrigatoriedade]="true" (focusout)="onCepChange()" ngDefaultControl/>
             </div>
             <div class="col-12 md:col-4">
-                <app-form type="text" [readonly]="true" id="logradouro" label="Rua" formControlName="logradouro" placeholder="Digite a rua do cliente" erro="Digite a rua do cliente" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
+                <app-form type="text" id="logradouro" label="Rua" formControlName="logradouro" placeholder="Digite a rua do cliente" erro="Digite a rua do cliente" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
             </div>
             <div class="col-12 md:col-4">
                 <app-form type="text" id="bairro" [readonly]="true" label="Bairro" formControlName="bairro" placeholder="Digite o bairro do cliente" erro="Digite o bairro do cliente" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>

@@ -90,6 +90,13 @@ export class HomeComponent {
         cellTemplate: 'dinheiroUS',
       },
       {
+        dataField: 'preco_compra_real',
+        caption: 'Preço de Compra Real',
+        dataType: 'string',
+        sorting: true,
+        cellTemplate: 'dinheiro',
+      },
+      {
         dataField: 'preco_venda',
         caption: 'Preço de Venda',
         dataType: 'string',
