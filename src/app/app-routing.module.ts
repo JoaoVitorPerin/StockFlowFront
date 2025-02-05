@@ -60,6 +60,13 @@ const APP_ROUTES: Routes = [
                   ).then(m => m.ClienteModule)
             },
             {
+              path: 'dashboard',
+              loadChildren: () =>
+                import(
+                  './modules/dashboard/dashboard.module'
+                ).then(m => m.DashboardModule)
+            },
+            {
               path: 'separar-pedido',
               component: SepararPedidoComponent
             },

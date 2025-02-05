@@ -18,6 +18,17 @@ export class AppMenuComponent implements OnInit {
 
     ngOnInit() {
         const permissoes = this.tokenService.getPermissions()
+        if(permissoes.includes('Administrador')) {
+            this.model.push(
+                {
+                    label: 'Dashboard',
+                    items: [
+                        { label: 'Estoque', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/dashboard/estoque'] },
+                    ]
+                }
+            )
+        }
+
 
         if(permissoes.includes('Operador de Estoque') || permissoes.includes('Administrador')) {
             this.model.push(
