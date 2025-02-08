@@ -14,6 +14,7 @@ import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGri
 export class EstoqueComponent {
   formFiltroMarca: FormGroup;
   itensMarcas: items[] = [];
+  itensCategoria: items[] = [];
 
   dadosTabelaEstoque: any[] = [];
   columnsTabelaEstoque: any[];
@@ -50,6 +51,12 @@ export class EstoqueComponent {
       {
         dataField: 'nome_marca',
         caption: 'Marca',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
+        dataField: 'nome_categoria',
+        caption: 'Categoria',
         dataType: 'string',
         sorting: true,
       },
@@ -91,11 +98,20 @@ export class EstoqueComponent {
 
     this.formFiltroMarca = this.formBuilder.group({
       marca_id: [null],
+      categoria_id: [null],
     });
 
     this.formFiltroMarca.get('marca_id').valueChanges.subscribe((value) => {
       if (value) {
-        this.buscarProdutos(value);
+        this.buscarProdutos(value, this.formFiltroMarca.get('categoria_id').value);
+      }else{
+        this.buscarProdutos();
+      }
+    });
+
+    this.formFiltroMarca.get('categoria_id').valueChanges.subscribe((value) => {
+      if (value) {
+        this.buscarProdutos(this.formFiltroMarca.get('marca_id').value, value);
       }else{
         this.buscarProdutos();
       }
@@ -103,6 +119,7 @@ export class EstoqueComponent {
 
     this.buscarProdutos()
     this.buscarMarcas();
+    this.buscarCategorias();
     this.initGrafico();
   }
 
@@ -144,8 +161,16 @@ export class EstoqueComponent {
     this.buscarDadosEstoqueMarcasGrafico();
   }
 
-  buscarProdutos(marcaId?: string): void {
-    this.estoqueService.buscarTabelaEstoque(marcaId).subscribe(
+  buscarProdutos(marcaId?: string, categoriaId?: string): void {
+    const data: any = {};
+
+    if (marcaId) {
+      data.marca_id = marcaId;
+    }
+    if (categoriaId) {
+      data.categoria_id = categoriaId;
+    }
+    this.estoqueService.buscarTabelaEstoque(data).subscribe(
       (response) => {
         this.dadosTabelaEstoque = response.estoque;
       },
@@ -166,6 +191,22 @@ export class EstoqueComponent {
       },
       (error) => {
         this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
+      }
+    );
+  }
+
+  buscarCategorias(): void {
+    this.produtoService.buscarTodasCategorias().subscribe(
+      (response) => {
+        this.itensCategoria = response.categorias.map((categoria) => {
+          return {
+            label: categoria.nome,
+            value: categoria.id,
+          };
+        });
+      },
+      (error) => {
+        this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
       }
     );
   }

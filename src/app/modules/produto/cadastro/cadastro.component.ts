@@ -15,6 +15,7 @@ export class CadastroComponent {
   idProduto: string;
   items: any[];
   marcas: any[] = [];
+  categorias: any[] = [];
   home: any;
 
   constructor(private formBuilder: FormBuilder,
@@ -26,6 +27,7 @@ export class CadastroComponent {
                   produto_id: [null],
                   nome: [null, Validators.required],
                   marca__id: [null],
+                  categoria__id: [null],
                   descricao: [null],
                   preco_compra: [null, Validators.required],
                   preco_venda: [null, Validators.required]
@@ -40,7 +42,7 @@ export class CadastroComponent {
                 }
 
                 this.items = [
-                  { label: 'Gestão Admin' }, 
+                  { label: 'Gestão Produto' }, 
                   { label: 'Produtos' }, 
                   { label: 'Cadastro' }
                 ];
@@ -48,6 +50,7 @@ export class CadastroComponent {
                 this.home = { icon: 'pi pi-home'};
 
                 this.buscarMarcas()
+                this.buscarCategorias()
                 }
 
   buscarProdutoById(id: string): void {
@@ -68,6 +71,18 @@ export class CadastroComponent {
         })
       }, error: () => {
         this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
+      }
+    })
+  }
+
+  buscarCategorias(): void {
+    this.produtoService.buscarTodasCategorias().subscribe({
+      next: (dados) => {
+        this.categorias = dados.categorias.map((categoria) => {
+          return { label: categoria.nome, value: categoria.id }
+        })
+      }, error: () => {
+        this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
       }
     })
   }

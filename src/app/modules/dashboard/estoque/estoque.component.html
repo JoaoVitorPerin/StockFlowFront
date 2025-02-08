@@ -1,20 +1,23 @@
 <form [formGroup]="formFiltroMarca">
-    <div class="grid">
-        <div class="col-12">
-            <app-form type="select" [items]="itensMarcas" id="marca_id" placeholder="Selecione uma marca para filtrar" formControlName="marca_id" ngDefaultControl/>
+    <p-card>
+        <div class="grid">
+            <div class="col-12 md:col-6 py-0 mt-2">
+                <app-form type="select" [items]="itensMarcas" id="marca_id" placeholder="Selecione uma marca para filtrar" formControlName="marca_id" ngDefaultControl/>
+            </div>
+            <div class="col-12 md:col-6 py-0 mt-2">
+                <app-form type="select" [items]="itensCategoria" id="categoria_id" placeholder="Selecione uma categoria para filtrar" formControlName="categoria_id" ngDefaultControl/>
+            </div>
         </div>
-    </div>
+    </p-card>
 </form>
 
 <div class="mt-2">
     <app-datagrid [data]="dadosTabelaEstoque" [columns]="columnsTabelaEstoque" [configuracoes]="configuracoes" titulo="Produtos no estoque" class="w-full"></app-datagrid>
 </div>
 
-@if(!formFiltroMarca.get("marca_id").value){
 <div class="mt-2">
     <p-card>
         <p class="text-900 text-xl font-semibold">Marcas com mais produtos</p>
         <p-chart type="bar" [data]="dataMarcasGrafico" [options]="basicOptionsGrafico" />
     </p-card>
 </div>
-}

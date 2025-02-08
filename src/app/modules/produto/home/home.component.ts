@@ -21,6 +21,7 @@ export class HomeComponent {
   data: any = [];
   formEstoque: FormGroup;
   formMarca: FormGroup;
+  formCategoria: FormGroup;
   movimentacaoProduto: any = {};
   opcoesRadio: Array<items> = [];
 
@@ -31,6 +32,7 @@ export class HomeComponent {
 
   @ViewChild('modalControleEstoque', { static: false }) modalControleEstoque!: TemplateRef<any>;
   @ViewChild('modalMarca', { static: false }) modalMarca!: TemplateRef<any>;
+  @ViewChild('modalCategoria', { static: false }) modalCategoria!: TemplateRef<any>;
 
   constructor(
     private router: Router,
@@ -63,6 +65,10 @@ export class HomeComponent {
       nome: [null, Validators.required]
     })
 
+    this.formCategoria = this.formBuilder.group({
+      nome: [null, Validators.required]
+    })
+
     this.columns = [
       {
         dataField: 'nome',
@@ -73,6 +79,12 @@ export class HomeComponent {
       {
         dataField: 'marca__nome',
         caption: 'Marca',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
+        dataField: 'categoria__nome',
+        caption: 'Categoria',
         dataType: 'string',
         sorting: true,
       },
@@ -230,6 +242,7 @@ export class HomeComponent {
                     if(res.status){
                       this.toastrService.mostrarToastrSuccess(`Marca cadastrada com sucesso`);
                       this.modalService.fecharModal();
+                      this.formMarca.reset();
                     }else{
                       this.toastrService.mostrarToastrDanger(res.descricao);
                     }
@@ -246,8 +259,55 @@ export class HomeComponent {
       }
     )
 
+    this.configuracoes.customButtons.push(
+      {
+        icon: 'pi pi-plus',
+        color: 'info',
+        tooltip: 'Adicionar Categoria',
+        text: 'Categoria',
+        click: (): void => {
+          const botoes = [
+            {
+              label: 'Cancelar',
+              color: 'primary',
+              link: true,
+              onClick: () => {
+                this.modalService.fecharModal();
+              },
+            },
+            {
+              label: 'Salvar',
+              color: 'primary',
+              onClick: () => {
+                this.formCategoria.markAllAsTouched();
+                if (this.formCategoria.invalid) {
+                  return;
+                }
+                this.produtoService.cadastrarCategoria(this.formCategoria.value).subscribe(
+                  (res) => {
+                    if(res.status){
+                      this.toastrService.mostrarToastrSuccess(`Categoria cadastrada com sucesso`);
+                      this.modalService.fecharModal();
+                      this.formCategoria.reset();
+                    }else{
+                      this.toastrService.mostrarToastrDanger(res.descricao);
+                    }
+                  },
+                  () => {
+                    this.toastrService.mostrarToastrDanger('Erro ao cadastrar categoria');
+                  }
+                );
+              }
+            }
+          ];
+        this.modalService.abrirModal(`Adicionar Categoria`, this.modalCategoria, botoes, {larguraDesktop: '50'});
+        }
+      }
+    )
+
+
     this.items = [
-      { label: 'Gestão Admin' }, 
+      { label: 'Gestão Produto' }, 
       { label: 'Produtos' }, 
       { label: 'Home' }
     ];

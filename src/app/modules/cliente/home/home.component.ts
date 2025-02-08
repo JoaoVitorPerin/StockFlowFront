@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit{
     )
 
     this.items = [
-      { label: 'Pedidos' }, 
+      { label: 'Gestão de Pedidos' }, 
       { label: 'Cliente' }, 
       { label: 'Home' }
     ];

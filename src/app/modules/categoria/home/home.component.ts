@@ -51,9 +51,9 @@ export class HomeComponent {
     this.configuracoes.actionButtons.push({
       icon: 'pi pi-pencil',
       color: 'primary',
-      tooltip: 'Editar Marca',
+      tooltip: 'Editar Categoria',
       click: (rowData): void => {
-        this.router.navigate(['marca/cadastro/', rowData?.id])
+        this.router.navigate(['categoria/cadastro/', rowData?.id])
       }
     })
 
@@ -61,17 +61,17 @@ export class HomeComponent {
       {
         icon: 'pi pi-plus',
         color: 'success',
-        tooltip: 'Adicionar Marca',
+        tooltip: 'Adicionar Categoria',
         text: 'Adicionar',
         click: (): void => {
-          this.router.navigate(['marca/cadastro']);
+          this.router.navigate(['categoria/cadastro']);
         }
       }
     )
 
     this.items = [
       { label: 'Gestão Produto' }, 
-      { label: 'Marca' }, 
+      { label: 'Categoria' }, 
       { label: 'Home' }
     ];
 
@@ -79,16 +79,16 @@ export class HomeComponent {
   }
 
   ngOnInit(): void {
-    this.buscarMarcas();
+    this.buscarCategorias();
   }
 
-  buscarMarcas(): void {
-    this.produtoService.buscarTodasMarcas().subscribe(
+  buscarCategorias(): void {
+    this.produtoService.buscarTodasCategorias().subscribe(
       (response) => {
-        this.data = response.marcas ?? [];
+        this.data = response.categorias ?? [];
       },
       (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
+        this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
       }
     );
   }

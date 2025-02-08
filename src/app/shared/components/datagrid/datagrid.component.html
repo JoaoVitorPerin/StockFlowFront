@@ -55,6 +55,7 @@
                       [severity]="config.color"
                       [pTooltip]="config.tooltip ?? null"
                       tooltipPosition="right"
+                      styleClass="w-full"
                       (click)="config.click(selectedRows())">
                       <i [class.mr-2]="config.text" class="material-symbols-outlined">{{config.icon}}</i>
                       @if(config.text){
@@ -67,6 +68,7 @@
                       [label]="config.text"
                       [icon]="config.icon"
                       [severity]="config.color"
+                      styleClass="w-full"
                       [pTooltip]="config.tooltip ?? null"
                       tooltipPosition="right"
                       (click)="config.click(selectedRows())">
@@ -123,7 +125,7 @@
               }
             </div>
             <div class="grid flex justify-content-between">
-              <div class="flex justify-content-start gap-3">
+              <div class="grid flex justify-content-start px-3 mt-2 align-items-center">
                 @if(configuracoes.addRow){
                   <div class="col-6">
                     <p-button pRipple pTooltip="Adicionar linha" tooltipPosition="right" severity="success" (click)="addRowMasterDetail()">
@@ -150,6 +152,7 @@
                         [severity]="config.color"
                         [pTooltip]="config.tooltip ?? null"
                         tooltipPosition="top"
+                        styleClass="w-full"
                         (click)="config.click()">
                         <i [class.mr-2]="config.text" class="material-symbols-outlined">{{config.icon}}</i>
                         @if(config.text){
@@ -162,6 +165,7 @@
                         [label]="config.text"
                         [icon]="config.icon"
                         [severity]="config.color"
+                        styleClass="w-full"
                         [pTooltip]="config.tooltip ?? null"
                         tooltipPosition="top"
                         (click)="config.click()">

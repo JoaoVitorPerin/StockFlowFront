@@ -53,6 +53,13 @@ const APP_ROUTES: Routes = [
                 ).then(m => m.MarcaModule)
             },
             {
+              path: 'categoria',
+              loadChildren: () =>
+                import(
+                  './modules/categoria/categoria.module'
+                ).then(m => m.CategoriaModule)
+            },
+            {
                 path: 'cliente',
                 loadChildren: () =>
                   import(

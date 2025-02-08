@@ -69,7 +69,7 @@ export class CadastroComponent {
       }
 
       this.items = [
-        { label: 'Pedido' }, 
+        { label: 'Gestão de Pedidos' }, 
         { label: 'Cliente' }, 
         { label: 'Cadastro' }
       ];

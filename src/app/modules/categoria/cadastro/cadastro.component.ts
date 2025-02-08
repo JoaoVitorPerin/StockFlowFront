@@ -10,8 +10,8 @@ import { ProdutoService } from '../../produto/produto.service';
   styleUrl: './cadastro.component.scss'
 })
 export class CadastroComponent {
-  formMarca: FormGroup;
-  idMarca: string;
+  formCategoria: FormGroup;
+  idCategoria: string;
   items: any[];
   marcas: any[] = [];
   home: any;
@@ -21,47 +21,47 @@ export class CadastroComponent {
               private router: Router,
               private produtoService: ProdutoService,
               private activatedRoute: ActivatedRoute){
-                this.formMarca = this.formBuilder.group({
-                      marca_id: [null],
+                this.formCategoria = this.formBuilder.group({
+                      categoria_id: [null],
                       nome: [null, Validators.required]
                     })
 
-                this.idMarca = this.activatedRoute.snapshot.paramMap.get('id');
-                this.formMarca.patchValue({marca_id: this.idMarca});
+                this.idCategoria = this.activatedRoute.snapshot.paramMap.get('id');
+                this.formCategoria.patchValue({categoria_id: this.idCategoria});
 
-                if (this.idMarca) {
-                  this.formMarca.get('marca_id').disable();
-                  this.buscarMarcasById(this.idMarca);
+                if (this.idCategoria) {
+                  this.formCategoria.get('categoria_id').disable();
+                  this.buscarCategoriasById(this.idCategoria);
                 }
 
                 this.items = [
                   { label: 'Gestão Produto' }, 
-                  { label: 'Marcas' }, 
+                  { label: 'Categorias' }, 
                   { label: 'Cadastro' }
                 ];
       
                 this.home = { icon: 'pi pi-home'};
                 }
 
-  buscarMarcasById(id: string): void {
-    this.produtoService.buscarMarcaById(id).subscribe({
+  buscarCategoriasById(id: string): void {
+    this.produtoService.buscarCategoriaById(id).subscribe({
       next: (dados) => {
-        this.formMarca.patchValue(dados.marcas);
+        this.formCategoria.patchValue(dados.categorias);
       }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar marca');
+        this.toastrService.mostrarToastrDanger('Erro ao buscar categoria');
       }
     })
   }
 
-  cadastrarMarca(): void {
-    this.formMarca.markAllAsTouched();
-    if(this.formMarca.valid){
-      this.produtoService.cadastrarMarca(this.formMarca.getRawValue()).subscribe({
+  cadastrarCategoria(): void {
+    this.formCategoria.markAllAsTouched();
+    if(this.formCategoria.valid){
+      this.produtoService.cadastrarCategoria(this.formCategoria.getRawValue()).subscribe({
         next: (response) => {
-          this.toastrService.mostrarToastrSuccess(`Marca ${this.idMarca ? 'editada' : 'cadastrada'} com sucesso`);
-          this.router.navigate(['marca/home']);
+          this.toastrService.mostrarToastrSuccess(`Categoria ${this.idCategoria ? 'editada' : 'cadastrada'} com sucesso`);
+          this.router.navigate(['categoria/home']);
         }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar marca');
+          this.toastrService.mostrarToastrDanger('Erro ao cadastrar categoria');
         }
       })
     }

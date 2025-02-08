@@ -57,11 +57,22 @@ export class AppMenuComponent implements OnInit {
         if(permissoes.includes('Administrador')) {
             this.model.push(
                 {
-                    label: 'Gestão Admin',
+                    label: 'Gestão Produto',
                     items: [
-                        { label: 'Usuários', icon: 'pi pi-fw pi-user', routerLink: ['/user/home'] },
                         { label: 'Produtos e Estoque', icon: 'pi pi-fw pi-box', routerLink: ['/produto/home'] },
                         { label: 'Marcas', icon: 'pi pi-fw pi-bookmark', routerLink: ['/marca/home'] },
+                        { label: 'Categorias', icon: 'pi pi-fw pi-list', routerLink: ['/categoria/home'] },
+                    ]
+                }
+            )
+        }
+
+        if(permissoes.includes('Administrador')) {
+            this.model.push(
+                {
+                    label: 'Gestão Admin',
+                    items: [
+                        { label: 'Usuários', icon: 'pi pi-fw pi-user', routerLink: ['/user/home'] }
                     ]
                 }
             )

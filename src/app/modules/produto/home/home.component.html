@@ -49,3 +49,14 @@
         </div>
     </form>
 </ng-template>
+
+<ng-template #modalCategoria>
+    <form [formGroup]="formCategoria">
+        <p>Para cadastrar uma categoria é apenas necessário digitar o nome dela:</p>
+        <div class="grid">
+            <div class="col-12 md:col-4">
+                <app-form type="text" id="nome" label="Nome" [exibirLabelObrigatoriedade]="true" formControlName="nome" erro="Digite o nome da categoria!" ngDefaultControl/>
+            </div>
+        </div>
+    </form>
+</ng-template>

@@ -7,11 +7,14 @@
     <p class="text-sm text-red-500 mb-3">* representam campos obrigatórios!</p>
     <form [formGroup]="formProduto">
         <div class="grid">
-            <div class="col-12 md:col-6">
+            <div class="col-12 md:col-4">
                 <app-form type="text" id="nome" label="Nome" formControlName="nome" placeholder="Digite o Nome" erro="Digite o nome do produto!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
             </div>
-            <div class="col-12 md:col-6">
+            <div class="col-12 md:col-4">
                 <app-form type="select" id="marca_id" label="Marca" formControlName="marca__id" placeholder="Selecione a Marca" ngDefaultControl [items]="marcas"/>
+            </div>
+            <div class="col-12 md:col-4">
+                <app-form type="select" id="categoria__id" label="Categoria" formControlName="categoria__id" placeholder="Selecione a Categoria" ngDefaultControl [items]="categorias"/>
             </div>
             <div class="col-12 md:col-6">
                 <app-form type="dinheiro" currency="USD" id="preco_compra" label="Preço de compra" formControlName="preco_compra" placeholder="Digite o Preço de Compra" erro="Digite o preço de compra do produto!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>

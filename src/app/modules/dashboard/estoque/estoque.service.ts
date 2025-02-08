@@ -21,11 +21,11 @@ export class EstoqueService {
   ) {
   }
   
-  buscarTabelaEstoque(marca_id): Observable<any>{
+  buscarTabelaEstoque(data): Observable<any>{
     return this.http.get<any>(this.API_BACK + 'dashboard/estoque', {
         context: new HttpContext().set(SET_LOADER, true),
         headers: this.headerService.getHeader(),
-        params: marca_id ? {marca_id: marca_id} : null
+        params: data ?? null
     });
   }
 
