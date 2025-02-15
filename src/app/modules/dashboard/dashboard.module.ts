@@ -12,10 +12,12 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { EstoqueComponent } from './estoque/estoque.component';
 import { DashboardComponent } from './dashboard.component';
 import { ChartModule } from 'primeng/chart';
+import { VendasCustosComponent } from './vendas-custos/vendas-custos.component';
 
 @NgModule({
     declarations: [
         EstoqueComponent,
+        VendasCustosComponent,
         DashboardComponent
     ],
     imports: [
