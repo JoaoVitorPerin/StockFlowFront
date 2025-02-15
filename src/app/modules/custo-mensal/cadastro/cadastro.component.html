@@ -1,0 +1,29 @@
+<p-breadcrumb 
+    class="max-w-full" 
+    [model]="items" 
+    [home]="home" />
+    
+<p-card header="Cadastro/Edição de custos mensais">  
+    <p class="text-sm text-red-500 mb-3">* representam campos obrigatórios!</p>
+    <form [formGroup]="formCusto">
+        <div class="grid">
+            <div class="col-12 md:col-4">
+                <app-form type="text" id="descricao" label="Descrição" formControlName="nome" erro="Digite a descricao do custo!" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
+            </div>
+            <div class="col-12 md:col-4">
+                <app-form type="dinheiro" id="valor" label="Valor" formControlName="valor" erro="Digite o valor do custo" [exibirLabelObrigatoriedade]="true" ngDefaultControl/>
+            </div>
+            <div class="col-12 md:col-4">
+                <app-form type="checkbox" id="recorrente" label="Recorrente?" formControlName="recorrente" ngDefaultControl/>
+            </div>
+        </div>
+    </form>
+    <div class="grid md:flex md:justify-content-end">
+        <div class="col-6 md:col-2">
+            <p-button label="Voltar" routerLink="/custo-mensal/home" styleClass="w-full" severity="danger"/>
+        </div>
+        <div class="col-6 md:col-2">
+            <p-button label="Cadastrar" (click)="cadastrarCusto()" styleClass="w-full" severity="success"/>
+        </div>
+    </div>
+</p-card> 

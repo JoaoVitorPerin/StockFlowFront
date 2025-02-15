@@ -74,6 +74,13 @@ const APP_ROUTES: Routes = [
                 ).then(m => m.DashboardModule)
             },
             {
+              path: 'custo-mensal',
+              loadChildren: () =>
+                import(
+                  './modules/custo-mensal/custo-mensal.module'
+                ).then(m => m.CustoMensalModule)
+            },
+            {
               path: 'separar-pedido',
               component: SepararPedidoComponent
             },
