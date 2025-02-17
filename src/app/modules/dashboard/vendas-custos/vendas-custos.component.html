@@ -65,7 +65,15 @@
         <p-card>
             <div class="flex flex-column justify-center items-center">
                 <h3 class="text-center text-base font-bold text-primary">Margem líquida</h3>
-                <h1 class="text-center text-3xl m-0">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
+                @if(dadosCards?.vlr_margem_liquida <= 33){
+                    <h1 class="text-center text-3xl m-0 text-red-500">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
+                }@else if(dadosCards?.vlr_margem_liquida > 33 && dadosCards?.vlr_margem_liquida <= 37){
+                    <h1 class="text-center text-3xl m-0 text-yellow-500">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
+                } @else if(dadosCards?.vlr_margem_liquida > 37){
+                    <h1 class="text-center text-3xl m-0 text-green-500">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
+                }@else{
+                    <h1 class="text-center text-3xl m-0">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
+                }
             </div>
         </p-card>
     </div>
@@ -73,7 +81,15 @@
         <p-card>
             <div class="flex flex-column justify-center items-center">
                 <h3 class="text-center text-base font-bold text-primary">Ticket médio</h3>
-                <h1 class="text-center text-3xl m-0">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
+                @if(dadosCards?.vlr_ticket_medio < 950){
+                    <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
+                }@else if(dadosCards?.vlr_ticket_medio >= 951 && dadosCards?.vlr_ticket_medio <= 999){
+                    <h1 class="text-center text-3xl m-0 text-yellow-500">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
+                } @else if(dadosCards?.vlr_ticket_medio > 999){
+                    <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
+                }@else{
+                    <h1 class="text-center text-3xl m-0">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
+                }
             </div>
         </p-card>
     </div>

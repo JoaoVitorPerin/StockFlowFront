@@ -32,6 +32,7 @@ export class VendasCustosComponent {
   dadosCards: any;
 
   toLocaleFixed = toLocaleFixed;
+  parseFloat = parseFloat;
 
   constructor(
     private formBuilder: FormBuilder,
