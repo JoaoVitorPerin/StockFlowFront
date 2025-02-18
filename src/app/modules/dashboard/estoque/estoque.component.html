@@ -11,6 +11,37 @@
     </p-card>
 </form>
 
+<div class="mt-2 grid">
+    <div class="col-12 md:col-4">
+        <p-card>
+            <div class="flex flex-column justify-center items-center">
+                <h3 class="text-center text-base font-bold text-primary">Total venda</h3>
+                <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_total_venda ? toLocaleFixed(dadosCards?.vlr_total_venda) : '--'}}</h1>
+            </div>
+        </p-card>
+    </div>
+    <div class="col-12 md:col-4">
+        <p-card>
+            <div class="flex flex-column justify-center items-center">
+                <h3 class="text-center text-base font-bold text-primary">Total custo</h3>
+                <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_compra ? toLocaleFixed(dadosCards?.vlr_total_compra) : '--'}}</h1>
+            </div>
+        </p-card>
+    </div>
+    <div class="col-12 md:col-4">
+        <p-card>
+            <div class="flex flex-column justify-center items-center">
+                <h3 class="text-center text-base font-bold text-primary">Diferença</h3>
+                @if(dadosCards?.vlr_diferenca > 0){
+                    <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_diferenca ? toLocaleFixed(dadosCards?.vlr_diferenca) : '--'}}</h1>
+                }@else{
+                    <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_diferenca ? toLocaleFixed(dadosCards?.vlr_diferenca) : '--'}}</h1>
+                }
+            </div>
+        </p-card>
+    </div>
+</div>
+
 <div class="mt-2">
     <app-datagrid [data]="dadosTabelaEstoque" [columns]="columnsTabelaEstoque" [configuracoes]="configuracoes" titulo="Produtos no estoque" class="w-full"></app-datagrid>
 </div>

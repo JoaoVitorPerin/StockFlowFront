@@ -1,3 +1,4 @@
+import { toLocaleFixed } from './../../../shared/ts/util';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { items } from 'src/app/shared/models/items.model';
@@ -33,7 +34,11 @@ export class EstoqueComponent {
     ],
   };
 
+  dadosCards: any;
+
   basicOptionsGrafico: any;
+
+  toLocaleFixed = toLocaleFixed;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -172,7 +177,8 @@ export class EstoqueComponent {
     }
     this.estoqueService.buscarTabelaEstoque(data).subscribe(
       (response) => {
-        this.dadosTabelaEstoque = response.estoque;
+        this.dadosTabelaEstoque = response.estoque?.tabela ?? [];
+        this.dadosCards = response.estoque?.cards ?? {};
       },
       (error) => {
         this.toastrService.mostrarToastrDanger('Erro ao buscar produtos');

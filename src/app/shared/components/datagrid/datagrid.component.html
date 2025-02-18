@@ -28,7 +28,7 @@
             }
           </div>
           <div class="flex justify-content-between gap-3">
-            <div class="flex align-items-center w-full">
+            <div class="flex md:ml-3 gap-2 align-items-center w-full">
               @if(configuracoes.addRow){
                 <div class="md:col-2">
                   <p-button pRipple pTooltip="Adicionar linha" tooltipPosition="right" severity="success" (click)="addRowMasterDetail()">
@@ -46,7 +46,7 @@
                 </div>
               }
               @for(config of configuracoes?.customButtons; track config){
-                <div class="md:col-2">
+                <div>
                   @if(config.iconType == 'material' && config.icon){
                     <p-button
                       [outlined]="config.outlined || false"

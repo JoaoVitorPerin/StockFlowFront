@@ -14,8 +14,8 @@
         </tr>
         @for(item of pedido.produtos; track item){
           <tr>
-            <td>{{item?.produto__nome ?? '--'}}</td>
-            <td>{{item?.produto__marca__nome ?? '--'}}</td>
+            <td>{{item?.nome ?? '--'}}</td>
+            <td>{{item?.marca_nome ?? '--'}}</td>
             <td>{{item?.quantidade ?? '--'}}</td>
           </tr>
         }
@@ -28,11 +28,11 @@
             <p>{{pedido?.cliente?.email}}</p>
             <p>{{pedido?.cliente?.telefone}}</p>
         </div>
-        <div>
+        <div>   
             <p class="m-0 font-bold">Endereço:</p>
-            <p>{{pedido?.cliente?.cep}}</p>
-            <p>{{pedido?.cliente?.rua}}, {{pedido?.cliente?.numero}}, {{pedido?.cliente?.cidade}}, {{pedido?.cliente?.estado}}</p>
-            <p>{{pedido?.cliente?.complemento}}</p>
+            <p>{{pedido?.cliente?.endereco?.cep}}</p>
+            <p>{{pedido?.cliente?.endereco?.logradouro}}, {{pedido?.cliente?.endereco?.numero}}, {{pedido?.cliente?.endereco?.cidade}}, {{pedido?.cliente?.endereco?.estado}}</p>
+            <p>{{pedido?.cliente?.endereco?.complemento}}</p>
         </div>
     </div>
 </ng-template>

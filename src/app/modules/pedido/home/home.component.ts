@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit{
         cellTemplate: 'datetime'
       },
       {
-        dataField: 'vlrTotal',
+        dataField: 'vlr_total',
         caption: 'Valor Total',
         dataType: 'string',
         cellTemplate: 'dinheiro',
