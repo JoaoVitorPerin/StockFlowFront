@@ -67,7 +67,7 @@ export class VendasCustosComponent {
         sorting: true,
       },
       {
-        dataField: 'vlr_venda',
+        dataField: 'vlr_total',
         caption: 'Valor venda',
         dataType: 'string',
         cellTemplate: 'dinheiro',
