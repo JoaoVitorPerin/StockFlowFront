@@ -28,7 +28,7 @@ export class SepararPedidoService {
         });
     }
 
-    alterarStatusPedido(idPedido: number): Observable<any>{
+    alterarStatusPedido(idPedido: number[]): Observable<any>{
         return this.http.post<any>(this.API_BACK + `pedido/status`, {pedido_id: idPedido}, {
             headers: this.headerService.getHeader({ 'Content-Type': 'application/json' }),
             context: new HttpContext().set(SET_LOADER, true),

@@ -141,7 +141,7 @@
                   </div>
                 }
                 @for(config of configuracoes?.customButtons; track config){
-                  <div class="col-6">
+                  <div class="col-6 w-full">
                     @if(config.iconType == 'material' && config.icon){
                       <p-button
                         [outlined]="config.outlined || false"

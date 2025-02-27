@@ -3,7 +3,7 @@
     [model]="items" 
     [home]="home" />
 
-<app-datagrid [data]="pedidosSeparacao ? pedidosSeparacao : []" [columns]="columns" [configuracoes]="configuracoes" titulo="Pedidos pendentes no estoque" class="w-full"></app-datagrid>
+<app-datagrid [data]="pedidosSeparacao ? pedidosSeparacao : []" [columns]="columns" [configuracoes]="configuracoes" titulo="Pedidos pendentes no estoque" (changeSelected)="dadosSelectedPedidos($event)" class="w-full"></app-datagrid>
 
 <ng-template #modalPedido>
     <table class="w-full table mb-2">

@@ -29,6 +29,8 @@ export class SepararPedidoComponent implements OnInit{
   pedidosEmbalados: any = [];
   pedidosSaidaEstoque: any = [];
 
+  pedidosSelecionados: any = [];
+
   columns: any;
   configuracoes: DatagridConfig = datagridConfigDefault();
   data: any = [];
@@ -49,6 +51,18 @@ export class SepararPedidoComponent implements OnInit{
   ) { }
 
   ngOnInit(){
+    this.configuracoes.selectionMode = true;
+
+    this.configuracoes.customButtons.push({
+      icon: 'pi pi-check',
+      color: 'success',
+      tooltip: 'Alterar status',
+      text: 'Alterar status',
+      click: () => {
+        this.alterarStatusVariosPedidos();
+      }
+    })
+
     this.buscarPedidos();
 
     this.columns = [
@@ -130,14 +144,51 @@ export class SepararPedidoComponent implements OnInit{
   }
 
   alterarStatusPedido(pedido){
-    this.separarPedidoService.alterarStatusPedido(pedido?.idPedido).subscribe((data) => {
-      if(data.status){
-        this.toastrService.mostrarToastrSuccess('Status do pedido alterado com sucesso!');
-        this.modalService.fecharModal();
-        this.buscarPedidos();
-      }else{
-        this.toastrService.mostrarToastrDanger(`${data?.mensagem ?? 'Erro ao alterar status do pedido'}`);
+    this.modalConfirmacaoService.abrirModalConfirmacao(
+      'Atenção',
+      `Deseja realmente alterar o status desse pedido?`,
+      {
+        icone: 'pi pi-info-circle',
+        callbackAceitar: () => {
+          this.separarPedidoService.alterarStatusPedido([pedido?.idPedido]).subscribe((data) => {
+            if(data.status){
+              this.toastrService.mostrarToastrSuccess('Status do pedido alterado com sucesso!');
+              this.modalService.fecharModal();
+              this.buscarPedidos();
+            }else{
+              this.toastrService.mostrarToastrDanger(`${data?.mensagem ?? 'Erro ao alterar status do pedido'}`);
+            }
+          });
+        }
       }
-    });
+    );
   } 
+
+  alterarStatusVariosPedidos(){
+    if(!this.pedidosSelecionados.length)
+      return this.toastrService.mostrarToastrDanger('Selecione ao menos um pedido para alterar o status');
+
+    this.modalConfirmacaoService.abrirModalConfirmacao(
+      'Atenção',
+      `Deseja realmente alterar o status desses pedidos?`,
+      {
+        icone: 'pi pi-info-circle',
+        callbackAceitar: () => {
+          this.separarPedidoService.alterarStatusPedido(this.pedidosSelecionados).subscribe((data) => {
+            if(data.status){
+              this.toastrService.mostrarToastrSuccess('Status do pedidos alterados com sucesso!');
+              this.modalService.fecharModal();
+              this.buscarPedidos();
+            }else{
+              this.toastrService.mostrarToastrDanger(`${data?.mensagem ?? 'Erro ao alterar status dos pedidos'}`);
+            }
+          });
+        }
+      }
+    );
+  }
+
+  dadosSelectedPedidos(event){
+    this.pedidosSelecionados = event.map((pedido: any) => pedido.idPedido);
+  }
 }

@@ -94,4 +94,8 @@ export class AppTopBarComponent {
             }
         );
     }
+
+    ngOnChanges() {
+        this.isMobile = window.innerWidth <= 1024;
+    }
 }
