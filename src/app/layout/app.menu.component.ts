@@ -25,6 +25,7 @@ export class AppMenuComponent implements OnInit {
                     items: [
                         { label: 'Estoque', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/dashboard/estoque'] },
                         { label: 'Vendas e custos', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/dashboard/vendas-custos'] },
+                        { label: 'Atletas', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/dashboard/custo-atleta'] },
                     ]
                 }
             )

@@ -1,0 +1,45 @@
+<form [formGroup]="formFiltroAnomes">
+    <p-card>
+        <div class="grid">
+            <div class="col-12 md:col-6 py-0 mt-2">
+                <app-form type="select" [items]="itensAnomes" id="anomes" placeholder="Selecione uma mes para filtrar" formControlName="anomes" ngDefaultControl/>
+            </div>
+            <div class="col-12 md:col-6 py-0 mt-2">
+                <app-form type="select" [items]="itensAtletas" id="atleta_id" placeholder="Todos atletas" formControlName="atleta_id" ngDefaultControl/>
+            </div>
+        </div>
+    </p-card>
+</form>
+
+<div class="mt-2 grid">
+    <div class="col-12 md:col-6">
+        <p-card>
+            <div class="flex flex-column justify-center items-center">
+                <h3 class="text-center text-base font-bold text-primary">Qtd. de Pedidos</h3>
+                <h1 class="text-center text-3xl m-0">{{dadosCards?.qtd_total_pedido ?? '--'}}</h1>
+            </div>
+        </p-card>
+    </div>
+    <div class="col-12 md:col-6">
+        <p-card>
+            <div class="flex flex-column justify-center items-center">
+                <h3 class="text-center text-base font-bold text-primary">Lucro total</h3>
+                @if(dadosCards?.vlr_total_pedido > 0){
+                    <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_total_pedido ? toLocaleFixed(dadosCards?.vlr_total_pedido) : '--'}}</h1>
+                }@else{
+                    <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_pedido ? toLocaleFixed(dadosCards?.vlr_total_pedido) : '--'}}</h1>
+                }
+            </div>
+        </p-card>
+    </div>
+</div>
+
+@if(formFiltroAnomes.get('atleta_id').value){
+    <div class="mt-2">
+        <app-datagrid [data]="dadosTabelaVendas" [columns]="columnsTabelaVendas" [configuracoes]="configuracoes" titulo="Pedidos do atleta selecionado" class="w-full"></app-datagrid>
+    </div>
+}@else{
+    <div class="mt-2">
+        <app-datagrid [data]="dadosTabelaCustosAtleta" [columns]="columnsTabelaAtletas" [configuracoes]="configuracoesVendas" titulo="Dados dos atletas" class="w-full"></app-datagrid>
+    </div>
+}
