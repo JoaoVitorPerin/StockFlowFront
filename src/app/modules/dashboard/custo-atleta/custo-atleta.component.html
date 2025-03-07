@@ -15,19 +15,19 @@
     <div class="col-12 md:col-6">
         <p-card>
             <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Qtd. de Pedidos</h3>
-                <h1 class="text-center text-3xl m-0">{{dadosCards?.qtd_total_pedido ?? '--'}}</h1>
+                <h3 class="text-center text-base font-bold text-primary">Valor total</h3>
+                <h1 class="text-center text-3xl m-0">R$ {{dadosCards?.vlr_total ? toLocaleFixed(dadosCards?.vlr_total) : '--'}}</h1>
             </div>
         </p-card>
     </div>
     <div class="col-12 md:col-6">
         <p-card>
             <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Lucro total</h3>
-                @if(dadosCards?.vlr_total_pedido > 0){
-                    <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_total_pedido ? toLocaleFixed(dadosCards?.vlr_total_pedido) : '--'}}</h1>
+                <h3 class="text-center text-base font-bold text-primary">Lucro líquido</h3>
+                @if(dadosCards?.vlr_total_lucro_liquido > 0){
+                    <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_total_lucro_liquido ? toLocaleFixed(dadosCards?.vlr_total_lucro_liquido) : '--'}}</h1>
                 }@else{
-                    <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_pedido ? toLocaleFixed(dadosCards?.vlr_total_pedido) : '--'}}</h1>
+                    <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_lucro_liquido ? toLocaleFixed(dadosCards?.vlr_total_lucro_liquido) : '--'}}</h1>
                 }
             </div>
         </p-card>

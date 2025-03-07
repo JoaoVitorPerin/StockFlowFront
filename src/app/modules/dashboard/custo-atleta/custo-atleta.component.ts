@@ -29,8 +29,8 @@ export class CustoAtletaComponent {
   columnsTabelaCustoMensal: any[];
 
   dadosCards: any = {
-    qtd_total_pedido: 0,
-    vlr_total_pedido: 0,
+    vlr_total: 0,
+    vlr_total_lucro_liquido: 0,
   };
 
   toLocaleFixed = toLocaleFixed;
@@ -121,27 +121,34 @@ export class CustoAtletaComponent {
       },
       {
         dataField: 'qtd_indicacao',
-        caption: 'Qtd. de indicações',
+        caption: 'Qtd.',
         dataType: 'string',
         sorting: true,
       },
       {
-        dataField: 'vlr_custo',
-        caption: 'Vlr. Custo',
+        dataField: 'vlr_total',
+        caption: 'Vlr. Total',
         dataType: 'string',
         cellTemplate: 'dinheiro',
         sorting: true,
       },
       {
         dataField: 'vlr_total_lucro_pedidos',
-        caption: 'Vlr. Lucro Pedidos',
+        caption: 'Lucro total',
+        dataType: 'string',
+        cellTemplate: 'dinheiro',
+        sorting: true,
+      },
+      {
+        dataField: 'vlr_custo',
+        caption: 'Custo',
         dataType: 'string',
         cellTemplate: 'dinheiro',
         sorting: true,
       },
       {
         dataField: 'vlr_lucro_total',
-        caption: 'Vlr. Lucro Total',
+        caption: 'Lucro líquido',
         dataType: 'string',
         cellTemplate: 'dinheiro',
         sorting: true
@@ -189,8 +196,8 @@ export class CustoAtletaComponent {
       (response) => {
         if(atleta_id){
           this.dadosTabelaVendas = response.atletas;
-          this.dadosCards.vlr_total_pedido = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_lucro), 0);
-          this.dadosCards.qtd_total_pedido = response.atletas.length;
+          this.dadosCards.vlr_total_lucro_liquido = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_lucro), 0);
+          this.dadosCards.vlr_total = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_total), 0);
         }else{
           this.dadosTabelaCustosAtleta = response.atletas.map((atleta) => {
             return {
@@ -199,8 +206,8 @@ export class CustoAtletaComponent {
             };
           }).sort((a, b) => b.vlr_lucro_total - a.vlr_lucro_total).filter((atleta) => atleta.nm_indicacao != '');
           
-          this.dadosCards.qtd_total_pedido = response.atletas.reduce((acc, atleta) => acc + atleta.qtd_indicacao, 0);
-          this.dadosCards.vlr_total_pedido = this.dadosTabelaCustosAtleta.reduce((acc, atleta) => acc + atleta.vlr_lucro_total, 0);
+          this.dadosCards.vlr_total = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_total), 0);
+          this.dadosCards.vlr_total_lucro_liquido = this.dadosTabelaCustosAtleta.reduce((acc, atleta) => acc + atleta.vlr_lucro_total, 0);
         }
       },
       (error) => {
