@@ -18,6 +18,7 @@ export class AppMenuComponent implements OnInit {
 
     ngOnInit() {
         const permissoes = this.tokenService.getPermissions()
+        
         if(permissoes.includes('Administrador')) {
             this.model.push(
                 {
@@ -31,8 +32,7 @@ export class AppMenuComponent implements OnInit {
             )
         }
 
-
-        if(permissoes.includes('Operador de Estoque') || permissoes.includes('Administrador')) {
+        if(permissoes.includes('Operador de Estoque') || permissoes.includes('Administrador') || permissoes.includes('Operador de Pedidos')) {
             this.model.push(
                 {
                     label: 'Gestão de Pedidos',

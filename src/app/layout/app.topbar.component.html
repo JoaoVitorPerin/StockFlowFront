@@ -7,15 +7,17 @@
     </a>
     @if(!isMobile){
         <div #topbarmenu class="layout-topbar-menu flex align-item-center gap-2" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-            <div class="flex align-items-center justify-content-center mr-3 cursor-pointer"
-            style="
-                border: 1px solid var(--primary-color);
-                padding: 2px 20px;
-                border-radius: 5px;
-            "
-            (click)="editarCotacao()">
-                <p class="m-0 p-0 font-bold">Cotação: US${{toLocaleFixed(cotacaoAtual)}}</p>
-            </div>
+            @if(permissoes.includes('Administrador')){
+                <div class="flex align-items-center justify-content-center mr-3 cursor-pointer"
+                style="
+                    border: 1px solid var(--primary-color);
+                    padding: 2px 20px;
+                    border-radius: 5px;
+                "
+                (click)="editarCotacao()">
+                    <p class="m-0 p-0 font-bold">Cotação: US${{toLocaleFixed(cotacaoAtual)}}</p>
+                </div>
+            }
             <p class="text-base">Seja bem vindo, <span class="font-bold">{{nomeUsuario ?? '--'}}</span>!</p>
             <button class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>

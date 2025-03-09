@@ -20,6 +20,8 @@ export class AppTopBarComponent {
 
     isMobile = window.innerWidth <= 1024;
 
+    permissoes: any;
+
     @ViewChild('menubutton') menuButton!: ElementRef;
 
     @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
@@ -37,13 +39,16 @@ export class AppTopBarComponent {
         private formBuilder: FormBuilder,
         private toastrService: ToastrService,
     ) {
+        this.permissoes = this.tokenService.getPermissions();
+
         this.formCotacao = this.formBuilder.group({
             cotacao: [null],
         })
 
         this.nomeUsuario = `${this.tokenService.getJwtDecodedAccess().first_name} ${this.tokenService.getJwtDecodedAccess().last_name}`;
 
-        this.buscarCotacao();
+        if(this.permissoes.includes('Administrador'))
+            this.buscarCotacao();
     }
 
     buscarCotacao() {
