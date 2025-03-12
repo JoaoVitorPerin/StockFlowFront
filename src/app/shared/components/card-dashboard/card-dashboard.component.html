@@ -1,0 +1,38 @@
+<p-card>
+    <div class="flex flex-column justify-center items-center">
+        <h3 class="text-center text-base font-bold text-primary">{{title ?? ''}}</h3>
+        @if(cor == 'maior-menor-zero'){
+            @if(valor > 0){
+                <h1 class="text-center text-3xl m-0 text-green-500">{{formatarValor()}}</h1>
+            }@else{
+                <h1 class="text-center text-3xl m-0 text-red-500">{{formatarValor()}}</h1>
+            }
+        }@else if(cor == 'negativo'){
+            <h1 class="text-center text-3xl m-0 text-red-500">{{formatarValor()}}</h1>
+        }@else if(cor == 'positivo'){
+            <h1 class="text-center text-3xl m-0 text-green-500">{{formatarValor()}}</h1>
+        }@else if(cor == 'margem'){
+            @if(valor <= 33){
+                <h1 class="text-center text-3xl m-0 text-red-500">{{formatarValor()}}</h1>
+            }@else if(valor > 33 && valor <= 37){
+                <h1 class="text-center text-3xl m-0 text-yellow-500">{{formatarValor()}}</h1>
+            } @else if(valor > 37){
+                <h1 class="text-center text-3xl m-0 text-green-500">{{formatarValor()}}</h1>
+            }@else{
+                <h1 class="text-center text-3xl m-0">{{formatarValor()}}</h1>
+            }
+        }@else if(cor == 'ticket-medio'){
+            @if(valor < 950){
+                <h1 class="text-center text-3xl m-0 text-red-500">{{formatarValor()}}</h1>
+            }@else if(valor >= 951 && valor <= 999){
+                <h1 class="text-center text-3xl m-0 text-yellow-500">{{formatarValor()}}</h1>
+            } @else if(valor > 999){
+                <h1 class="text-center text-3xl m-0 text-green-500">{{formatarValor()}}</h1>
+            }@else{
+                <h1 class="text-center text-3xl m-0">{{formatarValor()}}</h1>
+            }
+        }@else{
+            <h1 class="text-center text-3xl m-0">{{formatarValor()}}</h1>
+        }
+    </div>
+</p-card>

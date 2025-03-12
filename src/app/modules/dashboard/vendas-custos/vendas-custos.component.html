@@ -10,88 +10,28 @@
 
 <div class="mt-2 grid">
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Vendas</h3>
-                <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_total_venda ? toLocaleFixed(dadosCards?.vlr_total_venda) : '--'}}</h1>
-            </div>
-        </p-card>
+        <app-card-dashboard title="Vendas" [valor]="dadosCards?.vlr_total_venda" tipoValor="moeda" cor="positivo"></app-card-dashboard>
     </div>
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Custos fretes</h3>
-                <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_frete ? toLocaleFixed(dadosCards?.vlr_total_frete) : '--'}}</h1>
-            </div>
-        </p-card>
+        <app-card-dashboard title="Custos fretes" [valor]="dadosCards?.vlr_total_frete" tipoValor="moeda" cor="positivo"></app-card-dashboard>
     </div>
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Custos produtos</h3>
-                <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_custo ? toLocaleFixed(dadosCards?.vlr_total_custo) : '--'}}</h1>
-            </div>
-        </p-card>
+        <app-card-dashboard title="Custos produtos" [valor]="dadosCards?.vlr_total_custo" tipoValor="moeda" cor="negativo"></app-card-dashboard>
     </div>
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Custos fixos</h3>
-                <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_custo_fixo ? toLocaleFixed(dadosCards?.vlr_total_custo_fixo) : '--'}}</h1>
-            </div>
-        </p-card>
+        <app-card-dashboard title="Custos fixos" [valor]="dadosCards?.vlr_total_custo_fixo" tipoValor="moeda" cor="negativo"></app-card-dashboard>
     </div>
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Custos atletas</h3>
-                <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_custo_atleta ? toLocaleFixed(dadosCards?.vlr_total_custo_atleta) : '--'}}</h1>
-            </div>
-        </p-card>
+        <app-card-dashboard title="Custos atletas" [valor]="dadosCards?.vlr_total_custo_atleta" tipoValor="moeda" cor="negativo"></app-card-dashboard>
     </div>
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Lucro líquido</h3>
-                @if(dadosCards?.vlr_total_lucro < 0){
-                    <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_total_lucro ? toLocaleFixed(dadosCards?.vlr_total_lucro) : '--'}}</h1>
-                }@else{
-                    <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_total_lucro ? toLocaleFixed(dadosCards?.vlr_total_lucro) : '--'}}</h1>
-                }
-            </div>
-        </p-card>
+        <app-card-dashboard title="Lucro líquido" [valor]="dadosCards?.vlr_total_lucro" tipoValor="moeda" cor="maior-menor-zero"></app-card-dashboard>
     </div>
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Margem líquida</h3>
-                @if(dadosCards?.vlr_margem_liquida <= 33){
-                    <h1 class="text-center text-3xl m-0 text-red-500">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
-                }@else if(dadosCards?.vlr_margem_liquida > 33 && dadosCards?.vlr_margem_liquida <= 37){
-                    <h1 class="text-center text-3xl m-0 text-yellow-500">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
-                } @else if(dadosCards?.vlr_margem_liquida > 37){
-                    <h1 class="text-center text-3xl m-0 text-green-500">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
-                }@else{
-                    <h1 class="text-center text-3xl m-0">{{dadosCards?.vlr_margem_liquida ? toLocaleFixed(dadosCards?.vlr_margem_liquida) : '--'}} %</h1>
-                }
-            </div>
-        </p-card>
+        <app-card-dashboard title="Margem líquida" [valor]="dadosCards?.vlr_margem_liquida" tipoValor="porcentagem" cor="margem"></app-card-dashboard>
     </div>
     <div class="col-12 md:col-3">
-        <p-card>
-            <div class="flex flex-column justify-center items-center">
-                <h3 class="text-center text-base font-bold text-primary">Ticket médio</h3>
-                @if(dadosCards?.vlr_ticket_medio < 950){
-                    <h1 class="text-center text-3xl m-0 text-red-500">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
-                }@else if(dadosCards?.vlr_ticket_medio >= 951 && dadosCards?.vlr_ticket_medio <= 999){
-                    <h1 class="text-center text-3xl m-0 text-yellow-500">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
-                } @else if(dadosCards?.vlr_ticket_medio > 999){
-                    <h1 class="text-center text-3xl m-0 text-green-500">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
-                }@else{
-                    <h1 class="text-center text-3xl m-0">R$ {{dadosCards?.vlr_ticket_medio ? toLocaleFixed(dadosCards?.vlr_ticket_medio) : '--'}}</h1>
-                }
-            </div>
-        </p-card>
+        <app-card-dashboard title="Ticket médio" [valor]="dadosCards?.vlr_ticket_medio" tipoValor="moeda" cor="ticket-medio"></app-card-dashboard>
     </div>
 </div>
 
