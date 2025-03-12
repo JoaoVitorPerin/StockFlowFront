@@ -10,6 +10,10 @@ input {
   width: 100%!important;
 }
 
+.p-calendar{
+  width: 100%!important;
+}
+
 .p-element-radio{
   margin-top: 10px;
 }

@@ -17,6 +17,8 @@ export class CadastroComponent {
   marcas: any[] = [];
   home: any;
 
+  anoAtual = new Date().getFullYear();
+
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
               private router: Router,
@@ -26,9 +28,18 @@ export class CadastroComponent {
                       custo_id: [null],
                       nome: [null, Validators.required],
                       valor: [null, Validators.required],
-                      recorrente: [null],
-                      anomes: [null]
+                      recorrente: [true],
+                      data: [null]
                     })
+
+                this.formCusto.get('recorrente').valueChanges.subscribe((value) => {
+                  if(value){
+                    this.formCusto.get('data').setValidators(Validators.required);
+                  }else{
+                    this.formCusto.get('data').clearValidators();
+                    this.formCusto.get('data').reset();
+                  }
+                })
 
                 this.idCusto = this.activatedRoute.snapshot.paramMap.get('id');
                 this.formCusto.patchValue({custo_id: this.idCusto});
@@ -49,7 +60,8 @@ export class CadastroComponent {
   buscarCustoById(id: string): void {
     this.custoMensalService.buscarCustoById(id).subscribe({
       next: (dados) => {
-        this.formCusto.patchValue(dados.marcas);
+        this.formCusto.patchValue(dados.custos);
+        this.formCusto.get('data').setValue(dados.custos.dat_ini && dados.custos.dat_fim ? [new Date(dados.custos.dat_ini), new Date(dados.custos.dat_fim)] : null);
       }, error: () => {
         this.toastrService.mostrarToastrDanger('Erro ao buscar custo');
       }
@@ -58,12 +70,15 @@ export class CadastroComponent {
 
   cadastrarCusto(): void {
     this.formCusto.markAllAsTouched();
-    const data = {
-      ...this.formCusto.getRawValue()
+
+    if(!this.formCusto.get('recorrente').value && !this.formCusto.get('data').value){
+      this.toastrService.mostrarToastrDanger('Preencha o período do custo!');
     }
 
-    if(!this.formCusto.get('recorrente').value){
-      data.anomes = new Date().toISOString().slice(0, 7).replace('-', '')
+    const data = {
+      ...this.formCusto.getRawValue(),
+      dat_ini: this.formCusto.get('data').value[0] ?? '',
+      dat_fim: this.formCusto.get('data').value[1] ?? ''
     }
 
     if(this.formCusto.valid){

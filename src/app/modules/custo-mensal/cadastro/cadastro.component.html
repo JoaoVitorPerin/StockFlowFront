@@ -16,6 +16,11 @@
             <div class="col-12 md:col-4">
                 <app-form type="checkbox" id="recorrente" label="Recorrente?" formControlName="recorrente" ngDefaultControl/>
             </div>
+            @if(!formCusto.get('recorrente').value){
+                <div class="col-12 md:col-4">
+                    <app-form type="date-range" id="data" label="Selecione o período desse custo" formControlName="data" ngDefaultControl/>
+                </div>
+            }
         </div>
     </form>
     <div class="grid md:flex md:justify-content-end">
