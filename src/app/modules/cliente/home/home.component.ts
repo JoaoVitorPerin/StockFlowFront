@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit{
     private clienteService: ClienteService,
     private modalService: ModalService,
   ){
+    //teste
     this.columns = [
       {
         dataField: 'telefone',
