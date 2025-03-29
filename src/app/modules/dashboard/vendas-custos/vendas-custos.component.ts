@@ -201,31 +201,28 @@ export class VendasCustosComponent {
   }
 
   getUltimos12Meses(): { label: string; value: number }[] {
-    const currentDate = new Date();
     const anomesList: { label: string; value: number }[] = [];
-
-    // Meses em português
     const meses = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
     ];
-
+  
+    const currentDate = new Date();
+  
     for (let i = 0; i < 12; i++) {
-        const date = new Date(currentDate);
-        date.setMonth(currentDate.getMonth() - i); // Ajusta o mês para trás
-
-        // Formatar como YYYYMM
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1; // getMonth() retorna 0-11
-        const anomes = Number(`${year}${month.toString().padStart(2, '0')}`);
-
-        // Criar o objeto com label e value
-        anomesList.push({
-            label: `${meses[month - 1]} ${year}`,
-            value: anomes
-        });
+      const date = new Date();
+      date.setFullYear(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+  
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const anomes = Number(`${year}${month.toString().padStart(2, "0")}`);
+  
+      anomesList.push({
+        label: `${meses[date.getMonth()]} ${year}`,
+        value: anomes
+      });
     }
-
+  
     return anomesList;
   }
 }
