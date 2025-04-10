@@ -4,6 +4,7 @@ import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { PedidoService } from '../pedido.service';
 import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirmacao/modal-confirmacao.service';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit{
     private router: Router,
     private toastrService: ToastrService,
     private pedidoService: PedidoService,
+    private tokenService: TokenService,
     private modalConfirmacaoService: ModalConfirmacaoService
   ){
     this.columns = [
@@ -124,7 +126,7 @@ export class HomeComponent implements OnInit{
       {
         icone: 'pi pi-info-circle',
         callbackAceitar: () => {
-          this.pedidoService.excluirPedido(id).subscribe(
+          this.pedidoService.excluirPedido(id, this.tokenService.getJwtDecodedAccess()?.user_id).subscribe(
             () => {
               this.toastrService.mostrarToastrSuccess(`Pedido deletado com sucesso!`);
               this.buscarPedidos();

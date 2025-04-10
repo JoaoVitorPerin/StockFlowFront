@@ -50,11 +50,11 @@ export class PedidoService {
     });
   }
 
-  excluirPedido(id: string | number): Observable<any>{
+  excluirPedido(id: string | number, user_id: string | number): Observable<any>{
     return this.http.delete<any>(this.API_BACK + 'pedido/cadastro', {
         context: new HttpContext().set(SET_LOADER, true), 
         headers: this.headerService.getHeader(),
-        params: {pedido_id: id}
+        params: {pedido_id: id, usuario_id: user_id}
     });
   }
 }

@@ -56,6 +56,12 @@ export class MovimentacaoEstoqueComponent {
         sorting: true,
       },
       {
+        dataField: 'produto__marca__nome',
+        caption: 'Marca',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
         dataField: 'produto__nome',
         caption: 'Produto',
         dataType: 'string',
