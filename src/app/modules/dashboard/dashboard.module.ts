@@ -15,12 +15,14 @@ import { ChartModule } from 'primeng/chart';
 import { VendasCustosComponent } from './vendas-custos/vendas-custos.component';
 import { CustoAtletaComponent } from './custo-atleta/custo-atleta.component';
 import { CardDashboardComponent } from 'src/app/shared/components/card-dashboard/card-dashboard.component';
+import { VendasMarcasComponent } from './vendas-marcas/vendas-marcas.component';
 
 @NgModule({
     declarations: [
         EstoqueComponent,
         VendasCustosComponent,
         CustoAtletaComponent,
+        VendasMarcasComponent,
         DashboardComponent
     ],
     imports: [

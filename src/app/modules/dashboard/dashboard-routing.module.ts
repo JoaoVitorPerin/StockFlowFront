@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard.component';
 import { EstoqueComponent } from './estoque/estoque.component';
 import { VendasCustosComponent } from './vendas-custos/vendas-custos.component';
 import { CustoAtletaComponent } from './custo-atleta/custo-atleta.component';
+import { VendasMarcasComponent } from './vendas-marcas/vendas-marcas.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
       {
         path: 'custo-atleta',
         component: CustoAtletaComponent,
+      },
+      {
+        path: 'vendas-marcas',
+        component: VendasMarcasComponent
       },
       {
         path: '',

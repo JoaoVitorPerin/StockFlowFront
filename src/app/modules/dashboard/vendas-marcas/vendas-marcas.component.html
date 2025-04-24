@@ -1,0 +1,31 @@
+<form [formGroup]="formFiltroDados">
+  <p-card>
+      <div class="grid">
+          <div class="col-12 md:col-6 py-0 mt-2">
+              <app-form type="select" [items]="itensAnomes" id="anomes" placeholder="Selecione uma mes para filtrar" formControlName="anomes" ngDefaultControl/>
+          </div>
+          <div class="col-12 md:col-6 py-0 mt-2">
+              <app-form type="select" [items]="itensMarcas" id="marca_id" placeholder="Selecione uma marca" formControlName="marca_id" ngDefaultControl/>
+          </div>
+      </div>
+  </p-card>
+</form>
+
+<div class="mt-2 grid">
+  <div class="col-12 md:col-3">
+    <app-card-dashboard title="Qtd. Total" [valor]="dadosCards?.qtd_total"></app-card-dashboard>
+  </div>
+  <div class="col-12 md:col-3">
+      <app-card-dashboard title="Valor venda" [valor]="dadosCards?.vlr_venda" tipoValor="moeda" cor="maior-menor-zero"></app-card-dashboard>
+  </div>
+  <div class="col-12 md:col-3">
+      <app-card-dashboard title="Custo Total" [valor]="dadosCards?.vlr_custo" tipoValor="moeda" cor="negativo"></app-card-dashboard>
+  </div>
+  <div class="col-12 md:col-3">
+    <app-card-dashboard title="Margem" [valor]="dadosCards?.vlr_margem" tipoValor="porcentagem" cor="margem"></app-card-dashboard>
+  </div>
+</div>
+
+<div class="mt-2">
+  <app-datagrid [data]="dadosTabelaVendas" [columns]="columnsTabelaVendas" [configuracoes]="configuracoes" titulo="Produtos vendidos" class="w-full"></app-datagrid>
+</div>
