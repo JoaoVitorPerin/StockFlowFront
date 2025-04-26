@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { ProdutoService } from '../../produto/produto.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro',
@@ -15,6 +16,8 @@ export class CadastroComponent {
   items: any[];
   marcas: any[] = [];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -44,26 +47,34 @@ export class CadastroComponent {
                 }
 
   buscarMarcasById(id: string): void {
-    this.produtoService.buscarMarcaById(id).subscribe({
-      next: (dados) => {
-        this.formMarca.patchValue(dados.marcas);
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar marca');
-      }
-    })
+    this.subs.push(
+      this.produtoService.buscarMarcaById(id).subscribe({
+        next: (dados) => {
+          this.formMarca.patchValue(dados.marcas);
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar marca');
+        }
+      })
+    )
   }
 
   cadastrarMarca(): void {
     this.formMarca.markAllAsTouched();
     if(this.formMarca.valid){
-      this.produtoService.cadastrarMarca(this.formMarca.getRawValue()).subscribe({
-        next: (response) => {
-          this.toastrService.mostrarToastrSuccess(`Marca ${this.idMarca ? 'editada' : 'cadastrada'} com sucesso`);
-          this.router.navigate(['marca/home']);
-        }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar marca');
-        }
-      })
+      this.subs.push(
+        this.produtoService.cadastrarMarca(this.formMarca.getRawValue()).subscribe({
+          next: (response) => {
+            this.toastrService.mostrarToastrSuccess(`Marca ${this.idMarca ? 'editada' : 'cadastrada'} com sucesso`);
+            this.router.navigate(['marca/home']);
+          }, error: () => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar marca');
+          }
+        })
+      )
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }
