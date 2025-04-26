@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { ProdutoService } from '../../produto/produto.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro',
@@ -15,6 +16,8 @@ export class CadastroComponent {
   items: any[];
   marcas: any[] = [];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -44,26 +47,34 @@ export class CadastroComponent {
                 }
 
   buscarCategoriasById(id: string): void {
-    this.produtoService.buscarCategoriaById(id).subscribe({
-      next: (dados) => {
-        this.formCategoria.patchValue(dados.categorias);
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar categoria');
-      }
-    })
+    this.subs.push(
+      this.produtoService.buscarCategoriaById(id).subscribe({
+        next: (dados) => {
+          this.formCategoria.patchValue(dados.categorias);
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar categoria');
+        }
+      })
+    )
   }
 
   cadastrarCategoria(): void {
     this.formCategoria.markAllAsTouched();
     if(this.formCategoria.valid){
-      this.produtoService.cadastrarCategoria(this.formCategoria.getRawValue()).subscribe({
-        next: (response) => {
-          this.toastrService.mostrarToastrSuccess(`Categoria ${this.idCategoria ? 'editada' : 'cadastrada'} com sucesso`);
-          this.router.navigate(['categoria/home']);
-        }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar categoria');
-        }
-      })
+      this.subs.push(
+        this.produtoService.cadastrarCategoria(this.formCategoria.getRawValue()).subscribe({
+          next: (response) => {
+            this.toastrService.mostrarToastrSuccess(`Categoria ${this.idCategoria ? 'editada' : 'cadastrada'} com sucesso`);
+            this.router.navigate(['categoria/home']);
+          }, error: () => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar categoria');
+          }
+        })
+      )
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

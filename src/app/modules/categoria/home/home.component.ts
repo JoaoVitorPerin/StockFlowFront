@@ -8,6 +8,7 @@ import { formatarData } from 'src/app/shared/ts/util';
 import { ProdutoService } from '../../produto/produto.service';
 import { TokenService } from 'src/app/shared/services/token.service';
 import { ModalService } from 'src/app/shared/components/modal/modal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,8 @@ export class HomeComponent {
 
   items: any[];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -83,13 +86,19 @@ export class HomeComponent {
   }
 
   buscarCategorias(): void {
-    this.produtoService.buscarTodasCategorias().subscribe(
-      (response) => {
-        this.data = response.categorias ?? [];
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
-      }
-    );
+    this.subs.push(
+      this.produtoService.buscarTodasCategorias().subscribe(
+        (response) => {
+          this.data = response.categorias ?? [];
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
+        }
+      )
+    )
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }
