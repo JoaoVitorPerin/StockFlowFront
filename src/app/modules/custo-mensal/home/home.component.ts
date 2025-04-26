@@ -6,6 +6,7 @@ import { items } from 'src/app/shared/models/items.model';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { ProdutoService } from '../../produto/produto.service';
 import { CustoMensalService } from '../custo-mensal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,8 @@ export class HomeComponent {
 
   items: any[];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -102,13 +105,15 @@ export class HomeComponent {
   }
 
   buscarCustos(): void {
-    this.custoMensalService.buscarTodosCustos(this.anomes).subscribe(
-      (response) => {
-        this.data = response.custos ?? [];
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar custos');
-      }
+    this.subs.push(
+      this.custoMensalService.buscarTodosCustos(this.anomes).subscribe(
+        (response) => {
+          this.data = response.custos ?? [];
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar custos');
+        }
+      )
     );
   }
 
@@ -119,18 +124,23 @@ export class HomeComponent {
       {
         icone: 'pi pi-info-circle',
         callbackAceitar: () => {
-          this.custoMensalService.excluirCusto(id).subscribe(
-            (response) => {
-              this.toastrService.mostrarToastrSuccess('Custo excluído com sucesso');
-              this.buscarCustos();
-            },
-            (error) => {
-              this.toastrService.mostrarToastrDanger('Erro ao excluir custo');
-            }
+          this.subs.push(
+            this.custoMensalService.excluirCusto(id).subscribe(
+              (response) => {
+                this.toastrService.mostrarToastrSuccess('Custo excluído com sucesso');
+                this.buscarCustos();
+              },
+              (error) => {
+                this.toastrService.mostrarToastrDanger('Erro ao excluir custo');
+              }
+            )
           );
         }
       }
     );
-    
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

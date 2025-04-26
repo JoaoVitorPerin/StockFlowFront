@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { ProdutoService } from '../../produto/produto.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro',
@@ -18,6 +19,8 @@ export class CadastroComponent {
   home: any;
 
   anoAtual = new Date().getFullYear();
+
+  subs: Subscription[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -58,14 +61,16 @@ export class CadastroComponent {
                 }
 
   buscarCustoById(id: string): void {
-    this.custoMensalService.buscarCustoById(id).subscribe({
-      next: (dados) => {
-        this.formCusto.patchValue(dados.custos);
-        this.formCusto.get('data').setValue(dados.custos.dat_ini && dados.custos.dat_fim ? [new Date(dados.custos.dat_ini), new Date(dados.custos.dat_fim)] : null);
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar custo');
-      }
-    })
+    this.subs.push(
+      this.custoMensalService.buscarCustoById(id).subscribe({
+        next: (dados) => {
+          this.formCusto.patchValue(dados.custos);
+          this.formCusto.get('data').setValue(dados.custos.dat_ini && dados.custos.dat_fim ? [new Date(dados.custos.dat_ini), new Date(dados.custos.dat_fim)] : null);
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar custo');
+        }
+      })
+    );
   }
 
   cadastrarCusto(): void {
@@ -82,14 +87,16 @@ export class CadastroComponent {
     }
 
     if(this.formCusto.valid){
-      this.custoMensalService.cadastrarCusto(data).subscribe({
-        next: (response) => {
-          this.toastrService.mostrarToastrSuccess(`Custo ${this.idCusto ? 'editada' : 'cadastrada'} com sucesso`);
-          this.router.navigate(['custo-mensal/home']);
-        }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar custo');
-        }
-      })
+      this.subs.push(
+        this.custoMensalService.cadastrarCusto(data).subscribe({
+          next: (response) => {
+            this.toastrService.mostrarToastrSuccess(`Custo ${this.idCusto ? 'editada' : 'cadastrada'} com sucesso`);
+            this.router.navigate(['custo-mensal/home']);
+          }, error: () => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar custo');
+          }
+        })
+      );
     }
   }
 }
