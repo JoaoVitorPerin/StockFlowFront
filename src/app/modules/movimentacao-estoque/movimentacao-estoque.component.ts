@@ -7,6 +7,7 @@ import { DatagridModule } from 'src/app/shared/components/datagrid/datagrid.modu
 import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-movimentacao-estoque',
@@ -28,6 +29,8 @@ export class MovimentacaoEstoqueComponent {
 
   items: any[];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(
     private produtoService: ProdutoService,
@@ -87,15 +90,23 @@ export class MovimentacaoEstoqueComponent {
   }
 
   buscarDadosMovimentacoes() {
-    this.produtoService.historicoMovimentacaoEstoque().subscribe((response) => {
-      if(response.status){
-        this.data = response.movimentacao;
-      }else{
-        this.toastrService.mostrarToastrPrimary(response.descricao ?? 'Erro ao buscar dados de movimentações de estoque');
-      }
-    },
-    (error) => {
-      console.log(error);
+    this.subs.push(
+      this.produtoService.historicoMovimentacaoEstoque().subscribe((response) => {
+        if(response.status){
+          this.data = response.movimentacao;
+        }else{
+          this.toastrService.mostrarToastrPrimary(response.descricao ?? 'Erro ao buscar dados de movimentações de estoque');
+        }
+      },
+      (error) => {
+        console.log(error);
+      })
+    )
+  }
+
+  ngOnDestroy(){
+    this.subs.forEach((sub) => {
+      sub.unsubscribe();
     });
   }
 }
