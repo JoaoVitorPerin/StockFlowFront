@@ -7,6 +7,7 @@ import { TokenService } from 'src/app/shared/services/token.service';
 import { AutenticacaoService } from './autenticacao.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-autenticacao',
@@ -24,6 +25,8 @@ import { ButtonModule } from 'primeng/button';
 export class AutenticacaoComponent implements OnInit {
   formLogin: FormGroup;
   loadingRequest = signal(false);
+
+  subs: Subscription[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -48,17 +51,19 @@ export class AutenticacaoComponent implements OnInit {
 
     if(this.formLogin.valid){
       this.loadingRequest.set(true);
-      this.autenticacaoService.login(this.formLogin.getRawValue()).subscribe({
-        next: (dados) => {
-          if(dados.access){
-            this.tokenService.setToken(dados);
-            this.router.navigate(['separar-pedido'])
+      this.subs.push(
+        this.autenticacaoService.login(this.formLogin.getRawValue()).subscribe({
+          next: (dados) => {
+            if(dados.access){
+              this.tokenService.setToken(dados);
+              this.router.navigate(['separar-pedido'])
+              this.loadingRequest.set(false);
+            }
+          }, error: () => {
             this.loadingRequest.set(false);
           }
-        }, error: () => {
-          this.loadingRequest.set(false);
-        }
-      })
+        })
+      );
     } else {
       this.loadingRequest.set(false);
       this.toastrService.mostrarToastrDanger('Informe o login e senha para prosseguir')
@@ -72,5 +77,9 @@ export class AutenticacaoComponent implements OnInit {
 
   redirectRedefinirSenha(): void {
     this.router.navigate(['redefinir-senha'])
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe())
   }
 }

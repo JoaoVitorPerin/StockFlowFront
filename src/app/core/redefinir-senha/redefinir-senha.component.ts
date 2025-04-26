@@ -9,6 +9,7 @@ import { FormModule } from 'src/app/shared/components/form/form.module';
 import { ButtonModule } from 'primeng/button';
 import { RedefinirSenhaService } from './redefinir-senha.service';
 import { confirmPasswordValidator, validatorSenhaForte } from 'src/app/shared/validator/validatorForm';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-redefinir-senha',
@@ -29,12 +30,13 @@ export class RedefinirSenhaComponent {
   loadingRequest = signal(false);
   isNextStep = false;
 
+  subs: Subscription[] = [];
+
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
               private tokenService: TokenService,
               private router: Router,
-              private redefinirSenhaService: RedefinirSenhaService,
-              private autenticacaoService: AutenticacaoService){}
+              private redefinirSenhaService: RedefinirSenhaService){}
 
   ngOnInit(): void {
     this.tokenService.clearToken()
@@ -59,22 +61,24 @@ export class RedefinirSenhaComponent {
 
     if(this.formRedefinirSenha.valid){
       this.loadingRequest.set(true);
-      this.redefinirSenhaService.enviarEmail(this.formRedefinirSenha.getRawValue()).subscribe(
-        (response) => {
-          if(response.status){
+      this.subs.push(
+        this.redefinirSenhaService.enviarEmail(this.formRedefinirSenha.getRawValue()).subscribe(
+          (response) => {
+            if(response.status){
+              this.loadingRequest.set(false);
+              this.toastrService.mostrarToastrSuccess('Email enviado com sucesso!')
+              this.isNextStep = true;
+            }else{
+              this.loadingRequest.set(false);
+              this.toastrService.mostrarToastrDanger(response.mensagem ?? 'Erro ao enviar email!')
+            }
+          },
+          (error) => {
             this.loadingRequest.set(false);
-            this.toastrService.mostrarToastrSuccess('Email enviado com sucesso!')
-            this.isNextStep = true;
-          }else{
-            this.loadingRequest.set(false);
-            this.toastrService.mostrarToastrDanger(response.mensagem ?? 'Erro ao enviar email!')
+            this.toastrService.mostrarToastrDanger('Erro ao enviar email!')
           }
-        },
-        (error) => {
-          this.loadingRequest.set(false);
-          this.toastrService.mostrarToastrDanger('Erro ao enviar email!')
-        }
-      )
+        )
+      );
     } else {
       this.loadingRequest.set(false);
       this.toastrService.mostrarToastrDanger('Informe um email válido!')
@@ -89,22 +93,24 @@ export class RedefinirSenhaComponent {
 
     if(this.formRedefinirSenhaCodigo.valid){
       this.loadingRequest.set(true);
-      this.redefinirSenhaService.redefinirSenha(this.formRedefinirSenhaCodigo.getRawValue()).subscribe(
-        (response) => {
-          if(response.status){
+      this.subs.push(
+        this.redefinirSenhaService.redefinirSenha(this.formRedefinirSenhaCodigo.getRawValue()).subscribe(
+          (response) => {
+            if(response.status){
+              this.loadingRequest.set(false);
+              this.toastrService.mostrarToastrSuccess('Senha redefinida com sucesso!')
+              this.router.navigate(['login'])
+            }else{
+              this.loadingRequest.set(false);
+              this.toastrService.mostrarToastrDanger(response.mensagem ?? 'Erro ao redefinir senha!')
+            }
+          },
+          (error) => {
             this.loadingRequest.set(false);
-            this.toastrService.mostrarToastrSuccess('Senha redefinida com sucesso!')
-            this.router.navigate(['login'])
-          }else{
-            this.loadingRequest.set(false);
-            this.toastrService.mostrarToastrDanger(response.mensagem ?? 'Erro ao redefinir senha!')
+            this.toastrService.mostrarToastrDanger('Erro ao redefinir senha!')
           }
-        },
-        (error) => {
-          this.loadingRequest.set(false);
-          this.toastrService.mostrarToastrDanger('Erro ao redefinir senha!')
-        }
-      )
+        )
+      );
     } else {
       this.loadingRequest.set(false);
       this.toastrService.mostrarToastrDanger('Infome todos os dados para prosseguir!')
@@ -122,5 +128,9 @@ export class RedefinirSenhaComponent {
     }else{
       this.redefinirSenha();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe())
   }
 }
