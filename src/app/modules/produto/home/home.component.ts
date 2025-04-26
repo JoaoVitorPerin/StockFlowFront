@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { items } from 'src/app/shared/models/items.model';
 import { TokenService } from 'src/app/shared/services/token.service';
 import { formatarData } from 'src/app/shared/ts/util';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +27,8 @@ export class HomeComponent {
   opcoesRadio: Array<items> = [];
 
   formatarData = formatarData;
+
+  subs: Subscription[] = [];
 
   items: any[];
   home: any;
@@ -237,19 +240,21 @@ export class HomeComponent {
                 if (this.formMarca.invalid) {
                   return;
                 }
-                this.produtoService.cadastrarMarca(this.formMarca.value).subscribe(
-                  (res) => {
-                    if(res.status){
-                      this.toastrService.mostrarToastrSuccess(`Marca cadastrada com sucesso`);
-                      this.modalService.fecharModal();
-                      this.formMarca.reset();
-                    }else{
-                      this.toastrService.mostrarToastrDanger(res.descricao);
+                this.subs.push(
+                  this.produtoService.cadastrarMarca(this.formMarca.value).subscribe(
+                    (res) => {
+                      if(res.status){
+                        this.toastrService.mostrarToastrSuccess(`Marca cadastrada com sucesso`);
+                        this.modalService.fecharModal();
+                        this.formMarca.reset();
+                      }else{
+                        this.toastrService.mostrarToastrDanger(res.descricao);
+                      }
+                    },
+                    () => {
+                      this.toastrService.mostrarToastrDanger('Erro ao cadastrar marca');
                     }
-                  },
-                  () => {
-                    this.toastrService.mostrarToastrDanger('Erro ao cadastrar marca');
-                  }
+                  )
                 );
               }
             }
@@ -283,19 +288,21 @@ export class HomeComponent {
                 if (this.formCategoria.invalid) {
                   return;
                 }
-                this.produtoService.cadastrarCategoria(this.formCategoria.value).subscribe(
-                  (res) => {
-                    if(res.status){
-                      this.toastrService.mostrarToastrSuccess(`Categoria cadastrada com sucesso`);
-                      this.modalService.fecharModal();
-                      this.formCategoria.reset();
-                    }else{
-                      this.toastrService.mostrarToastrDanger(res.descricao);
+                this.subs.push(
+                  this.produtoService.cadastrarCategoria(this.formCategoria.value).subscribe(
+                    (res) => {
+                      if(res.status){
+                        this.toastrService.mostrarToastrSuccess(`Categoria cadastrada com sucesso`);
+                        this.modalService.fecharModal();
+                        this.formCategoria.reset();
+                      }else{
+                        this.toastrService.mostrarToastrDanger(res.descricao);
+                      }
+                    },
+                    () => {
+                      this.toastrService.mostrarToastrDanger('Erro ao cadastrar categoria');
                     }
-                  },
-                  () => {
-                    this.toastrService.mostrarToastrDanger('Erro ao cadastrar categoria');
-                  }
+                  )
                 );
               }
             }
@@ -320,25 +327,29 @@ export class HomeComponent {
   }
 
   buscarProdutos(): void {
-    this.produtoService.buscarDadosProdutos().subscribe(
-      (response) => {
-        this.data = response.produtos ?? [];
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar produtos');
-      }
+    this.subs.push(
+      this.produtoService.buscarDadosProdutos().subscribe(
+        (response) => {
+          this.data = response.produtos ?? [];
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar produtos');
+        }
+      )
     );
   }
 
   alterarStatusProduto(id: string): void {
-    this.produtoService.alterarStatusProduto(id).subscribe(
-      () => {
-        this.toastrService.mostrarToastrSuccess(`Alterado status do produto com sucesso`);
-        this.buscarProdutos();
-      },
-      () => {
-        this.toastrService.mostrarToastrDanger('Erro ao alterar status do produto');
-      }
+    this.subs.push(
+      this.produtoService.alterarStatusProduto(id).subscribe(
+        () => {
+          this.toastrService.mostrarToastrSuccess(`Alterado status do produto com sucesso`);
+          this.buscarProdutos();
+        },
+        () => {
+          this.toastrService.mostrarToastrDanger('Erro ao alterar status do produto');
+        }
+      )
     );
   }
 
@@ -348,19 +359,25 @@ export class HomeComponent {
       return;
     }
 
-    this.produtoService.movimentarEstoque(this.formEstoque.getRawValue()).subscribe(
-      (res) => {
-        if(res.status){
-          this.toastrService.mostrarToastrSuccess(`Movimentação de estoque realizada com sucesso`);
-          this.modalService.fecharModal();
-          this.buscarProdutos();
-        }else{
-          this.toastrService.mostrarToastrDanger(res.descricao);
+    this.subs.push(
+      this.produtoService.movimentarEstoque(this.formEstoque.getRawValue()).subscribe(
+        (res) => {
+          if(res.status){
+            this.toastrService.mostrarToastrSuccess(`Movimentação de estoque realizada com sucesso`);
+            this.modalService.fecharModal();
+            this.buscarProdutos();
+          }else{
+            this.toastrService.mostrarToastrDanger(res.descricao);
+          }
+        },
+        () => {
+          this.toastrService.mostrarToastrDanger('Erro ao movimentar estoque');
         }
-      },
-      () => {
-        this.toastrService.mostrarToastrDanger('Erro ao movimentar estoque');
-      }
+      )
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

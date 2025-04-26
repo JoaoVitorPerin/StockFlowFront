@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { ProdutoService } from '../produto.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro', 
@@ -17,6 +18,8 @@ export class CadastroComponent {
   marcas: any[] = [];
   categorias: any[] = [];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -54,54 +57,66 @@ export class CadastroComponent {
                 }
 
   buscarProdutoById(id: string): void {
-    this.produtoService.buscarProdutoById(id).subscribe({
-      next: (dados) => {
-        this.formProduto.patchValue(dados.produtos);
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar produto');
-      }
-    })
+    this.subs.push(
+      this.produtoService.buscarProdutoById(id).subscribe({
+        next: (dados) => {
+          this.formProduto.patchValue(dados.produtos);
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar produto');
+        }
+      })
+    )
   }
 
   buscarMarcas(): void {
-    this.produtoService.buscarTodasMarcas().subscribe({
-      next: (dados) => {
-        this.marcas = dados.marcas.map((marca) => {
-          return {  label: marca.nome, value: marca.id }
-        })
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
-      }
-    })
+    this.subs.push(
+      this.produtoService.buscarTodasMarcas().subscribe({
+        next: (dados) => {
+          this.marcas = dados.marcas.map((marca) => {
+            return {  label: marca.nome, value: marca.id }
+          })
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
+        }
+      })
+    )
   }
 
   buscarCategorias(): void {
-    this.produtoService.buscarTodasCategorias().subscribe({
-      next: (dados) => {
-        this.categorias = dados.categorias.map((categoria) => {
-          return { label: categoria.nome, value: categoria.id }
-        })
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
-      }
-    })
+    this.subs.push(
+      this.produtoService.buscarTodasCategorias().subscribe({
+        next: (dados) => {
+          this.categorias = dados.categorias.map((categoria) => {
+            return { label: categoria.nome, value: categoria.id }
+          })
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
+        }
+      })
+    )
   }
 
   cadastrarProduto(): void {
     this.formProduto.markAllAsTouched();
     if(this.formProduto.valid){
-      this.produtoService.cadastrarProduto(this.formProduto.getRawValue()).subscribe({
-        next: (response) => {
-          if(response.status){
-            this.toastrService.mostrarToastrSuccess(`Produto ${this.idProduto ? 'editado' : 'cadastrado'} com sucesso`);
-            this.router.navigate(['produto/home']);
-          }else{
-            this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar produto');
+      this.subs.push(
+        this.produtoService.cadastrarProduto(this.formProduto.getRawValue()).subscribe({
+          next: (response) => {
+            if(response.status){
+              this.toastrService.mostrarToastrSuccess(`Produto ${this.idProduto ? 'editado' : 'cadastrado'} com sucesso`);
+              this.router.navigate(['produto/home']);
+            }else{
+              this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar produto');
+            }
+          }, error: () => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar produto');
           }
-        }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar produto');
-        }
-      })
+        })
+      )
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }
