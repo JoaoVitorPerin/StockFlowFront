@@ -6,6 +6,7 @@ import { ProdutoService } from '../../produto/produto.service';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { EstoqueService } from './estoque.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-estoque',
@@ -37,6 +38,8 @@ export class EstoqueComponent {
   dadosCards: any;
 
   basicOptionsGrafico: any;
+
+  subs: Subscription[] = [];
 
   toLocaleFixed = toLocaleFixed;
 
@@ -175,58 +178,67 @@ export class EstoqueComponent {
     if (categoriaId) {
       data.categoria_id = categoriaId;
     }
-    this.estoqueService.buscarTabelaEstoque(data).subscribe(
-      (response) => {
-        this.dadosTabelaEstoque = response.estoque?.tabela ?? [];
-        this.dadosCards = response.estoque?.cards ?? {};
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar produtos');
-      });
+    this.subs.push(
+      this.estoqueService.buscarTabelaEstoque(data).subscribe(
+        (response) => {
+          this.dadosTabelaEstoque = response.estoque?.tabela ?? [];
+          this.dadosCards = response.estoque?.cards ?? {};
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar produtos');
+        }
+      )
+    );
   }
 
   buscarMarcas(): void {
-    this.produtoService.buscarTodasMarcas().subscribe(
-      (response) => {
-        this.itensMarcas = response.marcas.map((marca) => {
-          return {
-            label: marca.nome,
-            value: marca.id,
-          };
-        });
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
-      }
+    this.subs.push(
+      this.produtoService.buscarTodasMarcas().subscribe(
+        (response) => {
+          this.itensMarcas = response.marcas.map((marca) => {
+            return {
+              label: marca.nome,
+              value: marca.id,
+            };
+          });
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
+        }
+      )
     );
   }
 
   buscarCategorias(): void {
-    this.produtoService.buscarTodasCategorias().subscribe(
-      (response) => {
-        this.itensCategoria = response.categorias.map((categoria) => {
-          return {
-            label: categoria.nome,
-            value: categoria.id,
-          };
-        });
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
-      }
+    this.subs.push(
+      this.produtoService.buscarTodasCategorias().subscribe(
+        (response) => {
+          this.itensCategoria = response.categorias.map((categoria) => {
+            return {
+              label: categoria.nome,
+              value: categoria.id,
+            };
+          });
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
+        }
+      )
     );
   }
 
   buscarDadosEstoqueMarcasGrafico(): void {
-    this.estoqueService.buscarDadosEstoqueMarcasGrafico().subscribe(
-      (response) => {
-        this.dataMarcasGrafico.labels = response.marcas.map((marca) => marca.marca);
-        this.dataMarcasGrafico.datasets[0].data = response.marcas.map((marca) => marca.quantidade_total);
-        this.dataMarcasGrafico = { ...this.dataMarcasGrafico };
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar dados do gráfico');
-      }
+    this.subs.push(
+      this.estoqueService.buscarDadosEstoqueMarcasGrafico().subscribe(
+        (response) => {
+          this.dataMarcasGrafico.labels = response.marcas.map((marca) => marca.marca);
+          this.dataMarcasGrafico.datasets[0].data = response.marcas.map((marca) => marca.quantidade_total);
+          this.dataMarcasGrafico = { ...this.dataMarcasGrafico };
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar dados do gráfico');
+        }
+      )
     );
   }
 }

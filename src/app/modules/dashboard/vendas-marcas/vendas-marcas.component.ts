@@ -6,6 +6,7 @@ import { items } from 'src/app/shared/models/items.model';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { toLocaleFixed } from 'src/app/shared/ts/util';
 import { ProdutoService } from '../../produto/produto.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vendas-marcas',
@@ -28,6 +29,8 @@ export class VendasMarcasComponent{
     qtd_total: 0,
     vlr_margem: 0,
   };
+  
+  subs: Subscription[] = [];
 
   toLocaleFixed = toLocaleFixed;
   parseFloat = parseFloat;
@@ -112,32 +115,37 @@ export class VendasMarcasComponent{
       data.marca_id = marca_id;
     }
 
-    this.vendasMarcasService.buscarDadosVendasMarcas(data).subscribe(
-      (response) => {
-        this.dadosTabelaVendas = response.dados_vendas_marcas?.lista_produtos ?? [];
-        this.dadosCards.vlr_venda = response.dados_vendas_marcas?.resumo_valores?.vlr_venda_somado ?? 0;
-        this.dadosCards.vlr_custo = response.dados_vendas_marcas?.resumo_valores?.vlr_custo_somado ?? 0;
-        this.dadosCards.qtd_total = response.dados_vendas_marcas?.resumo_valores?.qtd_somada ?? 0;
-        this.dadosCards.vlr_margem = response.dados_vendas_marcas?.resumo_valores?.margem_percentual ?? 0;
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar atletas');
-      });
+    this.subs.push(
+      this.vendasMarcasService.buscarDadosVendasMarcas(data).subscribe(
+        (response) => {
+          this.dadosTabelaVendas = response.dados_vendas_marcas?.lista_produtos ?? [];
+          this.dadosCards.vlr_venda = response.dados_vendas_marcas?.resumo_valores?.vlr_venda_somado ?? 0;
+          this.dadosCards.vlr_custo = response.dados_vendas_marcas?.resumo_valores?.vlr_custo_somado ?? 0;
+          this.dadosCards.qtd_total = response.dados_vendas_marcas?.resumo_valores?.qtd_somada ?? 0;
+          this.dadosCards.vlr_margem = response.dados_vendas_marcas?.resumo_valores?.margem_percentual ?? 0;
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar atletas');
+        }
+      )
+    );
   }
 
   buscarMarcas(): void {
-    this.produtoService.buscarTodasMarcas().subscribe(
-      (response) => {
-        this.itensMarcas = response.marcas.map((marca) => {
-          return {
-            label: marca.nome,
-            value: marca.id,
-          };
-        });
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
-      }
+    this.subs.push(
+      this.produtoService.buscarTodasMarcas().subscribe(
+        (response) => {
+          this.itensMarcas = response.marcas.map((marca) => {
+            return {
+              label: marca.nome,
+              value: marca.id,
+            };
+          });
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
+        }
+      )
     );
   }
 
@@ -174,4 +182,7 @@ export class VendasMarcasComponent{
     };
   }
 
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
+  }
 }

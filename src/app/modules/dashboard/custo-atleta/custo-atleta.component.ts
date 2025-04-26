@@ -6,6 +6,7 @@ import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGri
 import { toLocaleFixed } from 'src/app/shared/ts/util';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { CustoAtletaService } from './custo-atleta.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-custo-atleta',
@@ -32,6 +33,8 @@ export class CustoAtletaComponent {
     vlr_total: 0,
     vlr_total_lucro_liquido: 0,
   };
+
+  subs: Subscription[] = [];
 
   toLocaleFixed = toLocaleFixed;
   parseFloat = parseFloat;
@@ -192,42 +195,48 @@ export class CustoAtletaComponent {
       data.atleta_id = atleta_id;
     }
 
-    this.custoAtletaService.buscarTabelaAtletas(data).subscribe(
-      (response) => {
-        if(atleta_id){
-          this.dadosTabelaVendas = response.atletas;
-          this.dadosCards.vlr_total_lucro_liquido = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_lucro), 0);
-          this.dadosCards.vlr_total = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_total), 0);
-        }else{
-          this.dadosTabelaCustosAtleta = response.atletas.map((atleta) => {
-            return {
-              ...atleta,
-              vlr_lucro_total: atleta.vlr_total_lucro_pedidos - atleta.vlr_custo
-            };
-          }).sort((a, b) => b.vlr_lucro_total - a.vlr_lucro_total).filter((atleta) => atleta.nm_indicacao != '');
-          
-          this.dadosCards.vlr_total = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_total), 0);
-          this.dadosCards.vlr_total_lucro_liquido = this.dadosTabelaCustosAtleta.reduce((acc, atleta) => acc + atleta.vlr_lucro_total, 0);
+    this.subs.push(
+      this.custoAtletaService.buscarTabelaAtletas(data).subscribe(
+        (response) => {
+          if(atleta_id){
+            this.dadosTabelaVendas = response.atletas;
+            this.dadosCards.vlr_total_lucro_liquido = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_lucro), 0);
+            this.dadosCards.vlr_total = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_total), 0);
+          }else{
+            this.dadosTabelaCustosAtleta = response.atletas.map((atleta) => {
+              return {
+                ...atleta,
+                vlr_lucro_total: atleta.vlr_total_lucro_pedidos - atleta.vlr_custo
+              };
+            }).sort((a, b) => b.vlr_lucro_total - a.vlr_lucro_total).filter((atleta) => atleta.nm_indicacao != '');
+            
+            this.dadosCards.vlr_total = response.atletas.reduce((acc, atleta) => acc + parseFloat(atleta.vlr_total), 0);
+            this.dadosCards.vlr_total_lucro_liquido = this.dadosTabelaCustosAtleta.reduce((acc, atleta) => acc + atleta.vlr_lucro_total, 0);
+          }
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar atletas');
         }
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar atletas');
-      });
+      )
+    );
   }
 
   buscarAtletas(): void {
-    this.clienteService.buscarDadosClientes().subscribe(
-      (response) => {
-        this.itensAtletas = response.clientes.filter((atleta) => {return atleta.is_atleta}).map((atleta) => {
-          return {
-            label: atleta.nome_completo,
-            value: atleta.id
-          };
-        });
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar atletas');
-      });
+    this.subs.push(
+      this.clienteService.buscarDadosClientes().subscribe(
+        (response) => {
+          this.itensAtletas = response.clientes.filter((atleta) => {return atleta.is_atleta}).map((atleta) => {
+            return {
+              label: atleta.nome_completo,
+              value: atleta.id
+            };
+          });
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar atletas');
+        }
+      )
+    );
   }
 
   getUltimos12Meses(): { label: string; value: number }[] {
@@ -261,5 +270,9 @@ export class CustoAtletaComponent {
       qtd_total_pedido: 0,
       vlr_total_pedido: 0,
     };
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

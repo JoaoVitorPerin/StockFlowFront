@@ -7,6 +7,7 @@ import { EstoqueService } from '../estoque/estoque.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { VendasCustosService } from './vendas-custos.service';
 import { toLocaleFixed } from 'src/app/shared/ts/util';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vendas-custos',
@@ -15,9 +16,7 @@ import { toLocaleFixed } from 'src/app/shared/ts/util';
 })
 export class VendasCustosComponent {
   formFiltroAnomes: FormGroup;
-  itensAnomes: items[] = [
-    
-  ];
+  itensAnomes: items[] = [];
 
   dadosTabelaVendas: any[] = [];
   columnsTabelaVendas: any[];
@@ -31,12 +30,13 @@ export class VendasCustosComponent {
 
   dadosCards: any;
 
+  subs: Subscription[] = [];
+
   toLocaleFixed = toLocaleFixed;
   parseFloat = parseFloat;
 
   constructor(
     private formBuilder: FormBuilder,
-    private produtoService: ProdutoService,
     private toastrService: ToastrService,
     private vendasCustosService: VendasCustosService,
   ) {
@@ -188,16 +188,19 @@ export class VendasCustosComponent {
   }
 
   buscarVendas(anomes: string): void {
-    this.vendasCustosService.buscarTabelasVendas(anomes).subscribe(
-      (response) => {
-        this.dadosTabelaVendas = response?.vendas?.pedidos ? response.vendas.pedidos.filter((pedido) => !pedido.is_atleta) : [];
-        this.dadosTabelaCustosAtleta = response?.vendas?.pedidos ? response.vendas.pedidos.filter((pedido) => pedido.is_atleta) : [];
-        this.dadosTabelaCustoMensal = response?.vendas?.custos_mensais ?? [];
-        this.dadosCards = response?.vendas?.cards ?? [];
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar vendas');
-      });
+    this.subs.push(
+      this.vendasCustosService.buscarTabelasVendas(anomes).subscribe(
+        (response) => {
+          this.dadosTabelaVendas = response?.vendas?.pedidos ? response.vendas.pedidos.filter((pedido) => !pedido.is_atleta) : [];
+          this.dadosTabelaCustosAtleta = response?.vendas?.pedidos ? response.vendas.pedidos.filter((pedido) => pedido.is_atleta) : [];
+          this.dadosTabelaCustoMensal = response?.vendas?.custos_mensais ?? [];
+          this.dadosCards = response?.vendas?.cards ?? [];
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar vendas');
+        }
+      )
+    );
   }
 
   getUltimos12Meses(): { label: string; value: number }[] {
@@ -224,5 +227,9 @@ export class VendasCustosComponent {
     }
   
     return anomesList;
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }
