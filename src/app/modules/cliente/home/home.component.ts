@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalService } from 'src/app/shared/components/modal/modal.service';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { ClienteService } from '../cliente.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -17,11 +17,12 @@ export class HomeComponent implements OnInit{
   items: any[];
   home: any;
 
+  subs: Subscription[] = [];
+
   constructor(
     private router: Router,
     private toastrService: ToastrService,
     private clienteService: ClienteService,
-    private modalService: ModalService,
   ){
     //teste
     this.columns = [
@@ -140,26 +141,33 @@ export class HomeComponent implements OnInit{
   }
 
   buscarClientes(): void {
-    this.clienteService.buscarDadosClientes().subscribe(
-      (response) => {
-        this.data = response.clientes ?? [];
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar clientes');
-      }
+    this.subs.push(
+      this.clienteService.buscarDadosClientes().subscribe(
+        (response) => {
+          this.data = response.clientes ?? [];
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar clientes');
+        }
+      )
     );
   }
 
   alterarStatusCliente(id: string): void {
-    this.clienteService.alterarStatusCliente(id).subscribe(
-      () => {
-        this.toastrService.mostrarToastrSuccess(`Alterado status do cliente com sucesso`);
-        this.buscarClientes();
-      },
-      () => {
-        this.toastrService.mostrarToastrDanger('Erro ao alterar status do cliente');
-      }
+    this.subs.push(
+      this.clienteService.alterarStatusCliente(id).subscribe(
+        () => {
+          this.toastrService.mostrarToastrSuccess(`Alterado status do cliente com sucesso`);
+          this.buscarClientes();
+        },
+        () => {
+          this.toastrService.mostrarToastrDanger('Erro ao alterar status do cliente');
+        }
+      )
     );
   }
 
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
+  }
 }

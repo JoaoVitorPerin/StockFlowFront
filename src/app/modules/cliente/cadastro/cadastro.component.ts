@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { ClienteService } from '../cliente.service';
 import { ViaCepService } from 'src/app/shared/services/viaCep.service';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro',
@@ -17,6 +17,8 @@ export class CadastroComponent {
   items: any[];
   clienteAtletas: any[] = [];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -80,32 +82,36 @@ export class CadastroComponent {
     }
 
   buscarClienteById(id: string): void {
-    this.clienteService.buscarClienteById(id).subscribe({
-      next: (dados) => {
-        this.formCliente.patchValue(dados.clientes);
-        this.formCliente.patchValue({
-          logradouro: dados.clientes.rua,
-          uf: dados.clientes.estado,
-          localidade: dados.clientes.cidade,
-        })
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar cliente');
-      }
-    })
+    this.subs.push(
+      this.clienteService.buscarClienteById(id).subscribe({
+        next: (dados) => {
+          this.formCliente.patchValue(dados.clientes);
+          this.formCliente.patchValue({
+            logradouro: dados.clientes.rua,
+            uf: dados.clientes.estado,
+            localidade: dados.clientes.cidade,
+          })
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar cliente');
+        }
+      })
+    )
   }
 
   buscarClientes(): void {
-    this.clienteService.buscarDadosClientes().subscribe(
-      (response) => {
-        this.clienteAtletas = response.clientes
-        .filter(cliente => cliente.status && cliente.is_atleta && (cliente.id != this.idCliente))
-        .map((cliente) => {
-          return {label: cliente.nome_completo, value: cliente.id};
-        });
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar clientes');
-      }
+    this.subs.push(
+      this.clienteService.buscarDadosClientes().subscribe(
+        (response) => {
+          this.clienteAtletas = response.clientes
+          .filter(cliente => cliente.status && cliente.is_atleta && (cliente.id != this.idCliente))
+          .map((cliente) => {
+            return {label: cliente.nome_completo, value: cliente.id};
+          });
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar clientes');
+        }
+      )
     );
   }
 
@@ -116,18 +122,20 @@ export class CadastroComponent {
         ...this.formCliente.getRawValue(),
         cpf_cnpj: this.formCliente.get('cpf_cnpj').value === "" ? null : this.formCliente.get('cpf_cnpj').value,
       }
-      this.clienteService.cadastrarCliente(data).subscribe({
-        next: (response) => {
-          if(response.status){
-            this.toastrService.mostrarToastrSuccess(`Cliente ${this.idCliente ? 'editado' : 'cadastrado'} com sucesso`);
-            this.router.navigate(['cliente/home']);
-          }else{
-            this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar cliente')
+      this.subs.push(
+        this.clienteService.cadastrarCliente(data).subscribe({
+          next: (response) => {
+            if(response.status){
+              this.toastrService.mostrarToastrSuccess(`Cliente ${this.idCliente ? 'editado' : 'cadastrado'} com sucesso`);
+              this.router.navigate(['cliente/home']);
+            }else{
+              this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar cliente')
+            }
+          }, error: () => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar cliente');
           }
-        }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar cliente');
-        }
-      })
+        })
+      )
     }
   }
 
@@ -197,5 +205,11 @@ export class CadastroComponent {
     if (resto !== parseInt(cpf.charAt(10))) return false;
 
     return true
+  }
+
+  ngOnDestroy(){
+    this.subs.forEach((sub) => {
+      sub.unsubscribe();
+    });
   }
 }
