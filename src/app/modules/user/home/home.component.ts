@@ -4,6 +4,7 @@ import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGridConfigDefault';
 import { UserService } from '../user.service';
 import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirmacao/modal-confirmacao.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,8 @@ export class HomeComponent implements OnInit{
 
   items: any[];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -105,30 +108,34 @@ export class HomeComponent implements OnInit{
   }
 
   buscarUsuarios(): void {
-    this.userService.buscarDadosUsuario().subscribe(
-      (response) => {
-        this.data = response.usuario.map((usuario) => {
-          return {
-            ...usuario,
-            nome: `${usuario.first_name} ${usuario.last_name}`,
-          };
-        });
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar usuários');
-      }
+    this.subs.push(
+      this.userService.buscarDadosUsuario().subscribe(
+        (response) => {
+          this.data = response.usuario.map((usuario) => {
+            return {
+              ...usuario,
+              nome: `${usuario.first_name} ${usuario.last_name}`,
+            };
+          });
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar usuários');
+        }
+      )
     );
   }
 
   deletarUsuario(id: string): void {
-    this.userService.deletarUser(id).subscribe(
-      () => {
-        this.toastrService.mostrarToastrSuccess('Usuário deletado com sucesso');
-        this.buscarUsuarios();
-      },
-      () => {
-        this.toastrService.mostrarToastrDanger('Erro ao deletar usuário');
-      }
+    this.subs.push(
+      this.userService.deletarUser(id).subscribe(
+        () => {
+          this.toastrService.mostrarToastrSuccess('Usuário deletado com sucesso');
+          this.buscarUsuarios();
+        },
+        () => {
+          this.toastrService.mostrarToastrDanger('Erro ao deletar usuário');
+        }
+      )
     );
   }
 }

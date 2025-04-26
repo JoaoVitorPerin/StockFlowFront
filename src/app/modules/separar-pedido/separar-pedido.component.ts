@@ -10,6 +10,7 @@ import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGri
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { converterStatusPedido } from 'src/app/shared/ts/util';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-separar-pedido',
@@ -39,7 +40,9 @@ export class SepararPedidoComponent implements OnInit{
 
   pedido: any;
 
-   @ViewChild('modalPedido', { static: false }) modalPedido!: TemplateRef<any>;
+  subs: Subscription[] = [];
+
+  @ViewChild('modalPedido', { static: false }) modalPedido!: TemplateRef<any>;
 
   converterStatusPedido = converterStatusPedido;
 
@@ -111,14 +114,16 @@ export class SepararPedidoComponent implements OnInit{
   }
 
   buscarPedidos(){
-    this.separarPedidoService.buscarDadosPedidos().subscribe((data) => {
-      this.pedidosSeparacao = data?.pedidos.filter((pedido: any) => pedido.status === 'separacao').map((pedido: any) => {
-        return {
-          ...pedido,
-          nome_cliente: pedido.cliente.nome_completo
-        }
-      });
-    });
+    this.subs.push(
+      this.separarPedidoService.buscarDadosPedidos().subscribe((data) => {
+        this.pedidosSeparacao = data?.pedidos.filter((pedido: any) => pedido.status === 'separacao').map((pedido: any) => {
+          return {
+            ...pedido,
+            nome_cliente: pedido.cliente.nome_completo
+          }
+        });
+      })
+    );
   }
 
   abrirModalPedido(pedido){
@@ -150,15 +155,17 @@ export class SepararPedidoComponent implements OnInit{
       {
         icone: 'pi pi-info-circle',
         callbackAceitar: () => {
-          this.separarPedidoService.alterarStatusPedido([pedido?.idPedido]).subscribe((data) => {
-            if(data.status){
-              this.toastrService.mostrarToastrSuccess('Status do pedido alterado com sucesso!');
-              this.modalService.fecharModal();
-              this.buscarPedidos();
-            }else{
-              this.toastrService.mostrarToastrDanger(`${data?.mensagem ?? 'Erro ao alterar status do pedido'}`);
-            }
-          });
+          this.subs.push(
+            this.separarPedidoService.alterarStatusPedido([pedido?.idPedido]).subscribe((data) => {
+              if(data.status){
+                this.toastrService.mostrarToastrSuccess('Status do pedido alterado com sucesso!');
+                this.modalService.fecharModal();
+                this.buscarPedidos();
+              }else{
+                this.toastrService.mostrarToastrDanger(`${data?.mensagem ?? 'Erro ao alterar status do pedido'}`);
+              }
+            })
+          );
         }
       }
     );
@@ -174,15 +181,17 @@ export class SepararPedidoComponent implements OnInit{
       {
         icone: 'pi pi-info-circle',
         callbackAceitar: () => {
-          this.separarPedidoService.alterarStatusPedido(this.pedidosSelecionados).subscribe((data) => {
-            if(data.status){
-              this.toastrService.mostrarToastrSuccess('Status do pedidos alterados com sucesso!');
-              this.modalService.fecharModal();
-              this.buscarPedidos();
-            }else{
-              this.toastrService.mostrarToastrDanger(`${data?.mensagem ?? 'Erro ao alterar status dos pedidos'}`);
-            }
-          });
+          this.subs.push(
+            this.separarPedidoService.alterarStatusPedido(this.pedidosSelecionados).subscribe((data) => {
+              if(data.status){
+                this.toastrService.mostrarToastrSuccess('Status do pedidos alterados com sucesso!');
+                this.modalService.fecharModal();
+                this.buscarPedidos();
+              }else{
+                this.toastrService.mostrarToastrDanger(`${data?.mensagem ?? 'Erro ao alterar status dos pedidos'}`);
+              }
+            })
+          );
         }
       }
     );
@@ -190,5 +199,9 @@ export class SepararPedidoComponent implements OnInit{
 
   dadosSelectedPedidos(event){
     this.pedidosSelecionados = event.map((pedido: any) => pedido.idPedido);
+  }
+
+  ngOnDestroy(){
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { UserService } from '../user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro',
@@ -15,6 +16,8 @@ export class CadastroComponent {
   itemsGrupos: any[] = [];
   items: any[];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private toastrService: ToastrService,
@@ -49,39 +52,45 @@ export class CadastroComponent {
               }
 
   buscarUserById(id: string): void {
-    this.userService.buscarUserById(id).subscribe({
-      next: (dados) => {
-        this.formUser.patchValue(dados.usuario);
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar usuário');
-      }
-    })
+    this.subs.push(
+      this.userService.buscarUserById(id).subscribe({
+        next: (dados) => {
+          this.formUser.patchValue(dados.usuario);
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar usuário');
+        }
+      })
+    );
   }
 
   cadastrarUser(): void {
     this.formUser.markAllAsTouched();
     console.log(this.formUser.getRawValue());
     if(this.formUser.valid){
-      this.userService.cadastrarUser(this.formUser.getRawValue()).subscribe({
-        next: (response) => {
-          this.toastrService.mostrarToastrSuccess(`Usuário ${this.idUsuario ? 'editado' : 'cadastrado'} com sucesso`);
-          this.router.navigate(['user/home']);
-        }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar usuário');
-        }
-      })
+      this.subs.push(
+        this.userService.cadastrarUser(this.formUser.getRawValue()).subscribe({
+          next: (response) => {
+            this.toastrService.mostrarToastrSuccess(`Usuário ${this.idUsuario ? 'editado' : 'cadastrado'} com sucesso`);
+            this.router.navigate(['user/home']);
+          }, error: () => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar usuário');
+          }
+        })
+      );
     }
   }
 
   buscarGrupos(): void {
-    this.userService.buscarGrupos().subscribe({
-      next: (dados) => {
-        this.itemsGrupos = dados.grupos.map((grupo) => {
-          return {label: grupo.name, value: grupo.id};
-        });
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar grupos');
-      }
-    })
+    this.subs.push(
+      this.userService.buscarGrupos().subscribe({
+        next: (dados) => {
+          this.itemsGrupos = dados.grupos.map((grupo) => {
+            return {label: grupo.name, value: grupo.id};
+          });
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar grupos');
+        }
+      })
+    );
   }
 }
