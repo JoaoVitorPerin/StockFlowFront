@@ -5,7 +5,7 @@ import { ToastrService } from 'src/app/shared/components/toastr/toastr.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViaCepService } from 'src/app/shared/services/viaCep.service';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 import { ProdutoService } from '../../produto/produto.service';
 import { TokenService } from 'src/app/shared/services/token.service';
 import { ClienteService } from '../../cliente/cliente.service';
@@ -45,6 +45,9 @@ export class CadastroComponent {
 
   passoAtual: number = 0;
   totalEditadoManualmente: boolean = false;
+
+  subs: Subscription[] = [];
+
   parseFloat = parseFloat;
 
   itemsSteps = [
@@ -176,24 +179,26 @@ export class CadastroComponent {
   }
 
   buscarClientes(){
-    this.pedidoService.buscarDadosClientes().subscribe(
-      (response) => {
-        this.todosCliente = response.clientes;
-        this.itemsClientes = response.clientes.filter((item) => item.status).map((item) => {
-          return {
-            value: item.id,
-            label: item.nome_completo
-          }
-        })
+    this.subs.push(
+      this.pedidoService.buscarDadosClientes().subscribe(
+        (response) => {
+          this.todosCliente = response.clientes;
+          this.itemsClientes = response.clientes.filter((item) => item.status).map((item) => {
+            return {
+              value: item.id,
+              label: item.nome_completo
+            }
+          })
 
-        this.clienteAtletas = response.clientes.filter((cliente) => cliente.status && cliente.is_atleta).map((cliente) => {
-          return {label: cliente.nome_completo, value: cliente.id};
-        })
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar clientes!');
-      }
-    );
+          this.clienteAtletas = response.clientes.filter((cliente) => cliente.status && cliente.is_atleta).map((cliente) => {
+            return {label: cliente.nome_completo, value: cliente.id};
+          })
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar clientes!');
+        }
+      )
+    )
   }
 
   cadastrarPedido() {
@@ -205,18 +210,20 @@ export class CadastroComponent {
         total: parseFloat(this.formPedido.get('total').value) + this.parseFloat(this.formPedido.get('frete').value),
         usuario_id: this.tokenService.getJwtDecodedAccess()?.user_id,
       }
-      this.pedidoService.cadastrarPedido(dados).subscribe(
-        (response) => {
-          if (response.status) {
-            this.toastrService.mostrarToastrSuccess(`Pedido ${this.idPedido ? 'editado' : 'cadastrado'} com sucesso!`);
-            this.router.navigate(['/pedido/home']);
-          } else {
-            this.toastrService.mostrarToastrDanger(response.descricao);
+      this.subs.push(
+        this.pedidoService.cadastrarPedido(dados).subscribe(
+          (response) => {
+            if (response.status) {
+              this.toastrService.mostrarToastrSuccess(`Pedido ${this.idPedido ? 'editado' : 'cadastrado'} com sucesso!`);
+              this.router.navigate(['/pedido/home']);
+            } else {
+              this.toastrService.mostrarToastrDanger(response.descricao);
+            }
+          },
+          (error) => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar pedido!');
           }
-        },
-        (error) => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar pedido!');
-        }
+        )
       );
     }
   }
@@ -228,21 +235,23 @@ export class CadastroComponent {
         ...this.formCliente.getRawValue(),
         cpf_cnpj: this.formCliente.get('cpf_cnpj').value === "" ? null : this.formCliente.get('cpf_cnpj').value,
       }
-      this.clienteService.cadastrarCliente(data).subscribe({
-        next: (response) => {
-          if(response.status){
-            this.toastrService.mostrarToastrSuccess(`Cliente cadastrado com sucesso`);
-            this.buscarClientes();
-            this.modalService.fecharModal();
-            this.formCliente.reset();
-            this.formPedido.reset();
-          }else{
-            this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar cliente')
+      this.subs.push(
+        this.clienteService.cadastrarCliente(data).subscribe({
+          next: (response) => {
+            if(response.status){
+              this.toastrService.mostrarToastrSuccess(`Cliente cadastrado com sucesso`);
+              this.buscarClientes();
+              this.modalService.fecharModal();
+              this.formCliente.reset();
+              this.formPedido.reset();
+            }else{
+              this.toastrService.mostrarToastrDanger(response.descricao ?? 'Erro ao cadastrar cliente')
+            }
+          }, error: () => {
+            this.toastrService.mostrarToastrDanger('Erro ao cadastrar cliente');
           }
-        }, error: () => {
-          this.toastrService.mostrarToastrDanger('Erro ao cadastrar cliente');
-        }
-      })
+        })
+      )
     }
   }
 
@@ -306,49 +315,53 @@ export class CadastroComponent {
   }
 
   buscarPedidoById(id: string): void {
-    this.pedidoService.buscarPedidoById(id).subscribe({
-      next: (dados) => {
-        this.valorTotalEdicao = this.parseFloat(dados.pedidos.vlrTotal) - this.parseFloat(dados.pedidos.frete);
-        this.formPedido.patchValue(dados.pedidos);
-        this.formPedido.patchValue({
-          cliente_id: dados.pedidos.cliente.id,
-          total: this.valorTotalEdicao,
-        }, { emitEvent: false });
-        this.listaProdutos = dados.pedidos.produtos.forEach(item => {
-          const novoProduto = this.formBuilder.group({
-            produto_id: [item.produto_id, Validators.required],
-            quantidade: [parseInt(item.quantidade), Validators.required],
-            preco_unitario: [parseFloat(item.precoUnitario), Validators.required],
-            preco_custo: [parseFloat(item.precoCusto)],
-            is_estoque_externo: [item.is_estoque_externo],  
+    this.subs.push(
+      this.pedidoService.buscarPedidoById(id).subscribe({
+        next: (dados) => {
+          this.valorTotalEdicao = this.parseFloat(dados.pedidos.vlrTotal) - this.parseFloat(dados.pedidos.frete);
+          this.formPedido.patchValue(dados.pedidos);
+          this.formPedido.patchValue({
+            cliente_id: dados.pedidos.cliente.id,
+            total: this.valorTotalEdicao,
+          }, { emitEvent: false });
+          this.listaProdutos = dados.pedidos.produtos.forEach(item => {
+            const novoProduto = this.formBuilder.group({
+              produto_id: [item.produto_id, Validators.required],
+              quantidade: [parseInt(item.quantidade), Validators.required],
+              preco_unitario: [parseFloat(item.precoUnitario), Validators.required],
+              preco_custo: [parseFloat(item.precoCusto)],
+              is_estoque_externo: [item.is_estoque_externo],  
+            });
+            const itens = this.formPedido.get('itens') as FormArray;
+            itens.push(novoProduto);
           });
-          const itens = this.formPedido.get('itens') as FormArray;
-          itens.push(novoProduto);
-        });
-        this.formPedido.get('total').setValue(dados.pedidos.vlrTotal);
-      }, error: () => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar pedido');
-      }
-    })
+          this.formPedido.get('total').setValue(dados.pedidos.vlrTotal);
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar pedido');
+        }
+      })
+    )
   }
 
   buscarDadosProdutos(){
-    this.produtoService.buscarDadosProdutos().subscribe(
-      (response) => {
-        this.todosProdutos = response.produtos;
-        this.itemsProdutos = response.produtos
-        .filter(item => item.status)
-        .map((item) => {
-          return {
-            value: item.id,
-            label: `${item.marca__nome} - ${item.nome}`
-          }
-        })
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar produtos!');
-      }
-    );
+    this.subs.push(
+      this.produtoService.buscarDadosProdutos().subscribe(
+        (response) => {
+          this.todosProdutos = response.produtos;
+          this.itemsProdutos = response.produtos
+          .filter(item => item.status)
+          .map((item) => {
+            return {
+              value: item.id,
+              label: `${item.marca__nome} - ${item.nome}`
+            }
+          })
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar produtos!');
+        }
+      )
+    )
   }
 
   adicionarProduto() {
@@ -508,4 +521,7 @@ export class CadastroComponent {
     return true
   }
   
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
 }

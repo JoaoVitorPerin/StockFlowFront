@@ -5,6 +5,7 @@ import { DatagridConfig, datagridConfigDefault } from 'src/app/shared/ts/dataGri
 import { PedidoService } from '../pedido.service';
 import { ModalConfirmacaoService } from 'src/app/shared/components/modal-confirmacao/modal-confirmacao.service';
 import { TokenService } from 'src/app/shared/services/token.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,8 @@ export class HomeComponent implements OnInit{
   data: any = [];
   items: any[];
   home: any;
+
+  subs: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -104,18 +107,20 @@ export class HomeComponent implements OnInit{
   }
 
   buscarPedidos(): void {
-    this.pedidoService.buscarDadosPedidos().subscribe(
-      (response) => {
-        this.data = response.pedidos.map((item) => {
-          return {
-            ...item,
-            cliente: item.cliente.nome_completo
-          }
-        })
-      },
-      (error) => {
-        this.toastrService.mostrarToastrDanger('Erro ao buscar pedidos');
-      }
+    this.subs.push(
+      this.pedidoService.buscarDadosPedidos().subscribe(
+        (response) => {
+          this.data = response.pedidos.map((item) => {
+            return {
+              ...item,
+              cliente: item.cliente.nome_completo
+            }
+          })
+        },
+        (error) => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar pedidos');
+        }
+      )
     );
   }
 
@@ -126,19 +131,23 @@ export class HomeComponent implements OnInit{
       {
         icone: 'pi pi-info-circle',
         callbackAceitar: () => {
-          this.pedidoService.excluirPedido(id, this.tokenService.getJwtDecodedAccess()?.user_id).subscribe(
-            () => {
-              this.toastrService.mostrarToastrSuccess(`Pedido deletado com sucesso!`);
-              this.buscarPedidos();
-            },
-            () => {
-              this.toastrService.mostrarToastrDanger('Erro ao deletar pedido!');
-            }
+          this.subs.push(
+            this.pedidoService.excluirPedido(id, this.tokenService.getJwtDecodedAccess()?.user_id).subscribe(
+              () => {
+                this.toastrService.mostrarToastrSuccess(`Pedido deletado com sucesso!`);
+                this.buscarPedidos();
+              },
+              () => {
+                this.toastrService.mostrarToastrDanger('Erro ao deletar pedido!');
+              }
+            )
           );
         }
       }
     );
-    
   }
 
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
+  }
 }
