@@ -20,11 +20,16 @@ export class HomeComponent {
   columns: any;
   configuracoes: DatagridConfig = datagridConfigDefault();
   data: any = [];
+
+  formProduto: FormGroup;
   formEstoque: FormGroup;
   formMarca: FormGroup;
   formCategoria: FormGroup;
+
   movimentacaoProduto: any = {};
   opcoesRadio: Array<items> = [];
+  marcas: Array<items> = [];
+  categorias: Array<items> = [];
 
   formatarData = formatarData;
 
@@ -36,6 +41,7 @@ export class HomeComponent {
   @ViewChild('modalControleEstoque', { static: false }) modalControleEstoque!: TemplateRef<any>;
   @ViewChild('modalMarca', { static: false }) modalMarca!: TemplateRef<any>;
   @ViewChild('modalCategoria', { static: false }) modalCategoria!: TemplateRef<any>;
+  @ViewChild('modalEditarProduto', { static: false }) modalEditarProduto!: TemplateRef<any>;
 
   constructor(
     private router: Router,
@@ -62,6 +68,16 @@ export class HomeComponent {
       qtd_estoque: [null],
       movimentacao: [null, Validators.required],
       quantidade: [null, Validators.required],
+    })
+
+    this.formProduto = this.formBuilder.group({
+      produto_id: [null],
+      nome: [null, Validators.required],
+      marca__id: [null],
+      categoria__id: [null],
+      descricao: [null],
+      preco_compra: [null, Validators.required],
+      preco_venda: [null, Validators.required]
     })
 
     this.formMarca = this.formBuilder.group({
@@ -137,7 +153,7 @@ export class HomeComponent {
       color: 'primary',
       tooltip: 'Editar Produto',
       click: (rowData): void => {
-        this.router.navigate(['produto/cadastro/', rowData?.id])
+        this.abrirModalEditarProduto(rowData);
       }
     })
 
@@ -324,6 +340,8 @@ export class HomeComponent {
 
   ngOnInit(): void {
     this.buscarProdutos();
+    this.buscarMarcas();
+    this.buscarCategorias();
   }
 
   buscarProdutos(): void {
@@ -339,6 +357,34 @@ export class HomeComponent {
     );
   }
 
+  buscarMarcas(): void {
+    this.subs.push(
+      this.produtoService.buscarTodasMarcas().subscribe({
+        next: (dados) => {
+          this.marcas = dados.marcas.map((marca) => {
+            return {  label: marca.nome, value: marca.id }
+          })
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar marcas');
+        }
+      })
+    )
+  }
+
+  buscarCategorias(): void {
+    this.subs.push(
+      this.produtoService.buscarTodasCategorias().subscribe({
+        next: (dados) => {
+          this.categorias = dados.categorias.map((categoria) => {
+            return { label: categoria.nome, value: categoria.id }
+          })
+        }, error: () => {
+          this.toastrService.mostrarToastrDanger('Erro ao buscar categorias');
+        }
+      })
+    )
+  }
+
   alterarStatusProduto(id: string): void {
     this.subs.push(
       this.produtoService.alterarStatusProduto(id).subscribe(
@@ -351,6 +397,69 @@ export class HomeComponent {
         }
       )
     );
+  }
+
+  abrirModalEditarProduto(rowData: any): void {
+    this.formProduto.reset();
+    console.log(rowData)  
+    this.formProduto.patchValue({
+      produto_id: rowData?.id,
+      nome: rowData?.nome,
+      marca__id: rowData?.marca__id,
+      categoria__id: rowData?.categoria__id,
+      descricao: rowData?.descricao,
+      preco_compra: rowData?.preco_compra,
+      preco_venda: rowData?.preco_venda
+    })
+    const botoes = [
+      {
+        label: 'Cancelar',
+        color: 'primary',
+        link: true,
+        onClick: () => {
+          this.modalService.fecharModal();
+        },
+      },
+      {
+        label: 'Salvar',
+        color: 'primary',
+        onClick: () => {
+          this.formProduto.markAllAsTouched();
+
+          if (this.formProduto.invalid) {
+            this.toastrService.mostrarToastrDanger('Preencha todos os campos obrigatórios');
+            return;
+          }
+
+          this.subs.push(
+            this.produtoService.cadastrarProduto(this.formProduto.getRawValue()).subscribe(
+              (res) => {
+                if(res.status){
+                  this.alterarValorProdutoNaTabela(this.formProduto.getRawValue());
+                  this.toastrService.mostrarToastrSuccess(`Produto ${this.formProduto.get("nome").value} editado com sucesso`);
+                  this.modalService.fecharModal();
+                }else{
+                  this.toastrService.mostrarToastrDanger(res.descricao);
+                }
+              },
+              () => {
+                this.toastrService.mostrarToastrDanger('Erro ao editar produto');
+              }
+            )
+          );
+        }
+      }
+    ];
+    this.modalService.abrirModal(`Editar Produto`, this.modalEditarProduto, botoes);
+  }
+
+  alterarValorProdutoNaTabela(dadosProduto){
+    this.data = this.data.map((produto) => {
+      if (produto.id === dadosProduto.produto_id) {
+        return { ...produto, ...dadosProduto };
+      }
+      return produto;
+    });
   }
 
   movimentarEstoque(): void {
