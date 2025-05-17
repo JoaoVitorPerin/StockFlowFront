@@ -401,7 +401,6 @@ export class HomeComponent {
 
   abrirModalEditarProduto(rowData: any): void {
     this.formProduto.reset();
-    console.log(rowData)  
     this.formProduto.patchValue({
       produto_id: rowData?.id,
       nome: rowData?.nome,
