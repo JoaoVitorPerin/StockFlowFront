@@ -35,4 +35,11 @@ export class EstoqueService {
         headers: this.headerService.getHeader()
     });
   }
+
+  buscarCoeficienteCompras(): Observable<any>{
+    return this.http.get<any>(this.API_BACK + 'dashboard/estoque/coeficiente-compra', {
+        context: new HttpContext().set(SET_LOADER, true),
+        headers: this.headerService.getHeader()
+    });
+  }
 }

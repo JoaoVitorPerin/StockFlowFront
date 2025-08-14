@@ -22,6 +22,9 @@ export class EstoqueComponent {
   columnsTabelaEstoque: any[];
   configuracoes: DatagridConfig = datagridConfigDefault();
 
+  dadosTabelaEstoqueCoeficienteCompras: any[] = [];
+  columnsTabelaEstoqueCoeficienteCompras: any[];
+
   dataMarcasGrafico: any = {
     labels: [],
     datasets: [
@@ -104,6 +107,56 @@ export class EstoqueComponent {
       },
     ];
 
+    this.columnsTabelaEstoqueCoeficienteCompras = [
+      {
+        dataField: 'nome_produto',
+        caption: 'Nome',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
+        dataField: 'marca',
+        caption: 'Marca',
+        dataType: 'string',
+        sorting: true,
+      },
+      {
+        dataField: 'total_vendido_ultimos_3_meses',
+        caption: 'Total Vendido 3 Meses',
+        dataType: 'string',
+        sorting: true,
+        cellTemplate: 'int',
+      },
+      {
+        dataField: 'media_mensal',
+        caption: 'Média Mensal',
+        dataType: 'string',
+        sorting: true,
+        cellTemplate: 'int',
+      },
+      {
+        dataField: 'quantidade_estoque',
+        caption: 'Quantidade Estoque',
+        dataType: 'string',
+        sorting: true,
+        cellTemplate: 'int',
+      },
+      {
+        dataField: 'coef_estoque',  
+        caption: 'Coeficiente de Compra',
+        dataType: 'string',
+        sorting: true,
+        cellTemplate: 'coeficiente-estoque',
+      },
+      {
+        dataField: 'previsao_compra',
+        caption: 'Próx. Pedido',
+        dataType: 'string',
+        sorting: true,
+        cellTemplate: 'int',
+      },
+    ];
+
     this.formFiltroMarca = this.formBuilder.group({
       marca_id: [null],
       categoria_id: [null],
@@ -127,6 +180,7 @@ export class EstoqueComponent {
 
     this.buscarProdutos()
     this.buscarMarcas();
+    this.buscarCoeficienteCompras();
     this.buscarCategorias();
     this.initGrafico();
   }
@@ -239,6 +293,17 @@ export class EstoqueComponent {
           this.toastrService.mostrarToastrDanger('Erro ao buscar dados do gráfico');
         }
       )
+    );
+  }
+
+  buscarCoeficienteCompras(): void {
+    this.estoqueService.buscarCoeficienteCompras().subscribe(
+      (response) => {
+        this.dadosTabelaEstoqueCoeficienteCompras = response.lista_produtos;
+      },
+      (error) => {
+        this.toastrService.mostrarToastrDanger('Erro ao buscar coeficiente de compras');
+      }
     );
   }
 }

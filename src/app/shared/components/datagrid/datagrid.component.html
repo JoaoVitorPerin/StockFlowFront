@@ -307,6 +307,7 @@
             [alignFrozen]="col?.fixedPosition ? col?.fixedPosition : 'right'"
             [style.width]="col.width ? col.width : 'auto'"
             [style.display]="col?.visible === false ? 'none': ''"
+            [ngClass]="{'bg-red-500': rowData[col.dataField] <= 0.75 && col.cellTemplate == 'coeficiente-estoque', 'bg-yellow-500': (rowData[col.dataField] > 0.75 && rowData[col.dataField] <= 1) && col.cellTemplate == 'coeficiente-estoque', 'bg-green-500': rowData[col.dataField] > 1 && col.cellTemplate == 'coeficiente-estoque'}"
             [ngStyle]="{'background-color': setBackgroundColorCell(col, rowData), 'color': setColorCell(col, rowData)}"
             >
             <div>
@@ -360,7 +361,19 @@
                     } @else {
                       --
                     }
-                  } @else if(col.cellTemplate == 'dinheiro'){
+                  } @else if(col.cellTemplate == 'int'){
+                    @if(rowData[col.dataField]){        
+                      {{ converterParaInt(rowData[col.dataField]) }}
+                    } @else {
+                      0
+                    }
+                  }@else if(col.cellTemplate == 'coeficiente-estoque'){
+                    @if(rowData[col.dataField]){
+                      <p class="font-bold p-0 m-0">{{ rowData[col.dataField] }}</p>
+                    } @else {
+                      <p class="font-bold p-0 m-0">0</p>
+                    }
+                  }@else if(col.cellTemplate == 'dinheiro'){
                     @if(rowData[col.dataField] || rowData[col.dataField] === 0){
                       R$ {{ convertePrecoParaPadraoBR(rowData[col.dataField]) }}
                     } @else {

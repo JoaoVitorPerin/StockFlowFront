@@ -76,6 +76,10 @@ export class DatagridComponent implements OnChanges, OnInit, OnDestroy {
   minDateDefault: Date;
   maxDateDefault: Date;
 
+  converterParaInt(valor: string): number {
+    return parseInt(valor)
+  }
+
   ngOnInit() {
     if(this.control)
       this.control?.setValue(this.data)

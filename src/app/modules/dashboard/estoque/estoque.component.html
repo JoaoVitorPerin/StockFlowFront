@@ -28,6 +28,10 @@
 </div>
 
 <div class="mt-2">
+    <app-datagrid [data]="dadosTabelaEstoqueCoeficienteCompras" [columns]="columnsTabelaEstoqueCoeficienteCompras" [configuracoes]="configuracoes" titulo="Compras" class="w-full"></app-datagrid>
+</div>
+
+<div class="mt-2">
     <p-card>
         <p class="text-900 text-xl font-semibold">Marcas com mais produtos</p>
         <p-chart type="bar" [data]="dataMarcasGrafico" [options]="basicOptionsGrafico" />
